@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unvent Automations — Your phone gets answered. Every time.</title>
+<meta name="description" content="Los Angeles HVAC, roofing, and electrical companies lose most of their recoverable revenue to calls nobody picks up. We answer every one of them, day or night.">
+<meta property="og:title" content="Unvent Automations">
+<meta property="og:description" content="The call you just missed already called someone else.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12110F;
+  --ground:#1A1917;
+  --paper:#F4F1EA;
+  --paper-dim:#C9C4B8;
+  --paper-faint:#8A857A;
+  --ember:#D8542F;
+  --rule:rgba(244,241,234,.14);
+  --rule-dark:rgba(26,25,23,.16);
+  --display:'Bodoni Moda','Didot','Bodoni MT',Didot,'Playfair Display',Georgia,serif;
+  --body:'Archivo','Helvetica Neue',Helvetica,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--ground); color:var(--paper);
+  font-family:var(--body); font-size:17px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+/* grain */
+body::after{
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:99; opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap{max-width:1180px; margin:0 auto; padding:0 32px}
+@media(max-width:640px){ .wrap{padding:0 20px} body{font-size:16px} }
+
+/* ---------- type ---------- */
+.eyebrow{
+  font-size:11px; font-weight:600; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--ember); margin:0 0 22px;
+}
+.eyebrow.dim{color:var(--paper-faint)}
+h1,h2,h3{font-family:var(--display); font-weight:400; margin:0; letter-spacing:-.015em; line-height:1.02}
+h1{font-size:clamp(44px,7.4vw,104px)}
+h2{font-size:clamp(32px,4.6vw,62px)}
+h3{font-size:clamp(22px,2.2vw,30px)}
+p{margin:0 0 18px; max-width:62ch}
+.lede{font-size:clamp(18px,1.7vw,22px); color:var(--paper-dim); line-height:1.55}
+
+/* ---------- nav ---------- */
+nav{
+  position:sticky; top:0; z-index:50; backdrop-filter:blur(14px);
+  background:rgba(26,25,23,.82); border-bottom:1px solid var(--rule);
+}
+nav .wrap{display:flex; align-items:center; justify-content:space-between; height:74px; gap:20px}
+.lockup{display:flex; align-items:center; gap:13px; text-decoration:none; color:var(--paper)}
+.lockup svg{height:42px; width:auto; display:block; flex:none}
+.lockup .word{
+  font-family:var(--display); font-weight:700; font-size:27px; letter-spacing:.005em;
+  line-height:1; white-space:nowrap; position:relative; top:1px;
+}
+.navcta{
+  font-size:13.5px; font-weight:600; letter-spacing:.04em; text-decoration:none;
+  color:var(--ink); background:var(--paper); padding:11px 20px; border-radius:2px;
+  transition:background .2s, transform .2s; white-space:nowrap;
+}
+.navcta:hover{background:var(--ember); color:var(--paper); transform:translateY(-1px)}
+@media(max-width:560px){ .lockup svg{height:36px} .lockup .word{font-size:23px} nav .wrap{height:64px} }
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(70px,11vw,150px) 0 clamp(56px,7vw,90px); position:relative}
+.hero::before{
+  content:''; position:absolute; top:-160px; right:-220px; width:680px; height:680px;
+  background:radial-gradient(circle, rgba(216,84,47,.15), transparent 62%);
+  pointer-events:none;
+}
+.hero h1{max-width:15ch; position:relative}
+.hero h1 em{font-style:italic; color:var(--ember)}
+.hero .lede{margin-top:30px; max-width:52ch}
+.actions{display:flex; flex-wrap:wrap; gap:14px; margin-top:40px}
+.btn{
+  display:inline-flex; align-items:center; gap:10px; text-decoration:none;
+  font-size:15px; font-weight:600; letter-spacing:.02em; padding:16px 28px; border-radius:2px;
+  transition:transform .2s, background .2s, border-color .2s;
+}
+.btn-primary{background:var(--ember); color:var(--paper)}
+.btn-primary:hover{transform:translateY(-2px); background:#E9633B}
+.btn-ghost{border:1px solid var(--rule); color:var(--paper)}
+.btn-ghost:hover{border-color:var(--paper); transform:translateY(-2px)}
+.reveal{opacity:0; transform:translateY(18px); animation:rise .9s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes rise{to{opacity:1; transform:none}}
+@media(prefers-reduced-motion:reduce){ .reveal{animation:none; opacity:1; transform:none} }
+
+/* ---------- counter ---------- */
+.counter{
+  background:var(--paper); color:var(--ink); padding:clamp(56px,7vw,96px) 0;
+  border-top:1px solid var(--rule);
+}
+.counter .eyebrow{color:var(--ember)}
+.counter h2{max-width:18ch; margin-bottom:14px}
+.counter .sub{color:#5C574D; max-width:58ch; margin-bottom:44px}
+.calc{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:clamp(32px,5vw,72px); align-items:center}
+@media(max-width:860px){ .calc{grid-template-columns:1fr; gap:38px} }
+.field{margin-bottom:30px}
+.field label{
+  display:flex; justify-content:space-between; align-items:baseline; gap:12px;
+  font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#5C574D;
+  margin-bottom:12px;
+}
+.field .v{font-family:var(--display); font-size:27px; color:var(--ink); letter-spacing:-.01em}
+input[type=range]{
+  -webkit-appearance:none; appearance:none; width:100%; height:2px; background:var(--rule-dark);
+  outline:none; margin:0;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:22px; height:22px; border-radius:50%;
+  background:var(--ember); cursor:grab; border:3px solid var(--paper);
+  box-shadow:0 0 0 1px var(--rule-dark);
+}
+input[type=range]::-webkit-slider-thumb:active{cursor:grabbing; transform:scale(1.1)}
+input[type=range]::-moz-range-thumb{
+  width:22px; height:22px; border-radius:50%; background:var(--ember);
+  cursor:grab; border:3px solid var(--paper);
+}
+.readout{border-left:2px solid var(--ember); padding-left:clamp(20px,3vw,34px)}
+.readout .cap{font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#5C574D; margin-bottom:10px}
+.big{
+  font-family:var(--display); font-weight:500; letter-spacing:-.035em; line-height:.92;
+  font-size:clamp(52px,9vw,116px); color:var(--ink); font-variant-numeric:tabular-nums;
+}
+.big.mo{font-size:clamp(26px,3.4vw,42px); color:#5C574D; margin-top:14px}
+.working{
+  margin-top:26px; padding-top:20px; border-top:1px solid var(--rule-dark);
+  font-size:13.5px; line-height:1.65; color:#5C574D; max-width:46ch;
+}
+.working b{color:var(--ink); font-weight:600}
+
+/* ---------- sections ---------- */
+section{padding:clamp(64px,8vw,116px) 0}
+.dark{border-top:1px solid var(--rule)}
+.grid5{display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:1px; background:var(--rule); margin-top:52px; border:1px solid var(--rule)}
+.cell{background:var(--ground); padding:34px 30px}
+.cell .n{
+  font-family:var(--display); font-size:15px; color:var(--ember); margin-bottom:16px;
+  letter-spacing:.05em;
+}
+.cell h3{font-size:21px; margin-bottom:11px; line-height:1.2}
+.cell p{font-size:15px; color:var(--paper-dim); margin:0; line-height:1.58}
+
+.trades{display:flex; flex-wrap:wrap; gap:12px; margin-top:38px}
+.trade{
+  font-family:var(--display); font-size:clamp(24px,3.6vw,44px); padding:10px 26px;
+  border:1px solid var(--rule); border-radius:999px; color:var(--paper);
+}
+.trade.city{background:var(--ember); border-color:var(--ember)}
+
+.nots{max-width:820px; margin-top:44px}
+.not{display:flex; gap:20px; padding:26px 0; border-bottom:1px solid var(--rule)}
+.not:first-child{border-top:1px solid var(--rule)}
+.not .x{font-family:var(--display); font-size:26px; color:var(--ember); line-height:1; flex:none; width:26px}
+.not h3{font-size:19px; margin-bottom:6px}
+.not p{font-size:15px; color:var(--paper-dim); margin:0}
+
+/* ---------- close ---------- */
+.close{background:var(--paper); color:var(--ink); text-align:center; padding:clamp(70px,9vw,128px) 0}
+.close h2{max-width:20ch; margin:0 auto 22px}
+.close p{color:#5C574D; margin:0 auto 38px; max-width:50ch}
+.close .btn-primary{font-size:16px; padding:18px 36px}
+.close .alt{margin-top:26px; font-size:14.5px; color:#5C574D}
+.close .alt a{color:var(--ink); font-weight:600}
+
+footer{padding:44px 0; border-top:1px solid var(--rule); font-size:13px; color:var(--paper-faint)}
+footer .wrap{display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between; align-items:center}
+footer a{color:var(--paper-dim); text-decoration:none}
+footer a:hover{color:var(--paper)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="lockup" href="#top">
+      <svg viewBox="0 0 113.89 123.5" aria-hidden="true"><path fill="currentColor" d="M87.68,85.92v-33.07c0-5.85-1.53-10.2-4.57-13.03-3.05-2.83-7.46-4.25-13.22-4.25h-.03c-2.99,0-5.53.34-7.59,1.01-.14.03-.27.08-.4.14-.38.12-.74.27-1.08.42-.01.01-.03.01-.04.02-2.3,1.05-4.1,2.45-5.4,4.17-1.34,1.78-2.23,3.5-2.66,5.15-.44,1.66-.65,3.49-.65,5.51v33.87c-1.96.7-4.22,1.05-6.73,1.05-1.92,0-3.63-.26-5.12-.79-1.48-.53-2.73-1.41-3.74-2.63-1.01-1.22-1.76-2.83-2.27-4.82-.5-1.99-.75-4.43-.75-7.31v-33.79h7.98l-.57-.99-.58-1.01-10.44-18.07-10.44,18.07-.58,1.01-.57.99h8v33.07c0,5.85,1.52,10.2,4.57,13.03,3.05,2.83,7.45,4.25,13.21,4.25h.04c2.99,0,5.52-.34,7.58-1.01.14-.04.28-.08.41-.14.38-.12.74-.27,1.08-.43.01,0,.02-.01.03-.01,2.31-1.05,4.11-2.44,5.4-4.17,1.35-1.78,2.24-3.49,2.67-5.15.43-1.66.65-3.49.65-5.51v-33.87c1.97-.7,4.21-1.05,6.73-1.05,1.92,0,3.62.27,5.11.79,1.49.53,2.74,1.41,3.74,2.63,1.01,1.23,1.77,2.83,2.27,4.83.51,1.99.76,4.42.76,7.3v33.79h-7.99l.57.99.58,1.01,10.44,18.07,10.44-18.07.58-1.01.57-.99h-7.99ZM60.79,70.06c0,1.73-.08,3.18-.22,4.36-.14,1.18-.35,2.18-.61,3.02-.27.84-.58,1.58-.94,2.2s-.78,1.25-1.26,1.87c-1.32,1.79-2.86,3.09-4.64,3.92v-32c0-1.73.07-3.18.21-4.36.15-1.17.35-2.18.62-3.02.26-.84.57-1.57.93-2.2.36-.62.78-1.24,1.26-1.87,1.32-1.79,2.88-3.1,4.65-3.91v31.99Z"/></svg>
+      <span class="word">Automations</span>
+    </a>
+    <a class="navcta" href="#book">Book 20 minutes</a>
+  </div>
+</nav>
+
+<div id="top"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow reveal" style="animation-delay:.05s">Los Angeles · HVAC, Roofing, Electrical</p>
+    <h1 class="reveal" style="animation-delay:.15s">The call you just missed <em>already called someone else.</em></h1>
+    <p class="lede reveal" style="animation-delay:.3s">You are on a roof in Van Nuys at two in the afternoon. The phone rings. Four minutes later that customer has booked the next company on the list. We put something on your line that picks up every single time, sounds like a person, finds out what is wrong, and writes it down so your team can call straight back.</p>
+    <div class="actions reveal" style="animation-delay:.45s">
+      <a class="btn btn-primary" href="#book">Find out what it is costing you →</a>
+      <a class="btn btn-ghost" href="#what">See what we actually do</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ THE NUMBER ============ -->
+<section class="counter" id="math">
+  <div class="wrap">
+    <p class="eyebrow">Do the math on yourself</p>
+    <h2>Most of the money you are losing is on the phone.</h2>
+    <p class="sub">Move these two sliders. That is the entire pitch, and you can check it against your own books in about a minute.</p>
+
+    <div class="calc">
+      <div>
+        <div class="field">
+          <label>Average job value <span class="v" id="jobOut">$8,000</span></label>
+          <input type="range" id="job" min="300" max="30000" step="100" value="8000">
+        </div>
+        <div class="field">
+          <label>Calls a day nobody answers <span class="v" id="callOut">5</span></label>
+          <input type="range" id="calls" min="1" max="25" step="1" value="5">
+        </div>
+        <div class="working">
+          We assume you would win <b>5 out of every 100</b> of those calls. That is a deliberately low number. The real one is almost certainly higher, but we would rather show you something you can trust than something that sounds impressive.
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="cap">Walking out the door, per year</div>
+        <div class="big" id="yr">$720,000</div>
+        <div class="big mo" id="mo">$60,000 a month</div>
+        <div class="working" id="show"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT WE DO ============ -->
+<section class="dark" id="what">
+  <div class="wrap">
+    <p class="eyebrow">What you get</p>
+    <h2>Five things, running from week one.</h2>
+    <div class="grid5">
+      <div class="cell">
+        <div class="n">01</div>
+        <h3>The phone always gets answered</h3>
+        <p>Around the clock. It knows your services, your pricing, your service area. Nights, weekends, and the ninety seconds while you are up a ladder. It replaces the voicemail nobody checks and the receptionist you cannot justify hiring.</p>
+      </div>
+      <div class="cell">
+        <div class="n">02</div>
+        <h3>Missed calls get a text back</h3>
+        <p>If a call slips through for any reason, a text goes out inside thirty seconds asking what is going on. It is the cheapest thing we build and it starts recovering work the day it turns on.</p>
+      </div>
+      <div class="cell">
+        <div class="n">03</div>
+        <h3>Your quotes get chased</h3>
+        <p>You already paid for the truck roll and the hour on site. We follow up by text and email on a cadence that does not nag, until they say yes or no. You stop losing jobs you already did the work to win.</p>
+      </div>
+      <div class="cell">
+        <div class="n">04</div>
+        <h3>Your old customers hear from you</h3>
+        <p>You have hundreds of past customers who would hire you again and have not heard from you in two years. You already paid to acquire every one of them. We work that list in your first week.</p>
+      </div>
+      <div class="cell">
+        <div class="n">05</div>
+        <h3>Reviews stop being an afterthought</h3>
+        <p>A review request goes out when the job is finished, pointed at Google. Reviews are what makes the phone ring in the first place, so the whole thing compounds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHO ============ -->
+<section class="dark">
+  <div class="wrap">
+    <p class="eyebrow">Who this is for</p>
+    <h2>Trades where a missed call is a real job.</h2>
+    <div class="trades">
+      <span class="trade">HVAC</span>
+      <span class="trade">Roofing</span>
+      <span class="trade">Electrical</span>
+      <span class="trade city">Los Angeles</span>
+    </div>
+    <p class="lede" style="margin-top:38px">If your average job is worth a few hundred dollars, this does not pay for itself and we will tell you that on the call. If it is worth thousands and your phone goes unanswered while your crews are out, it is the most expensive problem in your business.</p>
+  </div>
+</section>
+
+<!-- ============ WHAT WE DON'T DO ============ -->
+<section class="dark">
+  <div class="wrap">
+    <p class="eyebrow">Being straight with you</p>
+    <h2>What we don't do.</h2>
+    <div class="nots">
+      <div class="not">
+        <div class="x">—</div>
+        <div>
+          <h3>No social media management</h3>
+          <p>We will not post for you. Likes and followers do not book jobs, and we are not going to charge you for them.</p>
+        </div>
+      </div>
+      <div class="not">
+        <div class="x">—</div>
+        <div>
+          <h3>No guaranteed results or rankings</h3>
+          <p>Anyone promising you a number is lying to you. What we will do is show you the numbers every month so you can decide for yourself whether it is working.</p>
+        </div>
+      </div>
+      <div class="not">
+        <div class="x">—</div>
+        <div>
+          <h3>No contracts designed to trap you</h3>
+          <p>Month to month. Thirty days notice. If it is not working, you tell us and we stop.</p>
+        </div>
+      </div>
+      <div class="not">
+        <div class="x">—</div>
+        <div>
+          <h3>No switching off what already works</h3>
+          <p>For the first week we run alongside your current setup, not instead of it. If something goes wrong you are exactly where you are today.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSE ============ -->
+<section class="close" id="book">
+  <div class="wrap">
+    <p class="eyebrow">The next step</p>
+    <h2>Twenty minutes. You will know your number either way.</h2>
+    <p>We go through what you are actually losing, using your numbers rather than ours. If it turns out we cannot help you, we will say so on the call and you will still leave knowing what your missed calls cost you a year.</p>
+    <a class="btn btn-primary" href="__CALENDLY__" id="bookBtn">Book the call →</a>
+    <div class="alt">Or reach us at <a href="tel:__PHONE_HREF__" id="telLink">__PHONE__</a> · <a href="mailto:andre@unventautomations.com">andre@unventautomations.com</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© <span id="yy">2026</span> Unvent Automations · Los Angeles, California</div>
+    <div><a href="#math">Do the math</a> · <a href="#what">What we do</a> · <a href="#book">Book a call</a></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const job=document.getElementById('job'), calls=document.getElementById('calls');
+  const jobOut=document.getElementById('jobOut'), callOut=document.getElementById('callOut');
+  const yr=document.getElementById('yr'), mo=document.getElementById('mo'), show=document.getElementById('show');
+  const CLOSE_RATE=0.05;
+  const usd=n=>'$'+Math.round(n).toLocaleString('en-US');
+
+  function paint(){
+    const j=+job.value, c=+calls.value;
+    const perMonth=c*30, booked=perMonth*CLOSE_RATE, m=booked*j;
+    jobOut.textContent=usd(j);
+    callOut.textContent=c;
+    yr.textContent=usd(m*12);
+    mo.textContent=usd(m)+' a month';
+    show.innerHTML='<b>'+c+'</b> missed calls a day is <b>'+perMonth+'</b> a month. Win <b>5%</b> of those at <b>'+usd(j)+'</b> a job and that is <b>'+usd(m)+'</b> every month you never see.';
+  }
+  job.addEventListener('input',paint); calls.addEventListener('input',paint); paint();
+
+  document.getElementById('yy').textContent=new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
