@@ -7,9 +7,20 @@
 <meta name="format-detection" content="telephone=no">
 <title>Unvent Automations - Your phone gets answered. Every time.</title>
 <meta name="description" content="Los Angeles businesses lose most of their recoverable revenue to calls nobody picks up and follow-ups nobody sends. We answer every call, day or night, and chase everything that goes quiet.">
-<meta property="og:title" content="Unvent Automations">
-<meta property="og:description" content="The call you just missed already called someone else.">
+<link rel="canonical" href="https://unventautomations.com/">
+<meta property="og:site_name" content="Unvent Automations">
+<meta property="og:title" content="Unvent Automations - The call you just missed already called someone else.">
+<meta property="og:description" content="We answer every call, chase every quote, and automate the rest of what keeps slipping. Work out what it is costing you in about a minute.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://unventautomations.com/">
+<meta property="og:image" content="https://unventautomations.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Unvent Automations - The call you just missed already called someone else.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Unvent Automations - The call you just missed already called someone else.">
+<meta name="twitter:description" content="We answer every call, chase every quote, and automate the rest of what keeps slipping.">
+<meta name="twitter:image" content="https://unventautomations.com/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -31,13 +42,20 @@ html{
   scroll-behavior:smooth;
   -webkit-text-size-adjust:100%; text-size-adjust:100%;
   background:var(--ground);
+  overflow-x:hidden; overflow-x:clip;
 }
 body{
   margin:0; background:var(--ground); color:var(--paper);
   font-family:var(--body); font-size:17px; line-height:1.6;
-  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden; overflow-x:clip;
   -webkit-tap-highlight-color:rgba(216,84,47,.18);
+  width:100%; max-width:100%;
 }
+/* Nothing is allowed to push the page wider than the screen. The decorative
+   glows are absolutely positioned past the right edge, and body overflow alone
+   did not contain them on mobile. Clip at the section that owns them. */
+section,header,footer,nav{max-width:100vw; overflow-x:clip}
 /* every anchor target clears the sticky nav instead of hiding under it */
 #top,#math,#what,#book{scroll-margin-top:84px}
 @media(max-width:560px){ #top,#math,#what,#book{scroll-margin-top:72px} }
@@ -104,7 +122,7 @@ nav .wrap{display:flex; align-items:center; justify-content:space-between; heigh
 @media(max-width:340px){ .lockup .word{display:none} }
 
 /* ---------- hero ---------- */
-.hero{padding:clamp(70px,11vw,150px) 0 clamp(56px,7vw,90px); position:relative}
+.hero{padding:clamp(70px,11vw,150px) 0 clamp(56px,7vw,90px); position:relative; overflow:hidden}
 .hero::before{
   content:''; position:absolute; top:-160px; right:-220px; width:680px; height:680px;
   background:radial-gradient(circle, rgba(216,84,47,.15), transparent 62%);
@@ -208,6 +226,27 @@ section{padding:clamp(64px,8vw,116px) 0}
 }
 .cell{background:var(--ground); padding:34px 30px}
 @media(max-width:600px){ .cell{padding:28px 22px} .grid5{margin-top:38px} }
+
+/* ---------- the wider list ---------- */
+.more{margin-top:clamp(56px,7vw,92px); padding-top:clamp(40px,5vw,58px); border-top:1px solid var(--rule)}
+.more h3{max-width:20ch; margin-bottom:16px}
+.more .lede{max-width:56ch; margin-bottom:38px}
+.more ul{
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 clamp(28px,4vw,60px);
+}
+@media(max-width:700px){ .more ul{grid-template-columns:1fr} }
+.more li{
+  padding:17px 0 17px 26px; border-bottom:1px solid var(--rule);
+  color:var(--paper-dim); font-size:15.5px; line-height:1.5; position:relative;
+}
+.more li::before{
+  content:''; position:absolute; left:0; top:26px; width:11px; height:1px; background:var(--ember);
+}
+.more .after{
+  margin-top:36px; font-size:15.5px; color:var(--paper-dim); max-width:58ch;
+}
+.more .after b{color:var(--paper); font-weight:600}
 .cell .n{
   font-family:var(--display); font-size:15px; color:var(--ember); margin-bottom:16px;
   letter-spacing:.05em;
@@ -230,7 +269,12 @@ footer{
   border-top:1px solid var(--rule); font-size:13px; color:var(--paper-faint);
 }
 footer .wrap{display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between; align-items:center}
-@media(max-width:560px){ footer .wrap{gap:12px} footer a{display:inline-block; padding:4px 0} }
+@media(max-width:560px){
+  footer .wrap{gap:6px}
+  footer .links{display:flex; flex-wrap:wrap; gap:0 18px}
+  footer a{display:inline-flex; align-items:center; min-height:44px}
+}
+@media(max-width:560px){ .lockup{min-height:44px; align-items:center} }
 footer a{color:var(--paper-dim); text-decoration:none}
 footer a:hover{color:var(--paper)}
 </style>
@@ -325,6 +369,23 @@ footer a:hover{color:var(--paper)}
         <p>A review request goes out the moment the work is done, pointed at Google. Reviews are what makes the phone ring in the first place, so the whole thing compounds.</p>
       </div>
     </div>
+
+    <div class="more">
+      <p class="eyebrow dim">And then the rest of it</p>
+      <h3>Those five are where we start, because that is where the money is easiest to prove.</h3>
+      <p class="lede">Once the phone is handled, the same approach works on everything else that only breaks because a person is busy, tired, or was never told. What that looks like:</p>
+      <ul>
+        <li>Scheduling and dispatch that fills its own gaps instead of waiting on someone to work the calendar</li>
+        <li>Intake and paperwork that stops getting typed twice into two different systems</li>
+        <li>Invoices that go out the day the work is done, and payment reminders that go out without you deciding to send them</li>
+        <li>Appointment reminders that cut the no-shows you currently absorb as a cost of doing business</li>
+        <li>Warranty, renewal, and recall outreach nobody has time to run by hand</li>
+        <li>The weekly numbers you rebuild in a spreadsheet every Monday, built for you instead</li>
+        <li>Every lead from every source landing in one place, in the same shape, without anyone copying anything</li>
+        <li>The follow-up that was supposed to happen in ninety days and never does</li>
+      </ul>
+      <p class="after">We do not sell you a product and then look for a use. <b>We walk the whole operation first, find what is actually costing you money, and build that.</b> Sometimes it is all five of the above. Sometimes it is one thing you have complained about for two years and stopped noticing.</p>
+    </div>
   </div>
 </section>
 
@@ -341,7 +402,7 @@ footer a:hover{color:var(--paper)}
 <footer>
   <div class="wrap">
     <div>© <span id="yy">2026</span> Unvent Automations · Los Angeles, California</div>
-    <div><a href="#math">Do the math</a> · <a href="#what">What we do</a> · <a href="#book">Book a call</a></div>
+    <div class="links"><a href="#math">Do the math</a> <a href="#what">What we do</a> <a href="#book">Book a call</a></div>
   </div>
 </footer>
 
