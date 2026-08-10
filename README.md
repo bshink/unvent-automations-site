@@ -71,9 +71,42 @@ contractor thinks it is inflated the page becomes marketing and the room is gone
 Ember is the subsidiary accent. Electric blue is reserved for ecosystem-level branding
 per the Unvent brand guide, so it is deliberately absent.
 
+## Link previews
+
+The page ships `og-image.png` (1200x630, brand card) plus `og:url`, `og:image:width/height`,
+a canonical URL, and `twitter:summary_large_image`.
+
+**Why it exists:** before this, the page had no `og:image` at all, so iMessage fell back to
+a *cached GoDaddy Website Builder stock photo* - blurry office people - under the title
+"Unvent Automations". That is what a prospect saw when the link got texted to them.
+
+Regenerate the card with Chrome headless (no ImageMagick or rsvg on this machine):
+
+```
+chrome --headless=new --window-size=1200,630 --screenshot=og-image.png file://<card.html>
+```
+
+**Preview caches are sticky.** iMessage, Slack, and WhatsApp cache per URL and will keep
+serving the old image for a long time. To force a fresh scrape, send the link once with a
+throwaway query string (`https://unventautomations.com/?v=2`) - it renders identically and
+the scrapers treat it as a new URL.
+
 ## Mobile
 
+**Test method, because this is where it went wrong once.** Chrome headless floors its layout
+viewport at 500px, so `--window-size=390,844` silently renders at 500 and then *crops* the
+screenshot to 390. That looks exactly like broken layout and is not. Load the page in a
+fixed-width `<iframe>` on a wide harness page instead - media queries key off the iframe's
+own width - and assert `documentElement.scrollWidth === clientWidth` at 320/390/430. Measure,
+do not eyeball a cropped screenshot.
+
 Reworked 2026-08-10. What was fixed and must not regress:
+
+- **No horizontal scroll.** The hero glow is positioned `right:-160px`; `overflow-x:hidden`
+  on `body` alone did not contain it and the page panned sideways by exactly 160px. Fixed
+  with `overflow-x:clip` on html and body, `max-width:100vw; overflow-x:clip` on every
+  section-level element, and `overflow:hidden` on `.hero` (that last one is what actually
+  does the work). Verified 0px overflow at all three widths.
 
 - **Anchor targets clear the sticky nav.** `scroll-margin-top` on `#top/#math/#what/#book`.
   Without it every in-page link parks the section heading underneath the nav bar.
