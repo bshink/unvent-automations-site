@@ -17,13 +17,15 @@ the Calendly event, change the copy in the same commit - a page that promises tw
 minutes and then books thirty is a small credibility hit on a cold prospect. Grep for
 `30min`, `Book 30 minutes`, and `Thirty minutes`.
 
-## Open discrepancy: the "what we don't do" section
+## The page is four blocks, deliberately
 
-`00_Setup/Build_Order_2026-08-10.md` lists "what we do not do - no social media, no
-guaranteed results, no lock-in" as required content, and the rules section below says it
-stays. **It is not currently on the page** - commit `32a4573` ("Trim to hero, calculator,
-five things, close") removed it. Either re-add it or amend both specs; do not leave the
-docs claiming a section the page does not have.
+Hero, loss calculator, the five deliverables, close. Nothing else.
+
+**The "what we don't do" section was cut on purpose** (commit `32a4573`, confirmed by
+Brandon 2026-08-10). It still belongs on the *call* - the no-social-media, no-guarantees,
+no-lock-in framing is what builds trust in conversation - but the page is a credibility
+backstop, not the pitch, and it is tighter without it. Do not re-add it on the grounds
+that an older spec mentioned it.
 
 ## Rules this page follows, and must keep following
 
@@ -34,7 +36,6 @@ docs claiming a section the page does not have.
 - **No stack names.** No Claude, n8n, Retell, ElevenLabs.
 - **No guarantees** of results, rankings, or revenue.
 - **No LLC or Inc.** anywhere. The entity does not exist yet.
-- The "what we don't do" section stays. It builds more trust than the feature list.
 
 ## The loss calculator
 
