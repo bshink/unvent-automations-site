@@ -6,16 +6,24 @@ One page. Static HTML, no build step, no dependencies beyond Google Fonts.
 interested will Google the company before the discovery call. This exists so they find
 something real instead of nothing. It is not a lead-gen asset and should not grow into one.
 
-## One placeholder to fill before it goes live
+## Calendly - wired in 2026-08-10
 
-It is in `index.html`, marked with `__DOUBLE_UNDERSCORES__`:
+Both CTAs (the nav button and the closing button) point at
+`https://calendly.com/andre-unventautomations/30min`, verified live on 2026-08-10.
+No placeholders remain, so the publish gate is cleared.
 
-| Placeholder | Replace with |
-|---|---|
-| `__CALENDLY__` | Andre's Calendly link, once it exists |
+**The event is 30 minutes and the page copy says so in both places.** If Andre shortens
+the Calendly event, change the copy in the same commit - a page that promises twenty
+minutes and then books thirty is a small credibility hit on a cold prospect. Grep for
+`30min`, `Book 30 minutes`, and `Thirty minutes`.
 
-Until the Calendly link exists the primary button goes nowhere. **Do not publish before
-filling it in** - a dead CTA is worse than no site.
+## Open discrepancy: the "what we don't do" section
+
+`00_Setup/Build_Order_2026-08-10.md` lists "what we do not do - no social media, no
+guaranteed results, no lock-in" as required content, and the rules section below says it
+stays. **It is not currently on the page** - commit `32a4573` ("Trim to hero, calculator,
+five things, close") removed it. Either re-add it or amend both specs; do not leave the
+docs claiming a section the page does not have.
 
 ## Rules this page follows, and must keep following
 
@@ -47,7 +55,29 @@ contractor thinks it is inflated the page becomes marketing and the room is gone
 Ember is the subsidiary accent. Electric blue is reserved for ecosystem-level branding
 per the Unvent brand guide, so it is deliberately absent.
 
+## Mobile
+
+Reworked 2026-08-10. What was fixed and must not regress:
+
+- **Anchor targets clear the sticky nav.** `scroll-margin-top` on `#top/#math/#what/#book`.
+  Without it every in-page link parks the section heading underneath the nav bar.
+- **The sliders are a 44px-tall hit area.** The input is transparent and 44px tall; the
+  visible hairline is drawn by `::-webkit-slider-runnable-track`. The old 2px-tall input
+  was close to untappable on a phone, and the calculator is the whole point of the page.
+- **Nav fits at 320px.** The CTA swaps to "Book a call" under 560px and the wordmark drops
+  entirely under 340px.
+- **Buttons go full width under 560px** in both the hero and the closing section.
+- **Safe-area insets** on `.wrap` and the footer, plus `viewport-fit=cover`, so nothing
+  sits under the notch or the home indicator.
+- Headline floors dropped to 38px/28px and the big number to 44px so the largest possible
+  readout (`$13,500,000`) still fits on a 320px screen.
+
 ## Hosting
 
 Do not buy GoDaddy hosting for a static page. Point the domain at Cloudflare Pages,
-GitHub Pages, or Netlify - all free. Setup instructions live with Brandon.
+GitHub Pages, or Netlify - all free.
+
+**As of 2026-08-10 the domain still serves the GoDaddy Website Builder default page.**
+Publishing is therefore two steps, and the second one is Brandon's: deploy this repo to a
+host, then in GoDaddy disable the Website Builder site and repoint DNS. Until the DNS
+change lands, a prospect who Googles the company gets a stock template.
