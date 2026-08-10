@@ -6,14 +6,13 @@ One page. Static HTML, no build step, no dependencies beyond Google Fonts.
 interested will Google the company before the discovery call. This exists so they find
 something real instead of nothing. It is not a lead-gen asset and should not grow into one.
 
-## Two placeholders to fill before it goes live
+## One placeholder to fill before it goes live
 
-Both are in `index.html`, marked with `__DOUBLE_UNDERSCORES__`:
+It is in `index.html`, marked with `__DOUBLE_UNDERSCORES__`:
 
 | Placeholder | Replace with |
 |---|---|
 | `__CALENDLY__` | Andre's Calendly link, once it exists |
-| `__PHONE__` and `__PHONE_HREF__` | The business number. `__PHONE__` is display text, `__PHONE_HREF__` is digits only for the `tel:` link |
 
 Until the Calendly link exists the primary button goes nowhere. **Do not publish before
 filling it in** - a dead CTA is worse than no site.
