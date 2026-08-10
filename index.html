@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1A1917">
 <meta name="format-detection" content="telephone=no">
 <title>Unvent Automations - Your phone gets answered. Every time.</title>
-<meta name="description" content="Los Angeles HVAC, roofing, and electrical companies lose most of their recoverable revenue to calls nobody picks up. We answer every one of them, day or night.">
+<meta name="description" content="Los Angeles businesses lose most of their recoverable revenue to calls nobody picks up and follow-ups nobody sends. We answer every call, day or night, and chase everything that goes quiet.">
 <meta property="og:title" content="Unvent Automations">
 <meta property="og:description" content="The call you just missed already called someone else.">
 <meta property="og:type" content="website">
@@ -252,7 +252,7 @@ footer a:hover{color:var(--paper)}
 <header class="hero">
   <div class="wrap">
     <h1 class="reveal" style="animation-delay:.15s">The call you just missed <em>already called someone else.</em></h1>
-    <p class="lede reveal" style="animation-delay:.3s">You are on a roof in Van Nuys at two in the afternoon. The phone rings. Four minutes later that customer has booked the next company on the list. We put something on your line that picks up every single time, sounds like a person, finds out what is wrong, and writes it down so your team can call straight back.</p>
+    <p class="lede reveal" style="animation-delay:.3s">It is two in the afternoon and everyone who could pick up the phone is busy doing the actual work. Four minutes later that customer has called the next company on the list. We put something on your line that answers every single time, sounds like a person, finds out what they need, and writes it down so your team can call straight back. Then we go find the rest of the money you are leaving on the table.</p>
     <div class="actions reveal" style="animation-delay:.45s">
       <a class="btn btn-primary" href="#book">Find out what it is costing you →</a>
       <a class="btn btn-ghost" href="#what">See what we actually do</a>
@@ -265,12 +265,12 @@ footer a:hover{color:var(--paper)}
   <div class="wrap">
     <p class="eyebrow">Do the math on yourself</p>
     <h2>Most of the money you are losing is on the phone.</h2>
-    <p class="sub">Move these two sliders. That is the entire pitch, and you can check it against your own books in about a minute.</p>
+    <p class="sub">It does not matter much what you sell. If customers reach you by phone and someone has to be free to answer, this number is bigger than you think. Move the two sliders and check it against your own books in about a minute.</p>
 
     <div class="calc">
       <div>
         <div class="field">
-          <label>Average job value <span class="v" id="jobOut">$8,000</span></label>
+          <label>What one customer is worth <span class="v" id="jobOut">$8,000</span></label>
           <input type="range" id="job" min="300" max="30000" step="100" value="8000">
         </div>
         <div class="field">
@@ -297,11 +297,12 @@ footer a:hover{color:var(--paper)}
   <div class="wrap">
     <p class="eyebrow">What you get</p>
     <h2>Five things, running from week one.</h2>
+    <p class="lede" style="margin-top:26px">The phone is where we start, because it is where the loss is easiest to prove. It is not where we stop. Anything in your business that is repetitive, happens on a schedule, or only fails because a person forgot, we can take off your plate.</p>
     <div class="grid5">
       <div class="cell">
         <div class="n">01</div>
         <h3>The phone always gets answered</h3>
-        <p>Around the clock. It knows your services, your pricing, your service area. Nights, weekends, and the ninety seconds while you are up a ladder. It replaces the voicemail nobody checks and the receptionist you cannot justify hiring.</p>
+        <p>Around the clock. It knows what you sell, what you charge, and who you serve. Nights, weekends, lunch, and the ninety seconds everyone is heads-down. It replaces the voicemail nobody checks and the front desk you cannot justify hiring.</p>
       </div>
       <div class="cell">
         <div class="n">02</div>
@@ -311,17 +312,17 @@ footer a:hover{color:var(--paper)}
       <div class="cell">
         <div class="n">03</div>
         <h3>Your quotes get chased</h3>
-        <p>You already paid for the truck roll and the hour on site. We follow up by text and email on a cadence that does not nag, until they say yes or no. You stop losing jobs you already did the work to win.</p>
+        <p>You already did the work to put that number together. We follow up by text and email on a cadence that does not nag, until they say yes or no. You stop losing deals you had already half won.</p>
       </div>
       <div class="cell">
         <div class="n">04</div>
         <h3>Your old customers hear from you</h3>
-        <p>You have hundreds of past customers who would hire you again and have not heard from you in two years. You already paid to acquire every one of them. We work that list in your first week.</p>
+        <p>You have hundreds of past customers who would happily come back and have not heard from you in two years. You already paid to acquire every one of them. We work that list in your first week.</p>
       </div>
       <div class="cell">
         <div class="n">05</div>
         <h3>Reviews stop being an afterthought</h3>
-        <p>A review request goes out when the job is finished, pointed at Google. Reviews are what makes the phone ring in the first place, so the whole thing compounds.</p>
+        <p>A review request goes out the moment the work is done, pointed at Google. Reviews are what makes the phone ring in the first place, so the whole thing compounds.</p>
       </div>
     </div>
   </div>
@@ -359,7 +360,7 @@ footer a:hover{color:var(--paper)}
     callOut.textContent=c;
     yr.textContent=usd(m*12);
     mo.textContent=usd(m)+' a month';
-    show.innerHTML='<b>'+c+'</b> missed calls a day is <b>'+perMonth+'</b> a month. Win <b>5%</b> of those at <b>'+usd(j)+'</b> a job and that is <b>'+usd(m)+'</b> every month you never see.';
+    show.innerHTML='<b>'+c+'</b> missed calls a day is <b>'+perMonth+'</b> a month. Win <b>5%</b> of those at <b>'+usd(j)+'</b> a customer and that is <b>'+usd(m)+'</b> every month you never see.';
   }
   job.addEventListener('input',paint); calls.addEventListener('input',paint); paint();
 

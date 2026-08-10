@@ -37,10 +37,25 @@ that an older spec mentioned it.
 - **No guarantees** of results, rankings, or revenue.
 - **No LLC or Inc.** anywhere. The entity does not exist yet.
 
+## Vertical-neutral copy - changed 2026-08-10
+
+The page originally named HVAC, roofing, and electrical and opened on "you are on a roof
+in Van Nuys." **Brandon removed all of it on 2026-08-10.** Andre is dialing HVAC and
+roofing today, but car dealerships are now a live second market, and a page that fences
+itself to the trades reads wrong to anyone outside them.
+
+The rule going forward: **the phone is the wedge, not the vertical.** Copy describes the
+mechanism (calls nobody answers, quotes nobody chases, customers nobody calls back) and
+never names an industry. The "what you get" section says outright that the phone is where
+we start and not where we stop, which is what makes it read as an automations company
+rather than a trades answering service.
+
+Do not re-add industry names to win a specific cold call. Say that on the call instead.
+
 ## The loss calculator
 
 The interactive number is the point of the page. It runs the same math as the sales
-docs: `missed calls/day x 30 x 5% close rate x average job value`.
+docs: `missed calls/day x 30 x 5% close rate x value of one customer`.
 
 **The 5% is fixed and labelled as deliberately conservative.** Do not raise it to make the
 number bigger. A figure they believe beats a figure that impresses, and the moment a
