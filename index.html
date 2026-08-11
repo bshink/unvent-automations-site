@@ -84,7 +84,13 @@ body::after{
   color:var(--ember); margin:0 0 22px;
 }
 .eyebrow.dim{color:var(--paper-faint)}
-h1,h2,h3{font-family:var(--display); font-weight:400; margin:0; letter-spacing:-.015em; line-height:1.02}
+/* Bodoni Moda is a variable font with an optical-size axis. Left on auto, a
+   104px headline gets opsz 96 - the display cut, whose hairlines are almost
+   invisible. Pinning opsz low borrows the small-text cut's thicker strokes
+   while keeping the exact same letterforms. */
+h1,h2,h3{font-family:var(--display); font-weight:400;
+  font-optical-sizing:none; font-variation-settings:'opsz' 8,'wght' 400;
+  margin:0; letter-spacing:-.015em; line-height:1.02}
 h1{font-size:clamp(38px,7.4vw,104px)}
 h2{font-size:clamp(28px,4.6vw,62px)}
 h3{font-size:clamp(22px,2.2vw,30px)}
@@ -193,6 +199,8 @@ input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 5px rgba(216,
 .readout .cap{font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#5C574D; margin-bottom:10px}
 .big{
   font-family:var(--display); font-weight:500; letter-spacing:-.035em; line-height:.92;
+  /* same optical-size pin as the headings, or this reads thinner than the h2 above it */
+  font-optical-sizing:none; font-variation-settings:'opsz' 8,'wght' 500;
   font-size:clamp(44px,9vw,116px); color:var(--ink); font-variant-numeric:tabular-nums;
 }
 .big.mo{font-size:clamp(24px,3.4vw,42px); color:#5C574D; margin-top:14px}
