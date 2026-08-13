@@ -298,6 +298,46 @@ section{padding:clamp(64px,8vw,116px) 0}
 .terms p{margin:0 auto 12px}
 .terms p:last-child{margin:0}
 
+/* ---------- audit tool ---------- */
+.inputs{display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,48px); max-width:760px; margin-bottom:14px}
+@media(max-width:600px){ .inputs{grid-template-columns:1fr; gap:0} }
+.pick-lead{color:#5C574D; max-width:58ch; margin:30px 0 18px; font-size:16px}
+.tiles{display:grid; grid-template-columns:repeat(auto-fill,minmax(232px,1fr)); gap:10px; margin-bottom:34px}
+.tile{
+  display:flex; align-items:flex-start; gap:11px; text-align:left; width:100%;
+  background:transparent; border:1px solid var(--rule-dark); border-radius:2px;
+  padding:15px 16px; cursor:pointer; font:inherit; font-size:15.5px; line-height:1.4;
+  color:#3D3931; transition:border-color .15s, background .15s, color .15s;
+}
+.tile:hover{border-color:#9A9488}
+.tile .box{
+  flex:none; width:19px; height:19px; border:1px solid #9A9488; border-radius:2px;
+  margin-top:1px; position:relative; transition:background .15s, border-color .15s;
+}
+.tile[aria-pressed="true"]{border-color:var(--ember); background:rgba(216,84,47,.06); color:var(--ink)}
+.tile[aria-pressed="true"] .box{background:var(--ember); border-color:var(--ember)}
+/* drawn tick, so it inherits the accent rather than shipping an icon font */
+.tile[aria-pressed="true"] .box::after{
+  content:""; position:absolute; left:6px; top:2px; width:5px; height:10px;
+  border-right:2px solid var(--paper); border-bottom:2px solid var(--paper); transform:rotate(42deg);
+}
+.tile:focus-visible{outline:2px solid var(--ember); outline-offset:3px}
+@media(prefers-reduced-motion:reduce){ .tile,.tile .box{transition:none} }
+
+.result{border-top:1px solid var(--rule-dark); padding-top:32px; display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:clamp(28px,5vw,64px)}
+@media(max-width:860px){ .result{grid-template-columns:1fr; gap:30px} }
+.result .cap{font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#5C574D; margin-bottom:10px}
+.result .big{font-family:var(--display); font-size:clamp(40px,6.6vw,76px); line-height:1; letter-spacing:-.02em}
+.result .hrs{font-family:var(--display); font-size:clamp(19px,2.2vw,26px); color:#5C574D; margin-top:10px}
+.breakdown{list-style:none; padding:0; margin:0 0 18px}
+.breakdown li{display:flex; justify-content:space-between; gap:18px; padding:9px 0;
+  border-bottom:1px solid var(--rule-dark); font-size:15px; color:#3D3931}
+.breakdown li b{font-variant-numeric:tabular-nums; white-space:nowrap; color:var(--ink)}
+.first-fix{background:var(--ink); color:var(--paper); padding:17px 19px; border-radius:2px; font-size:15.5px; line-height:1.5}
+.first-fix .cap{color:var(--ember); margin-bottom:7px}
+.empty{color:#5C574D; font-size:16px; max-width:44ch}
+
 /* ---------- close ---------- */
 .close{background:var(--paper); color:var(--ink); text-align:center; padding:clamp(70px,9vw,128px) 0}
 .close h2{max-width:20ch; margin:0 auto 22px}
@@ -333,14 +373,6 @@ footer a:hover{color:var(--paper)}
       "acceptedAnswer": {
         "@type": "Answer",
         "text": "Builds start at $3,500. What moves that number is how many things we are fixing and how tangled what you have now is. On top of the build there is a monthly retainer that scales with how much we are running for you. We will not quote you before we have looked at your operation, because we would be guessing, and a number we made up is worse than no number at all."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is this just phone stuff?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. The phone is where we usually start, because it is the easiest thing to put a dollar figure on in a first conversation. It is not the point. The same approach works on anything that only breaks because a person was busy or forgot. Quotes nobody chased. Invoices that go out nine days late. Jobs typed into two systems. Scheduling gaps and no-shows. The report you rebuild by hand every Monday. Onboarding a new hire through the same eight things for the ninth time. We walk the whole operation first and then tell you what is worth fixing. Sometimes that is the phone. Often it is not."
       }
     },
     {
@@ -404,7 +436,7 @@ footer a:hover{color:var(--paper)}
 <header class="hero">
   <div class="wrap">
     <h1 class="reveal" style="animation-delay:.15s">Most of what your business loses, <em>it loses quietly.</em></h1>
-    <p class="lede reveal" style="animation-delay:.3s">A call nobody picked up. An invoice that went out nine days late. A quote nobody chased. None of it shows up on a P&amp;L as a line item, so nobody fixes it, and it keeps happening every week. We walk the whole operation, find what the gaps are actually costing you in dollars, and build the systems that close them. We usually start with the phone, because it is the leak we can prove fastest.</p>
+    <p class="lede reveal" style="animation-delay:.3s">A call nobody picked up. An invoice that went out nine days late. A quote nobody chased. None of it shows up on a P&amp;L as a line item, so nobody fixes it, and it keeps happening every week. We walk the whole operation, find what the gaps are actually costing you in dollars, and build the systems that close them.</p>
     <div class="actions reveal" style="animation-delay:.45s">
       <a class="btn btn-primary" href="#book">Find out what it is costing you →</a>
       <a class="btn btn-ghost" href="#what">See what we actually do</a>
@@ -415,30 +447,49 @@ footer a:hover{color:var(--paper)}
 <!-- ============ THE NUMBER ============ -->
 <section class="counter" id="math">
   <div class="wrap">
-    <p class="eyebrow">Do the math on yourself</p>
-    <h2>Start with the gap that is easiest to measure.</h2>
-    <p class="sub">The phone is not the only place your business leaks money, but it is the one you can put a number on in about a minute. If customers reach you by phone and someone has to be free to answer, this number is bigger than you think. Move the two sliders and check it against your own books.</p>
+    <p class="eyebrow">Find your own leak</p>
+    <h2>What is actually broken in there?</h2>
+    <p class="sub">This is the short version of what we do on the first call. Tell us roughly what your work is worth, tick anything that sounds like your week, and we will show you what it is costing and what we would fix first.</p>
 
-    <div class="calc">
+    <div class="inputs">
+      <div class="field">
+        <label>What one job is worth <span class="v" id="jobOut">$8,000</span></label>
+        <input type="range" id="job" min="300" max="30000" step="100" value="8000" aria-label="What one job is worth">
+      </div>
+      <div class="field">
+        <label>Jobs a month <span class="v" id="volOut">20</span></label>
+        <input type="range" id="vol" min="2" max="300" step="1" value="20" aria-label="Jobs a month">
+      </div>
+    </div>
+
+    <p class="pick-lead">Now tick everything that is true. Most people tick more than they expect to.</p>
+    <div class="tiles" id="tiles">
+      <button class="tile" type="button" aria-pressed="false" data-k="quotes"><span class="box"></span><span>Quotes go out and nobody chases them</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="invoices"><span class="box"></span><span>Invoices go out late, or when someone remembers</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="double"><span class="box"></span><span>The same job gets typed into two systems</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="noshow"><span class="box"></span><span>No-shows we have stopped counting</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="calls"><span class="box"></span><span>Calls come in while everyone is busy</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="dormant"><span class="box"></span><span>Past customers we have not contacted in a year</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="report"><span class="box"></span><span>I rebuild the same report every Monday</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="keyperson"><span class="box"></span><span>Only one person knows how a thing works</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="leads"><span class="box"></span><span>Leads come from four places and live in four places</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="onboard"><span class="box"></span><span>Onboarding a hire means walking them through it again</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="reviews"><span class="box"></span><span>Nobody asks customers for reviews</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-k="afterhours"><span class="box"></span><span>After-hours enquiries wait until morning</span></button>
+    </div>
+
+    <div class="result">
       <div>
-        <div class="field">
-          <label>What one customer is worth <span class="v" id="jobOut">$8,000</span></label>
-          <input type="range" id="job" min="300" max="30000" step="100" value="8000">
-        </div>
-        <div class="field">
-          <label>Calls a day nobody answers <span class="v" id="callOut">5</span></label>
-          <input type="range" id="calls" min="1" max="25" step="1" value="5">
-        </div>
-        <div class="working">
-          We assume you would win <b>5 out of every 100</b> of those calls. That is a deliberately low number. The real one is almost certainly higher, but we would rather show you something you can trust than something that sounds impressive.
+        <div class="cap">Leaking, per year</div>
+        <div class="big" id="yr">$0</div>
+        <div class="hrs" id="hrs"></div>
+        <div class="working" style="margin-top:18px">
+          Every figure here is deliberately conservative, and none of it is guesswork about you specifically. It is arithmetic on the numbers you just entered. The real number is almost certainly higher, but we would rather show you something you can defend than something that sounds impressive.
         </div>
       </div>
-
-      <div class="readout">
-        <div class="cap">Walking out the door, per year</div>
-        <div class="big" id="yr">$720,000</div>
-        <div class="big mo" id="mo">$60,000 a month</div>
-        <div class="working" id="show"></div>
+      <div>
+        <ul class="breakdown" id="breakdown"></ul>
+        <div id="firstfix"></div>
       </div>
     </div>
   </div>
@@ -449,22 +500,22 @@ footer a:hover{color:var(--paper)}
   <div class="wrap">
     <p class="eyebrow">Where we start</p>
     <h2>Five things, running from week one.</h2>
-    <p class="lede" style="margin-top:26px">The phone is where we start, because it is where the loss is easiest to prove. It is not where we stop. Anything in your business that is repetitive, happens on a schedule, or only fails because a person forgot, we can take off your plate.</p>
+    <p class="lede" style="margin-top:26px">Anything in your business that repeats, runs on a schedule, or only fails because somebody was busy or forgot, we can take off your plate. These are the five that pay for themselves fastest, and none of them need you to change how you already work.</p>
     <div class="grid5">
       <div class="cell">
         <div class="n">01</div>
-        <h3>The phone always gets answered</h3>
-        <p>Around the clock. It knows what you sell, what you charge, and who you serve. Nights, weekends, lunch, and the ninety seconds everyone is heads-down. It replaces the voicemail nobody checks and the front desk you cannot justify hiring.</p>
+        <h3>Your quotes get chased</h3>
+        <p>You already did the work to put that number together. We follow up by text and email on a cadence that does not nag, until they say yes or no. You stop losing deals you had already half won.</p>
       </div>
       <div class="cell">
         <div class="n">02</div>
-        <h3>Missed calls get a text back</h3>
-        <p>If a call slips through for any reason, a text goes out inside thirty seconds asking what is going on. It is the cheapest thing we build and it starts recovering work the day it turns on.</p>
+        <h3>Your invoices stop going out late</h3>
+        <p>The invoice goes out the day the work is done, not when someone gets to it. Payment reminders go out on their own after that. You stop financing your customers by accident.</p>
       </div>
       <div class="cell">
         <div class="n">03</div>
-        <h3>Your quotes get chased</h3>
-        <p>You already did the work to put that number together. We follow up by text and email on a cadence that does not nag, until they say yes or no. You stop losing deals you had already half won.</p>
+        <h3>Your line always gets answered</h3>
+        <p>Nights, weekends, lunch, and the ninety seconds everyone is heads-down. If a call still slips through, a text goes out within thirty seconds. You get the job details in writing either way.</p>
       </div>
       <div class="cell">
         <div class="n">04</div>
@@ -480,8 +531,8 @@ footer a:hover{color:var(--paper)}
 
     <div class="more">
       <p class="eyebrow dim">And then the rest of it</p>
-      <h3>The phone is one gap. We are not a phone company.</h3>
-      <p class="lede">The same approach works on every part of the business that only breaks because a person was busy, tired, or never told. Your admin, your money, your sales, your operations. What that looks like:</p>
+      <h3>And everywhere else the same thing is happening.</h3>
+      <p class="lede">The five above are where most people start. The same approach works on every other part of the business that only breaks because a person was busy, tired, or never told. What that looks like:</p>
       <ul>
         <li><b>Sales.</b> Every lead from every source landing in one place, in the same shape, chased on a schedule instead of whenever someone remembers. The follow-up that was supposed to happen in ninety days and never does.</li>
         <li><b>Quotes and proposals.</b> The document that takes an hour to assemble, built from what the customer already told you, and then chased until they answer either way.</li>
@@ -507,15 +558,6 @@ footer a:hover{color:var(--paper)}
         <div class="a">
           <p>Builds start at $3,500. What moves that number is how many things we are fixing and how tangled what you have now is. On top of the build there is a monthly retainer that scales with how much we are running for you.</p>
           <p>We will not quote you before we have looked at your operation, because we would be guessing, and a number we made up is worse than no number at all.</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>Is this just phone stuff?</summary>
-        <div class="a">
-          <p>No. The phone is where we usually start, because it is the easiest thing to put a dollar figure on in a first conversation. It is not the point.</p>
-          <p>The same approach works on anything that only breaks because a person was busy or forgot. Quotes nobody chased. Invoices that go out nine days late. Jobs typed into two systems. Scheduling gaps and no-shows. The report you rebuild by hand every Monday. Onboarding a new hire through the same eight things for the ninth time.</p>
-          <p>We walk the whole operation first and then tell you what is worth fixing. Sometimes that is the phone. Often it is not.</p>
         </div>
       </details>
 
@@ -584,22 +626,81 @@ footer a:hover{color:var(--paper)}
 
 <script>
 (function(){
-  const job=document.getElementById('job'), calls=document.getElementById('calls');
-  const jobOut=document.getElementById('jobOut'), callOut=document.getElementById('callOut');
-  const yr=document.getElementById('yr'), mo=document.getElementById('mo'), show=document.getElementById('show');
-  const CLOSE_RATE=0.05;
-  const usd=n=>'$'+Math.round(n).toLocaleString('en-US');
+  /* Each item is either a share of monthly revenue that leaks, or hours a month
+     that go to work nobody should be doing by hand, or both. Every rate here is
+     set at the low end on purpose - the page claims conservative and has to be. */
+  var ITEMS = {
+    quotes:    {label:'Quotes nobody chases',            rev:.06, hrs:0,  fix:'Quote follow-up that runs on a schedule until they answer either way.'},
+    invoices:  {label:'Invoices going out late',         rev:.01, hrs:4,  fix:'Invoices that go out the day the work is done, and chase themselves after.'},
+    double:    {label:'The same job typed twice',        rev:0,   hrs:13, fix:'Connecting the two systems so it is entered once and lands in both.'},
+    noshow:    {label:'No-shows',                        rev:.04, hrs:0,  fix:'Reminder sequences before the appointment, which is the cheapest fix on this list.'},
+    calls:     {label:'Calls nobody could get to',       rev:.06, hrs:0,  fix:'Making sure the line always gets answered and the job details reach you in writing.'},
+    dormant:   {label:'Past customers gone quiet',       rev:.04, hrs:0,  fix:'Working your existing customer list, which is the cheapest revenue you have.'},
+    report:    {label:'Rebuilding the same report',      rev:0,   hrs:9,  fix:'Building the weekly numbers once so they arrive instead of getting assembled.'},
+    keyperson: {label:'One person holds the knowledge',  rev:0,   hrs:6,  fix:'Getting the process out of one head and into something that runs without them.'},
+    leads:     {label:'Leads scattered across tools',    rev:.03, hrs:6,  fix:'One place every lead lands in the same shape, chased on a schedule.'},
+    onboard:   {label:'Onboarding from scratch again',   rev:0,   hrs:5,  fix:'Onboarding that runs itself so the ninth hire costs you an hour, not a week.'},
+    reviews:   {label:'Reviews never asked for',         rev:.02, hrs:0,  fix:'A review request the moment work is done, because reviews are what makes the phone ring.'},
+    afterhours:{label:'After-hours enquiries waiting',   rev:.04, hrs:0,  fix:'Covering the hours nobody is there, which is when a lot of enquiries actually arrive.'}
+  };
+
+  var job=document.getElementById('job'), vol=document.getElementById('vol');
+  var jobOut=document.getElementById('jobOut'), volOut=document.getElementById('volOut');
+  var yr=document.getElementById('yr'), hrsEl=document.getElementById('hrs');
+  var list=document.getElementById('breakdown'), fix=document.getElementById('firstfix');
+  var tiles=[].slice.call(document.querySelectorAll('.tile'));
+  var picked={};
+
+  var usd=function(n){return '$'+Math.round(n).toLocaleString('en-US');};
 
   function paint(){
-    const j=+job.value, c=+calls.value;
-    const perMonth=c*30, booked=perMonth*CLOSE_RATE, m=booked*j;
+    var j=+job.value, v=+vol.value, monthly=j*v;
     jobOut.textContent=usd(j);
-    callOut.textContent=c;
-    yr.textContent=usd(m*12);
-    mo.textContent=usd(m)+' a month';
-    show.innerHTML='<b>'+c+'</b> missed calls a day is <b>'+perMonth+'</b> a month. Win <b>5%</b> of those at <b>'+usd(j)+'</b> a customer and that is <b>'+usd(m)+'</b> every month you never see.';
+    volOut.textContent=v;
+
+    var rows=[], totalRev=0, totalHrs=0;
+    Object.keys(ITEMS).forEach(function(k){
+      if(!picked[k]) return;
+      var it=ITEMS[k], m=monthly*it.rev;
+      totalRev+=m; totalHrs+=it.hrs;
+      rows.push({label:it.label, money:m, hrs:it.hrs, fix:it.fix});
+    });
+
+    /* rank by money first, then by hours, so "what we would fix first" is
+       always the most expensive thing rather than the first one ticked */
+    rows.sort(function(a,b){ return (b.money-a.money) || (b.hrs-a.hrs); });
+
+    if(!rows.length){
+      yr.textContent='$0';
+      hrsEl.textContent='';
+      list.innerHTML='';
+      fix.innerHTML='<p class="empty">Tick anything above that sounds like your week. Nothing here is submitted anywhere - the maths happens on your own screen.</p>';
+      return;
+    }
+
+    yr.textContent=usd(totalRev*12);
+    hrsEl.textContent = totalHrs ? 'and about '+totalHrs+' hours a month doing it by hand' : '';
+
+    list.innerHTML=rows.map(function(r){
+      var right = r.money>0 ? usd(r.money*12)+'/yr' : r.hrs+' hrs/mo';
+      return '<li><span>'+r.label+'</span><b>'+right+'</b></li>';
+    }).join('');
+
+    fix.innerHTML='<div class="first-fix"><div class="cap">What we would start with</div>'+rows[0].fix+'</div>';
   }
-  job.addEventListener('input',paint); calls.addEventListener('input',paint); paint();
+
+  tiles.forEach(function(t){
+    t.addEventListener('click', function(){
+      var k=t.dataset.k, on=t.getAttribute('aria-pressed')==='true';
+      t.setAttribute('aria-pressed', on?'false':'true');
+      picked[k]=!on;
+      paint();
+    });
+  });
+
+  job.addEventListener('input',paint);
+  vol.addEventListener('input',paint);
+  paint();
 
   document.getElementById('yy').textContent=new Date().getFullYear();
 })();
