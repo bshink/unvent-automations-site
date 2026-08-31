@@ -197,6 +197,33 @@ The order, and each band is a different shape on an alternating ground:
 back into four paragraphs, is exactly how it regressed the first time. The Toyota argument in
 particular must stay as three cells: it was four paragraphs and nobody was going to read them.
 
+## The display scale, and why the interior is smaller than the front door
+
+Set 2026-08-31. Brandon's read, and it is a conversion argument rather than a taste one:
+
+> "Because of how big the text is, it makes it come off as if it's a lot of stuff to read.
+> People who own businesses aren't going to want to take the time to actually read this when
+> they're on the fly."
+
+A 12-word headline at 104px eats a full screen, and a page of full-screen headlines reads as a
+commitment before a single word is processed. **The word count never changed here. Only the
+perceived one.**
+
+| | Size at 1440 | Where |
+|---|---|---|
+| Home hero `h1` | **104px** | front door only, and it stays |
+| `.page-head h1` | 68px | /about/ and /notes/ |
+| `.statement.big-line` | 56px | the hinge |
+| `.band h2` | 44px | section headings on /about/ |
+
+**The home hero keeps 104px on purpose.** It is the one place a big statement earns its size,
+and it was never the thing that read as work. Do not "make it consistent" by shrinking it, and
+do not push the interior back up to match it.
+
+Band padding came down with the type in the same commit - it was tuned around 104px headlines,
+and leaving it left each band mostly empty, which adds scroll for nothing and is the same
+complaint in a different form. /about/ went from 5,278px tall to 4,298px.
+
 ## Founder portraits - the only imagery this site is allowed
 
 Added 2026-08-31. A real face was the one visual worth adding, and the reason is the same one
