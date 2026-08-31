@@ -1,10 +1,52 @@
 # unventautomations.com
 
-One page. Static HTML, no build step, no dependencies beyond Google Fonts.
+Static HTML, no build step, no dependencies beyond Google Fonts. **Four pages plus a shared
+stylesheet** as of 2026-08-31: `index.html`, `about/`, `notes/`, and one directory per note.
+Styles live in `site.css` and every page links it with an absolute `/site.css`.
 
 **Purpose: a credibility backstop for cold calls.** Every prospect who is even mildly
 interested will Google the company before the discovery call. This exists so they find
 something real instead of nothing. It is not a lead-gen asset and should not grow into one.
+
+## 2026-08-31 rebuild - what changed and why. Read this before editing copy.
+
+This came out of an advisor call with **Kelsey Moschetti** on 2026-08-31. Her verdict on the
+old single page, verbatim: *"aesthetically pleasing, I like it. Problem is, it looks like the
+same exact scam sites that all these people that are using AI to scam other people."*
+**The design was never the problem. The absence of a person behind it was.** Full record:
+`AI Shit/02_Ecosystem/03_Subsidiaries/Unvent_Automations/07_Advisor_Package/Advisor_Call_Kelsey_2026-08-31.md`.
+
+Five changes, each traceable to something she said:
+
+1. **Nav links are written as questions, not category nouns.** "What do we do?", not "Services".
+   Her point: *"'Our services' - those are answers to questions. Make them links."* A prospect
+   arrives with questions, not a taxonomy. **Do not rename these back to nouns.**
+2. **`/about/` exists, with both founder origin stories.** Brandon noticed a gap and could not
+   work out why nobody had filled it. Andrea likes people and hates watching work grind them
+   down. These are the two stories she specifically asked for, and they are the single biggest
+   thing separating this from a template.
+3. **`/notes/` exists and ships with three real pieces.** *"People do read the About page and
+   people do use the blog page. I use the blog page on sites before I do an interview."*
+   ⚠️ **Never ship this as "coming soon" or with one post.** An empty blog is worse than no blog.
+   If a post is added, add it to `notes/index.html` in the same commit.
+4. **The hinge statement** on the home page (`#who`) and at the top of `/about/`:
+   *"We want you to get to Friday and not be able to name the thing you dropped."*
+   It implies the outcome and guarantees nothing, deliberately. Her framing: *"they wish that
+   for you, but they never said it was guaranteed."* **Do not turn it into a promise and do not
+   attach a metric to it.**
+5. **Tone is unbothered, not a journey story.** *"Not 'here is our journey.' More: this makes me
+   really excited, and if you think it's cool, give me a like, if not go about your day. That is
+   very unbothered energy, and people are like, that's addictive."* The `/about/` page ends with
+   "take it or leave it" on purpose. Do not soften it into agency-brochure voice.
+
+### The word "AI" does not appear anywhere on this site, and that is a rule now.
+
+Kelsey, and a live call that proves it: Andrea said "AI" to an HVAC owner, who replied *"I can
+clean air conditioners"* and hung up. **The company name stays** - Brandon declined her
+suggestion to shorten it to "Unvent" - but the word does not go in body copy, headlines, or
+metadata. The replacement frame is **control, not capability**: *"you still have all the
+control, you're just giving it certain jobs."* The Toyota andon-cord argument carries it on
+`/about/` and in `notes/what-toyota-kept/`. Grep for `\bAI\b` before committing copy.
 
 ## Calendly - wired in 2026-08-10
 
@@ -17,9 +59,12 @@ the Calendly event, change the copy in the same commit - a page that promises tw
 minutes and then books thirty is a small credibility hit on a cold prospect. Grep for
 `30min`, `Book 30 minutes`, and `Thirty minutes`.
 
-## The page is four blocks, deliberately
+## The home page is six blocks, deliberately
 
-Hero, loss calculator, the five deliverables, close. Nothing else.
+Hero, the audit tool, the five deliverables, **who we are (`#who`)**, FAQ, close.
+The `#who` block was added 2026-08-31 and sits immediately before the FAQ on purpose: by then
+the prospect has seen the argument and the number, and the next question they actually have is
+*who are these people.* Nothing else goes in.
 
 **The "what we don't do" section was cut on purpose** (commit `32a4573`, confirmed by
 Brandon 2026-08-10). It still belongs on the *call* - the no-social-media, no-guarantees,
@@ -31,8 +76,9 @@ that an older spec mentioned it.
 
 - **No client names, logos, testimonials, or case studies.** There are zero clients. The
   rule against claiming clients we do not have applies here exactly as it does on a call.
-- **No pricing.** Pricing comes out of the audit. A number on the page anchors every
-  negotiation before it starts.
+- ~~**No pricing.**~~ **Superseded.** The FAQ and the closing block both state "builds start
+  at $3,500" plus a retainer. That is deliberate and it stays. The rule that survives is
+  narrower: **no full quote on the page**, because the real number comes out of the audit.
 - **No stack names.** No Claude, n8n, Retell, ElevenLabs.
 - **No guarantees** of results, rankings, or revenue.
 - **No LLC or Inc.** anywhere. The entity does not exist yet.
