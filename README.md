@@ -197,6 +197,24 @@ The order, and each band is a different shape on an alternating ground:
 back into four paragraphs, is exactly how it regressed the first time. The Toyota argument in
 particular must stay as three cells: it was four paragraphs and nobody was going to read them.
 
+## ⚠️ Run `./stamp.sh` before any commit that touches site.css
+
+GitHub Pages serves `site.css` with `cache-control: max-age=600` and the pages linked it
+without a version. **On 2026-08-31 a type-scale change deployed correctly and Brandon's browser
+kept serving the old stylesheet, so the fix looked like it had not been applied at all.** The
+server was right; the screenshot was stale. That is an expensive way to lose an afternoon.
+
+`./stamp.sh` writes site.css's content hash into every `<link rel="stylesheet">` as
+`?v=<hash>`, so each deploy is a new URL and no browser can serve a stale copy.
+
+**Before believing a CSS change did not land, check the server, not the screenshot:**
+
+```
+curl -s -L https://unventautomations.com/site.css | grep 'page-head h1'
+```
+
+If the server has the new value, it is a cache, not a bug.
+
 ## The display scale, and why the interior is smaller than the front door
 
 Set 2026-08-31. Brandon's read, and it is a conversion argument rather than a taste one:
