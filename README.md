@@ -154,16 +154,19 @@ not estimated. Every point survived; the paragraphs around them did not. Brandon
 the first cut was that the whole page was still wordy, and he was right - the second pass
 deleted the supporting paragraphs entirely and let the one line carry each block.
 
-**The founder cards are a portrait, a name and one sentence. Nothing else.** They had four
-paragraphs under each quote and the paragraphs said nothing the quote did not. Do not restore
-them. Same rule for the Toyota cells and the will-not-do list: one line each, and only 04 and
-05 carry a second line because those two carry terms a prospect needs in writing.
+**The founder cards run portrait, name, one line in Bodoni, then two short paragraphs set
+small.** Brandon put the paragraphs back on 2026-08-31 after seeing the stripped version: the
+fix he asked for was smaller type, not less text. The hierarchy is the point - the quote at
+33px carries the card and the body at 15.5px fills it in. **Everywhere else on this page stays
+at one line per item**: the Toyota cells, and the will-not-do list where only 04 and 05 carry a
+second line, because those two hold terms a prospect needs in writing.
 
-⚠️ **`.fcard p` used to exist and silently pinned `.fquote` to 16.5px** - `.fcard p` is
-specificity (0,1,1) and `.fquote` is (0,1,0), so the element rule won no matter what order they
-were in. It was removed. If you add a paragraph rule scoped to `.fcard`, scope the quote higher
-too or you will re-break it, and it fails silently: the markup is right and the page just looks
-timid.
+⚠️ **Never write a bare `.fcard p` rule.** One existed and silently pinned `.fquote` to
+16.5px: `.fcard p` is specificity (0,1,1) and `.fquote` is (0,1,0), so the element rule won
+regardless of source order. It fails silently - the markup stays correct and the page just
+looks timid. The body copy is therefore styled by an explicit `.fbody` class, and it must stay
+that way. Check `getComputedStyle(document.querySelector('.fquote')).fontSize` returns 33px at
+1440 before believing the card is right.
 
 The order, and each band is a different shape on an alternating ground:
 
