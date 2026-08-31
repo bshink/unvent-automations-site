@@ -515,3 +515,84 @@ footer .links a{white-space:nowrap}
 .wholine h2{margin:0}
 .prose .wholine + p{margin-top:0}
 @media(max-width:520px){ .wholine{gap:16px} .wholine .portrait{--pw:92px} }
+
+/* ================================================================
+   /about/ layout, rebuilt 2026-08-31 (second pass).
+   The first version was one dark column of prose end to end. The home
+   page works because it alternates dark and paper; this page did not,
+   so it read as a wall. Every block below is a different shape, and the
+   grounds alternate. Keep the rhythm if you edit the copy.
+   ================================================================ */
+
+.band{padding:clamp(58px,7.5vw,110px) 0}
+.band.paper{background:var(--paper); color:var(--ink)}
+.band.paper .eyebrow{color:var(--ember)}
+.band.paper p{color:#5C574D}
+.band.paper p b,.band.paper b{color:var(--ink)}
+
+/* --- the hinge, set large on paper --- */
+.statement{max-width:20ch; margin:0}
+.statement.big-line{
+  font-family:var(--display); font-optical-sizing:none;
+  font-variation-settings:'opsz' 8,'wght' 400;
+  font-size:clamp(30px,5.6vw,72px); line-height:1.04; letter-spacing:-.025em;
+  text-wrap:balance;
+}
+.statement em{font-style:italic; color:var(--ember)}
+.statement-note{
+  margin:clamp(26px,3vw,38px) 0 0; max-width:44ch; font-size:16.5px; line-height:1.6;
+  padding-left:clamp(18px,2.2vw,26px); border-left:2px solid var(--ember);
+}
+
+/* --- founders, side by side, photo leading --- */
+.fpair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(34px,5vw,80px);
+  margin-top:clamp(38px,4.5vw,56px); max-width:1020px}
+@media(max-width:780px){ .fpair{grid-template-columns:1fr; gap:48px} }
+.fcard .portrait{--pw:150px; margin-bottom:24px}
+.fname{
+  font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ember); margin:0 0 12px;
+}
+.fquote{
+  font-family:var(--display); font-optical-sizing:none;
+  font-variation-settings:'opsz' 8,'wght' 400;
+  font-size:clamp(23px,2.8vw,36px); line-height:1.12; letter-spacing:-.02em;
+  margin:0 0 22px; max-width:18ch; text-wrap:balance;
+}
+.fcard p{color:var(--paper-dim); font-size:16.5px; line-height:1.62; max-width:46ch; margin:0 0 15px}
+.fcard p:last-child{margin:0}
+.fcard p b{color:var(--paper); font-weight:600}
+
+/* --- the three-part control argument --- */
+.triad{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--rule-dark);
+  border:1px solid var(--rule-dark); margin-top:clamp(34px,4vw,52px)}
+@media(max-width:760px){ .triad{grid-template-columns:1fr} }
+.tcell{background:var(--paper); padding:clamp(26px,3vw,36px)}
+.tcell .k{
+  font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--ember); margin-bottom:16px;
+}
+.tcell p{margin:0; font-size:16px; line-height:1.55; color:#5C574D; max-width:30ch}
+.tcell p b{color:var(--ink)}
+.triad-after{margin:clamp(30px,3.4vw,44px) 0 0; max-width:56ch; font-size:16.5px}
+
+/* --- what we will not do --- */
+.wont{list-style:none; padding:0; margin:clamp(34px,4vw,52px) 0 0;
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 clamp(30px,4.5vw,64px)}
+@media(max-width:760px){ .wont{grid-template-columns:1fr} }
+.wont li{
+  display:flex; gap:16px; align-items:baseline;
+  padding:18px 0; border-bottom:1px solid var(--rule);
+  color:var(--paper-dim); font-size:16px; line-height:1.5;
+}
+.wont li::before{display:none}
+.wont .no{
+  font-family:var(--display); font-size:14px; color:var(--ember);
+  flex:none; letter-spacing:.06em; position:relative; top:-1px;
+}
+.wont b{color:var(--paper); font-weight:600}
+
+/* --- the closing honesty block --- */
+.plain{max-width:60ch}
+.plain p{font-size:17px; line-height:1.65}
+.plain p:last-child{margin-bottom:0}

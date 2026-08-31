@@ -142,6 +142,32 @@ question inside the scroll strip, and it is correct: `document.documentElement.s
 still equals `clientWidth`, so the page does not pan. Check `.navlinks.scrollWidth >
 .navlinks.clientWidth` before "fixing" it.
 
+## /about/ is six alternating bands, not a prose column
+
+**Rebuilt a second time on 2026-08-31.** The first version of the page was one dark column of
+paragraphs end to end, and Brandon's verdict was blunt: too many words, not enough variety.
+The diagnosis was structural, not editorial - the home page reads well because it alternates
+dark and paper grounds and changes shape every block, and /about/ did neither.
+
+**Word count went from roughly 1,100 to roughly 370.** Every point survived; the paragraphs
+around them did not.
+
+The order, and each band is a different shape on an alternating ground:
+
+| Band | Ground | Shape |
+|---|---|---|
+| Hero | dark | headline + one line |
+| The hinge | paper | one huge display sentence + a rule-marked note |
+| The two of us | dark | two portrait cards side by side |
+| You keep the controls | paper | three-cell grid: the machine / the person / the cord |
+| Five things we will not do | dark | numbered two-column list |
+| One more thing, plainly | paper | three short paragraphs |
+| Close | paper | centred CTA, hairline on top because it follows another paper band |
+
+**Keep the alternation if you edit the copy.** Two dark bands in a row, or one band that grows
+back into four paragraphs, is exactly how it regressed the first time. The Toyota argument in
+particular must stay as three cells: it was four paragraphs and nobody was going to read them.
+
 ## Founder portraits - the only imagery this site is allowed
 
 Added 2026-08-31. A real face was the one visual worth adding, and the reason is the same one
