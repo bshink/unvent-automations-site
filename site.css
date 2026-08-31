@@ -531,11 +531,11 @@ footer .links a{white-space:nowrap}
 .band.paper p b,.band.paper b{color:var(--ink)}
 
 /* --- the hinge, set large on paper --- */
-.statement{max-width:20ch; margin:0}
+.statement{max-width:19ch; margin:0}
 .statement.big-line{
   font-family:var(--display); font-optical-sizing:none;
   font-variation-settings:'opsz' 8,'wght' 400;
-  font-size:clamp(30px,5.6vw,72px); line-height:1.04; letter-spacing:-.025em;
+  font-size:clamp(32px,6.2vw,80px); line-height:1.02; letter-spacing:-.025em;
   text-wrap:balance;
 }
 .statement em{font-style:italic; color:var(--ember)}
@@ -548,7 +548,7 @@ footer .links a{white-space:nowrap}
 .fpair{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(34px,5vw,80px);
   margin-top:clamp(38px,4.5vw,56px); max-width:1020px}
 @media(max-width:780px){ .fpair{grid-template-columns:1fr; gap:48px} }
-.fcard .portrait{--pw:150px; margin-bottom:24px}
+.fcard .portrait{--pw:168px; margin-bottom:26px}
 .fname{
   font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
   color:var(--ember); margin:0 0 12px;
@@ -556,12 +556,9 @@ footer .links a{white-space:nowrap}
 .fquote{
   font-family:var(--display); font-optical-sizing:none;
   font-variation-settings:'opsz' 8,'wght' 400;
-  font-size:clamp(23px,2.8vw,36px); line-height:1.12; letter-spacing:-.02em;
-  margin:0 0 22px; max-width:18ch; text-wrap:balance;
+  font-size:clamp(25px,3.3vw,42px); line-height:1.1; letter-spacing:-.022em;
+  margin:0; max-width:17ch; text-wrap:balance;
 }
-.fcard p{color:var(--paper-dim); font-size:16.5px; line-height:1.62; max-width:46ch; margin:0 0 15px}
-.fcard p:last-child{margin:0}
-.fcard p b{color:var(--paper); font-weight:600}
 
 /* --- the three-part control argument --- */
 .triad{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--rule-dark);
@@ -572,9 +569,9 @@ footer .links a{white-space:nowrap}
   font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
   color:var(--ember); margin-bottom:16px;
 }
-.tcell p{margin:0; font-size:16px; line-height:1.55; color:#5C574D; max-width:30ch}
+.tcell p{margin:0; font-size:clamp(16.5px,1.5vw,19px); line-height:1.45; color:#5C574D; max-width:24ch}
 .tcell p b{color:var(--ink)}
-.triad-after{margin:clamp(30px,3.4vw,44px) 0 0; max-width:56ch; font-size:16.5px}
+.triad-after{margin:clamp(30px,3.4vw,44px) 0 0; max-width:40ch; font-size:clamp(16.5px,1.6vw,19px); line-height:1.5}
 
 /* --- what we will not do --- */
 .wont{list-style:none; padding:0; margin:clamp(34px,4vw,52px) 0 0;
@@ -582,8 +579,8 @@ footer .links a{white-space:nowrap}
 @media(max-width:760px){ .wont{grid-template-columns:1fr} }
 .wont li{
   display:flex; gap:16px; align-items:baseline;
-  padding:18px 0; border-bottom:1px solid var(--rule);
-  color:var(--paper-dim); font-size:16px; line-height:1.5;
+  padding:22px 0; border-bottom:1px solid var(--rule);
+  color:var(--paper); font-size:clamp(17px,1.6vw,20px); line-height:1.4;
 }
 .wont li::before{display:none}
 .wont .no{
@@ -591,8 +588,10 @@ footer .links a{white-space:nowrap}
   flex:none; letter-spacing:.06em; position:relative; top:-1px;
 }
 .wont b{color:var(--paper); font-weight:600}
+.wont .tail{display:block; color:var(--paper-faint); font-size:14.5px; line-height:1.45;
+  margin-top:6px; border:0; padding:0}
 
 /* --- the closing honesty block --- */
 .plain{max-width:60ch}
-.plain p{font-size:17px; line-height:1.65}
+.plain p{font-size:clamp(17px,1.7vw,20px); line-height:1.55; max-width:40ch}
 .plain p:last-child{margin-bottom:0}

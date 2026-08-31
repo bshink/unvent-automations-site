@@ -149,8 +149,21 @@ paragraphs end to end, and Brandon's verdict was blunt: too many words, not enou
 The diagnosis was structural, not editorial - the home page reads well because it alternates
 dark and paper grounds and changes shape every block, and /about/ did neither.
 
-**Word count went from roughly 1,100 to roughly 370.** Every point survived; the paragraphs
-around them did not.
+**Word count went from roughly 1,100 to 291**, measured with `innerText` on the rendered page,
+not estimated. Every point survived; the paragraphs around them did not. Brandon's note after
+the first cut was that the whole page was still wordy, and he was right - the second pass
+deleted the supporting paragraphs entirely and let the one line carry each block.
+
+**The founder cards are a portrait, a name and one sentence. Nothing else.** They had four
+paragraphs under each quote and the paragraphs said nothing the quote did not. Do not restore
+them. Same rule for the Toyota cells and the will-not-do list: one line each, and only 04 and
+05 carry a second line because those two carry terms a prospect needs in writing.
+
+⚠️ **`.fcard p` used to exist and silently pinned `.fquote` to 16.5px** - `.fcard p` is
+specificity (0,1,1) and `.fquote` is (0,1,0), so the element rule won no matter what order they
+were in. It was removed. If you add a paragraph rule scoped to `.fcard`, scope the quote higher
+too or you will re-break it, and it fails silently: the markup is right and the page just looks
+timid.
 
 The order, and each band is a different shape on an alternating ground:
 
