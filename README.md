@@ -239,7 +239,20 @@ owned a whole screen for one sentence.
 
 **The bar it now clears:** at a 1512x860 window the /about/ headline *and* the hinge statement
 are both visible without scrolling. Before the cuts, the headline alone filled the viewport.
-Page height went 5,278 to 3,934.
+Page height went 5,278 to 3,669.
+
+### Display lines run the full container. Do not put a `ch` cap back on them.
+
+`.page-head h1`, `.statement.big-line` and `.band h2` are all `max-width:none`, and the three
+inline `max-width:__ch` caps on the /about/ `<h2>`s were deleted. A measure limit exists to keep
+*body copy* readable; a twelve-word headline is not body copy, and capping one at 20ch just
+parks it in the left third with the right two-thirds empty.
+
+**`text-wrap:balance` is also off on those two display lines**, deliberately. Balance evens the
+line lengths, which pulls line one in from the right edge to match line two - the exact opposite
+of filling the measure. It stays on `.hinge blockquote` and `.prose .pull`, which are narrow by
+design. The headline now measures 1116px inside an 1180px container; if it ever measures much
+less than that again, something re-capped it.
 
 **The home hero keeps 104px on purpose.** It is the one place a big statement earns its size,
 and it was never the thing that read as work. Do not "make it consistent" by shrinking it, and
