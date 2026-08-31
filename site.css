@@ -481,3 +481,37 @@ footer .links a{white-space:nowrap}
   display:flex; flex-wrap:wrap; gap:16px 28px; align-items:center; justify-content:space-between;
 }
 .tail p{margin:0; color:var(--paper-dim); font-size:15.5px; max-width:44ch}
+
+/* ---------- founder portraits (added 2026-08-31) ----------
+   A real face is the one visual this site is allowed to have. Kelsey's whole
+   note was "make it personal", and two origin stories with no faces attached
+   read as claims rather than people. No stock, no generated art, no
+   illustration: those are the exact tells that put us in the scam-site genre
+   in the first place. If there is no real photo, use the mark tile below. */
+.portrait{
+  width:var(--pw,104px); height:var(--pw,104px); flex:none; border-radius:3px;
+  overflow:hidden; position:relative; background:#211F1D;
+  box-shadow:0 0 0 1px rgba(244,241,234,.13), inset 0 .5px rgba(255,255,255,.2);
+  margin-bottom:20px;
+}
+.portrait img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  /* the source frame is lit cold and the palette is warm. Mute and warm it
+     just enough to sit in the page. Do not push this further; a heavily
+     graded portrait reads as a stock photo, which is the thing to avoid. */
+  filter:saturate(.62) contrast(1.06) sepia(.16) brightness(1.1);
+}
+/* stand-in until a real photo exists. The mark, not a silhouette and never a
+   generated face. Delete the element the moment the photo lands. */
+.portrait.mark{display:grid; place-items:center; background:#211F1D}
+.portrait.mark svg{width:46%; height:auto; color:var(--ember); opacity:.42}
+
+.founder .who{margin-bottom:14px}
+.founder .portrait{--pw:96px}
+
+/* on /about/ the portrait sits beside the name */
+.wholine{display:flex; align-items:center; gap:clamp(16px,2.2vw,26px); margin:clamp(44px,5vw,68px) 0 18px}
+.wholine .portrait{--pw:118px; margin-bottom:0}
+.wholine h2{margin:0}
+.prose .wholine + p{margin-top:0}
+@media(max-width:520px){ .wholine{gap:16px} .wholine .portrait{--pw:92px} }
