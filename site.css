@@ -351,7 +351,29 @@ footer a:hover{color:var(--paper)}
 }
 .navlinks a:hover{color:var(--paper); border-bottom-color:var(--ember)}
 .navlinks a[aria-current="page"]{color:var(--paper); border-bottom-color:var(--ember)}
-@media(max-width:900px){ .navlinks{display:none} }
+/* Under 900px the questions drop to a second row inside the sticky bar and
+   scroll horizontally. They do NOT get hidden: they are the single structural
+   thing the 2026-08-31 rebuild was for, and a prospect who Googles you does it
+   on a phone. Keep the row scrollable rather than shrinking the type. */
+@media(max-width:900px){
+  nav .wrap{flex-wrap:wrap; height:auto; padding-top:11px; row-gap:0}
+  .navlinks{
+    order:3; width:100%; margin:0 0 0 0; padding:4px 0 9px;
+    overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    gap:20px;
+  }
+  .navlinks::-webkit-scrollbar{display:none}
+  .navlinks a{padding:7px 0; font-size:13.5px}
+  /* the scroll strip is allowed to reach the screen edges so the last item
+     does not look clipped mid-word; the padding is re-added per item */
+  .navlinks{
+    margin-left:calc(-1 * max(20px, env(safe-area-inset-left)));
+    margin-right:calc(-1 * max(20px, env(safe-area-inset-right)));
+    padding-left:max(20px, env(safe-area-inset-left));
+    padding-right:max(20px, env(safe-area-inset-right));
+  }
+}
+@media(max-width:900px){ #top,#math,#what,#who,#faq,#book{scroll-margin-top:118px} }
 
 /* the same questions, kept reachable on a phone, at the foot of the page */
 footer .links{display:flex; flex-wrap:wrap; gap:4px 20px}

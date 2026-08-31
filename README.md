@@ -117,6 +117,31 @@ contractor thinks it is inflated the page becomes marketing and the room is gone
 Ember is the subsidiary accent. Electric blue is reserved for ecosystem-level branding
 per the Unvent brand guide, so it is deliberately absent.
 
+## Assets added 2026-08-31
+
+- **`favicon.svg` + `apple-touch-icon.png`.** There was no favicon on this site at all until
+  2026-08-31, so a prospect who opened it in a tab got the blank-page glyph. The SVG is the
+  Unvent arrow in ember on the brand ground with a 30/160 corner radius. Regenerate the PNG by
+  screenshotting the SVG headless at 180x180.
+- **Three OG cards**: `og-image.png` (home), `og-about.png`, `og-notes.png`. Notes posts share
+  the notes card. **The old card was wrong and had been wrong since 2026-08-10** - it read
+  *"The call you just missed already called someone else"*, which is the answering-service
+  positioning the copy abandoned in commit `8164b80`. The card people saw when the link got
+  texted contradicted the page it opened. **If a headline changes, regenerate its card in the
+  same commit.**
+
+## The question nav on mobile - do not hide it again
+
+Under 900px the four questions wrap to a second row inside the sticky bar and scroll
+horizontally. **They were briefly `display:none` on mobile and that was a defect**, because the
+question nav is the single structural thing the rebuild exists for and a prospect who Googles
+you is on a phone.
+
+⚠️ **The overflow probe reports one element past the viewport at 500px.** That is the last nav
+question inside the scroll strip, and it is correct: `document.documentElement.scrollWidth`
+still equals `clientWidth`, so the page does not pan. Check `.navlinks.scrollWidth >
+.navlinks.clientWidth` before "fixing" it.
+
 ## Link previews
 
 The page ships `og-image.png` (1200x630, brand card) plus `og:url`, `og:image:width/height`,
