@@ -227,12 +227,19 @@ A 12-word headline at 104px eats a full screen, and a page of full-screen headli
 commitment before a single word is processed. **The word count never changed here. Only the
 perceived one.**
 
-| | Size at 1440 | Where |
+Cut twice on 2026-08-31. The second cut is the one that landed - at 68px the hero band still
+owned a whole screen for one sentence.
+
+| | Size at 1512 | Where |
 |---|---|---|
 | Home hero `h1` | **104px** | front door only, and it stays |
-| `.page-head h1` | 68px | /about/ and /notes/ |
-| `.statement.big-line` | 56px | the hinge |
-| `.band h2` | 44px | section headings on /about/ |
+| `.page-head h1` | **52px** | /about/ and /notes/ |
+| `.statement.big-line` | **42px** | the hinge |
+| `.band h2` | **34px** | section headings on /about/ |
+
+**The bar it now clears:** at a 1512x860 window the /about/ headline *and* the hinge statement
+are both visible without scrolling. Before the cuts, the headline alone filled the viewport.
+Page height went 5,278 to 3,934.
 
 **The home hero keeps 104px on purpose.** It is the one place a big statement earns its size,
 and it was never the thing that read as work. Do not "make it consistent" by shrinking it, and
