@@ -274,11 +274,21 @@ gradient blobs to this site.** Those are the loudest tells of the exact genre Ke
 and adding one puts the page straight back in it. A generated founder photo is worse still: it
 is a fake person on an About page.
 
-**`.portrait.mark` is a stand-in, not a design element to keep.** Andrea has one because his
-photo had not arrived on 2026-08-31. It renders the Unvent arrow instead of a face, which reads
-as deliberate rather than broken. **Replace it with his real photo when it lands** - same crop
-treatment, same 760x760, drop it at `team/andrea.jpg` - and delete the mark element from both
-`index.html` and `about/index.html`. Grep for `portrait mark`.
+**Both founders now have real photos.** Andrea's landed 2026-08-31 and the `.portrait.mark`
+stand-in was deleted from both pages and from the stylesheet. Nothing renders the arrow as an
+avatar any more; if you see that class come back, a photo went missing.
+
+**Crop recipe, so a future portrait matches.** Source photos are phone shots or on-set frames.
+Crop square to head and shoulders with the head occupying roughly 55-60% of the frame height
+and about 120px of headroom above the hair, then resize to 760x760 JPEG:
+
+```
+sips -c <side> <side> --cropOffset <offsetY> <offsetX> src.png --out /tmp/crop.png
+sips -Z 760 -s format jpeg -s formatOptions 82 /tmp/crop.png --out team/<name>.jpg
+```
+
+Do not colour-grade the file. The warming is a CSS filter on `.portrait img` so it stays
+reversible and so every portrait gets the identical treatment.
 
 ## Link previews
 

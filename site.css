@@ -497,10 +497,6 @@ footer .links a{white-space:nowrap}
      graded portrait reads as a stock photo, which is the thing to avoid. */
   filter:saturate(.62) contrast(1.06) sepia(.16) brightness(1.1);
 }
-/* stand-in until a real photo exists. The mark, not a silhouette and never a
-   generated face. Delete the element the moment the photo lands. */
-.portrait.mark{display:grid; place-items:center; background:#211F1D}
-.portrait.mark svg{width:46%; height:auto; color:var(--ember); opacity:.42}
 
 .founder .who{margin-bottom:16px}
 .founder .portrait{--pw:96px}
