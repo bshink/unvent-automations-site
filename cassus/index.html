@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Cassus Media · Operations</title>
+<meta name="description" content="Cassus Media Operations. The repeat work in your business, running on its own.">
+<style>
+:root{
+  color-scheme:light only;
+  --ink:#0C0D0F; --ink-2:#4A5056; --ink-3:#7C848C;
+  --paper:#FFFFFF; --paper-2:#F4F5F6; --paper-3:#EAECEE;
+  --line:#DCDFE3; --line-2:#C6CBD1;
+  --beak:#B50600; --beak-soft:#FBEAE9;
+  --ice:#2B6E8F; --ice-soft:#EAF2F6;
+  --go:#1E7A52;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{background:#FFFFFF}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+a{color:inherit}
+h1,h2,h3{letter-spacing:-.028em;font-weight:650;margin:0}
+
+
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:rgba(12,13,15,.97);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #1E2126}
+nav .wrap{display:flex;align-items:center;height:72px;gap:14px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:650;
+  font-size:16px;letter-spacing:-.02em;white-space:nowrap}
+.brand img{height:30px;width:auto;display:block}
+.bdiv{width:1px;height:26px;background:#343A41}
+.bops{font-family:var(--mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:#98A0A8}
+.nlinks{margin-left:auto;display:flex;gap:22px}
+.nlinks a{font-size:14px;color:#A8B0B8;text-decoration:none;transition:color .15s}
+.nlinks a:hover{color:#fff}
+@media(max-width:760px){.nlinks{display:none}}
+
+/* hero */
+.hero{padding:64px 0 52px;border-bottom:1px solid var(--line)}
+.eye{font-family:var(--mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--beak);margin-bottom:18px}
+h1{font-size:clamp(31px,4.6vw,52px);line-height:1.06;max-width:17ch;margin-bottom:20px}
+.lede{color:var(--ink-2);font-size:17.5px;max-width:56ch;margin:0 0 30px}
+.hgrid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:48px;align-items:center}
+@media(max-width:880px){.hgrid{grid-template-columns:1fr;gap:36px}}
+
+/* flow card */
+.flow{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:22px}
+.flow h3{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  font-family:var(--mono);font-weight:500;margin-bottom:16px}
+.step{display:flex;gap:13px;align-items:flex-start;padding:12px 0}
+.step+.step{border-top:1px dashed var(--line)}
+.num{flex:none;width:23px;height:23px;border-radius:50%;background:var(--ink);color:var(--paper);
+  font-size:11.5px;font-weight:700;display:grid;place-items:center;margin-top:2px}
+.step b{display:block;font-size:14.5px;font-weight:620}
+.step span{font-size:13.5px;color:var(--ink-2)}
+.you{background:var(--beak-soft);border-color:var(--beak)}
+.you .num{background:var(--beak)}
+
+/* sections */
+section{padding:60px 0;border-bottom:1px solid var(--line)}
+.shead{max-width:60ch;margin-bottom:34px}
+.shead .k{font-family:var(--mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:11px}
+.shead h2{font-size:clamp(23px,3vw,33px);line-height:1.15;margin-bottom:12px}
+.shead p{color:var(--ink-2);margin:0;font-size:16.5px}
+
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:16px}
+.card{background:var(--paper-2);border:1px solid var(--line);border-radius:13px;padding:20px}
+.card h3{font-size:16.5px;margin-bottom:7px}
+.card p{color:var(--ink-2);font-size:14.5px;margin:0 0 14px}
+.price{font-family:var(--mono);font-size:13px;color:var(--ink);padding-top:12px;
+  border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.price i{font-style:normal;color:var(--ink-3)}
+
+
+/* table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:13px}
+table{border-collapse:collapse;width:100%;min-width:660px;font-size:14.5px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;background:var(--paper-2)}
+tr:last-child td{border-bottom:none}
+td.n{font-family:var(--mono);white-space:nowrap}
+caption{caption-side:bottom;padding:13px 16px;font-size:13px;color:var(--ink-3);text-align:left}
+
+/* notes */
+.note{background:var(--paper-2);border-left:3px solid var(--beak);border-radius:0 10px 10px 0;
+  padding:17px 20px;margin-top:26px}
+.note b{display:block;margin-bottom:5px;font-size:14.5px}
+.note p{margin:0;color:var(--ink-2);font-size:14.5px}
+.stop{border-left-color:var(--ink)}
+
+ul.plain{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+ul.plain li{padding-left:26px;position:relative;color:var(--ink-2);font-size:15.5px}
+ul.plain li::before{content:"";position:absolute;left:4px;top:.62em;width:7px;height:7px;
+  border-radius:50%;background:var(--beak)}
+ul.plain li b{color:var(--ink);font-weight:620}
+
+footer{padding:46px 0 60px;color:var(--ink-3);font-size:13.5px}
+footer b{color:var(--ink-2);font-weight:500}
+</style>
+</head>
+<body>
+
+
+
+<nav><div class="wrap">
+  <a class="brand" href="#top">
+    <img src="assets/cassus-logo.png" alt="Cassus Media">
+    <span class="bdiv"></span>
+    <span class="bops">Operations</span>
+  </a>
+  <div class="nlinks">
+    <a href="#how">How it works</a>
+    <a href="#build">What we build</a>
+    <a href="#limits">Where we stop</a>
+    <a href="demo/" style="color:var(--beak);font-weight:600">See it running</a>
+  </div>
+</div></nav>
+
+<div id="top" class="hero"><div class="wrap hgrid">
+  <div>
+    <div class="eye">Cassus Media · Operations</div>
+    <h1>The work you keep in your head, running on its own.</h1>
+    <p class="lede">A quote nobody chased because Thursday happened. An invoice that sat in drafts for
+    nine days. The same customer detail typed into three different places. None of it has a line item,
+    so nobody fixes it, and it happens again next week.</p>
+    <ul class="plain">
+      <li><b>Built for your business.</b> No two have looked the same.</li>
+      <li><b>First systems live in about a week.</b> Starting with whatever is costing you most.</li>
+      <li><b>Month to month.</b> Thirty days notice, and you keep what we built.</li>
+    </ul>
+  </div>
+  <div class="flow">
+    <h3>A normal week, before and after</h3>
+    <div class="step"><div class="num">1</div><div>
+      <b>Six quotes went out. Two got chased.</b>
+      <span>The other four are not lost. Nobody has had a spare hour since Tuesday.</span></div></div>
+    <div class="step"><div class="num">2</div><div>
+      <b>Three invoices are past sixty days.</b>
+      <span>Calling about money is the job nobody volunteers for, so it waits another week.</span></div></div>
+    <div class="step you"><div class="num">3</div><div>
+      <b>Now: all six chased, all three asked.</b>
+      <span>On a schedule, in your name, whether or not anyone remembered. You approve, it runs.</span></div></div>
+  </div>
+</div></div>
+
+<section id="how"><div class="wrap">
+  <div class="shead">
+    <div class="k">01 · How it works</div>
+    <h2>We look first. Then we build.</h2>
+    <p>You have run this for years. We have been looking at it since Tuesday. Only one of us should be
+    doing most of the talking on the first call.</p>
+  </div>
+  <div class="cards">
+    <div class="card"><h3>We walk the whole operation</h3>
+      <p>What goes wrong most often. What happens between a customer getting in touch and somebody
+      actually doing the work. Where the same information gets typed twice. Who is the one person who
+      knows how a thing works, and what happens the week they are away.</p></div>
+    <div class="card"><h3>We put a number on every gap</h3>
+      <p>Each one costed in dollars from your own figures, with the arithmetic shown. Some of it will
+      be smaller than you feared. Some of it will be worse. You get the number on the first call,
+      before you have paid anything.</p></div>
+    <div class="card"><h3>We build what pays first</h3>
+      <p>Usually the expensive problem is not the one you called about. Sometimes you tell us we are
+      wrong, and that is a good call rather than a failed one. First systems are live in about a week,
+      starting with whatever we can prove is costing the most.</p></div>
+  </div>
+  <div class="note"><b>You keep the controls.</b>
+    <p>Every conversation about handing work to a machine reaches the same moment, where you lean back
+    and think: so I lose control of my own business. Reasonable worry, wrong one. The machine does the
+    repetition. You keep the authority, and you can stop any part of it at any time. Nothing goes live
+    until you have seen it and said yes.</p></div>
+</div></section>
+
+<section id="build"><div class="wrap">
+  <div class="shead">
+    <div class="k">02 · What we build</div>
+    <h2>If it repeats, it can run itself.</h2>
+    <p>Anything that happens on a schedule, or only ever breaks because somebody was busy, tired, or
+    never told. Grouped below by the problem you would actually describe out loud.</p>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <h3>Money in</h3>
+      <p>Invoices drafted the day the work is done. Payment reminders that keep going past the point
+      your accounting software gives up, that read the reply, and that escalate to you when the answer
+      actually needs a person. Deposits, payment plans, failed cards.</p>
+    </div>
+    <div class="card">
+      <h3>Quotes and follow-up</h3>
+      <p>The estimate that dies because chasing it is nobody's job, followed up by text and email
+      until they answer either way. Plus a second pass months later on the ones that went quiet.</p>
+    </div>
+    <div class="card">
+      <h3>Systems that talk</h3>
+      <p>Your CRM, calendar, quoting tool and scheduler sharing records instead of everything being
+      typed three times. If what you have genuinely cannot connect, we build you one that fits how you
+      actually work rather than moving you onto something worse.</p>
+    </div>
+    <div class="card">
+      <h3>The 9pm admin</h3>
+      <p>Scheduling, reminders, intake, job routing, timesheets, purchase orders, stock alerts,
+      warranty registrations, permit tracking. The parts of the day that are identical every time.</p>
+    </div>
+    <div class="card">
+      <h3>Waking up old customers</h3>
+      <p>Hundreds of past customers who would hire you again and have not heard from you in two years.
+      Worked against a list you already own, which makes it the cheapest revenue in your business.</p>
+    </div>
+    <div class="card">
+      <h3>One place to see it all</h3>
+      <p>Three numbers on your phone: what got handled, what is sitting waiting on a person, and what
+      fell through. Plus whatever weekly report you currently rebuild in a spreadsheet.</p>
+    </div>
+    <div class="card">
+      <h3>Your people and your paperwork</h3>
+      <p>Onboarding and offboarding, certifications and licences that expire, insurance certificates,
+      contract renewals, documents out for signature. The things that are fine until the one time they
+      are not.</p>
+    </div>
+    <div class="card">
+      <h3>Anything that repeats</h3>
+      <p>Every business has two or three jobs nobody would miss, done by hand, every week, because
+      that is how it has always been done. The list above is what comes up most, not a menu we are
+      limited to. If it repeats and it costs you money or hours, bring it to the call.</p>
+    </div>
+  </div>
+</div></section>
+
+
+
+<section id="limits"><div class="wrap">
+  <div class="shead">
+    <div class="k">04 · Where we stop</div>
+    <h2>Five things we will not do.</h2>
+    <p>Said now, rather than after you have paid for something.</p>
+  </div>
+  <ul class="plain">
+    <li><b>Guess at a price before we have looked at your operation.</b> A number we made up is worse
+      than no number at all.</li>
+    <li><b>Tell you how to run your business.</b> You know it better than we will. We build what you
+      approve and nothing else.</li>
+    <li><b>Pretend a machine is a person to your customers.</b> Most of what we build your customers
+      never see. Where something does reach them, it will not pretend to be something it is not.</li>
+    <li><b>Lock you in.</b> Month to month, thirty days notice, and what we built stays yours.</li>
+    <li><b>Take your money if we cannot help you.</b> We say so on the first call, before you have
+      paid anything.</li>
+  </ul>
+  <div class="note" style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">
+    <img src="assets/paul.png" alt="Paul the Penguin" style="width:96px;height:auto;flex:none">
+    <div style="flex:1;min-width:240px"><b>What actually happens on the first call.</b>
+    <p>Thirty minutes, nothing to sign. We ask what goes wrong most often and you tell us. You leave
+    with a number on what it is costing you, whether or not you ever hire us. If we do not think we
+    can help, that is what we will say.</p></div></div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><b>Cassus Media</b> · Operations<br>3900 Industrial Park Dr, Altoona, PA 16602</p>
+  <p style="margin-top:14px">Every build is scoped and priced from a walkthrough of your operation.
+  The first call is thirty minutes and costs nothing.</p>
+  <p style="margin-top:18px">© 2026 Cassus Media</p>
+</div></footer>
+
+</body>
+</html>
