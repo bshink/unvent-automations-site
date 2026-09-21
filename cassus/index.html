@@ -31,9 +31,10 @@ h1,h2,h3{letter-spacing:-.028em;font-weight:650;margin:0}
 nav{position:sticky;top:0;z-index:50;background:rgba(12,13,15,.97);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid #1E2126}
 nav .wrap{display:flex;align-items:center;height:72px;gap:14px}
-.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:650;
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:650;
   font-size:16px;letter-spacing:-.02em;white-space:nowrap}
-.brand img{height:30px;width:auto;display:block}
+.brand .paul{height:46px;width:auto;display:block;margin:-6px 2px -6px 0}
+.brand .wordmark{height:28px;width:auto;display:block}
 .bdiv{width:1px;height:26px;background:#343A41}
 .bops{font-family:var(--mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:#98A0A8}
 .nlinks{margin-left:auto;display:flex;gap:22px}
@@ -114,7 +115,8 @@ footer b{color:var(--ink-2);font-weight:500}
 
 <nav><div class="wrap">
   <a class="brand" href="#top">
-    <img src="assets/cassus-logo.png" alt="Cassus Media">
+    <img class="paul" src="assets/paul.png" alt="">
+    <img class="wordmark" src="assets/cassus-logo.png" alt="Cassus Media">
     <span class="bdiv"></span>
     <span class="bops">Operations</span>
   </a>
@@ -174,11 +176,13 @@ footer b{color:var(--ink-2);font-weight:500}
       wrong, and that is a good call rather than a failed one. First systems are live in about a week,
       starting with whatever we can prove is costing the most.</p></div>
   </div>
-  <div class="note"><b>You keep the controls.</b>
+  <div class="note" style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+    <img src="assets/unvent-mark.svg" alt="" style="width:38px;height:38px;border-radius:9px;flex:none">
+    <div style="flex:1;min-width:260px"><b>You keep the controls.</b>
     <p>Every conversation about handing work to a machine reaches the same moment, where you lean back
     and think: so I lose control of my own business. Reasonable worry, wrong one. The machine does the
     repetition. You keep the authority, and you can stop any part of it at any time. Nothing goes live
-    until you have seen it and said yes.</p></div>
+    until you have seen it and said yes.</p></div></div>
 </div></section>
 
 <section id="build"><div class="wrap">
@@ -240,7 +244,7 @@ footer b{color:var(--ink-2);font-weight:500}
 
 <section id="limits"><div class="wrap">
   <div class="shead">
-    <div class="k">04 · Where we stop</div>
+    <div class="k">03 · Where we stop</div>
     <h2>Five things we will not do.</h2>
     <p>Said now, rather than after you have paid for something.</p>
   </div>
@@ -267,7 +271,15 @@ footer b{color:var(--ink-2);font-weight:500}
   <p><b>Cassus Media</b> · Operations<br>3900 Industrial Park Dr, Altoona, PA 16602</p>
   <p style="margin-top:14px">Every build is scoped and priced from a walkthrough of your operation.
   The first call is thirty minutes and costs nothing.</p>
-  <p style="margin-top:18px">© 2026 Cassus Media</p>
+  <div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line);
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <img src="assets/unvent-mark.svg" alt="" style="width:30px;height:30px;border-radius:7px;flex:none">
+    <div style="font-size:13px;line-height:1.5">
+      <b style="color:var(--ink-2);font-weight:600">Built and run by Unvent Automations</b><br>
+      <span>Operations engineering for Cassus Media clients</span>
+    </div>
+    <span style="margin-left:auto;font-size:13px">© 2026 Cassus Media</span>
+  </div>
 </div></footer>
 
 </body>

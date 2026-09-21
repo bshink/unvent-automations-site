@@ -32,7 +32,8 @@ nav .wrap{display:flex;align-items:center;height:72px;gap:14px}
   text-transform:uppercase;color:var(--ink-3);line-height:1.2}
 nav .back{margin-left:auto;font-size:14px;color:#A8B0B8;text-decoration:none}
 nav .back:hover{color:#fff}
-.brand img{height:30px;width:auto;display:block}
+.brand .paul{height:46px;width:auto;display:block;margin:-6px 2px -6px 0}
+.brand .wordmark{height:28px;width:auto;display:block}
 .bdiv{width:1px;height:26px;background:#343A41}
 .bops{font-family:var(--mono);font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:#98A0A8}
 
@@ -119,7 +120,8 @@ footer{border-top:1px solid var(--line);padding:34px 0 56px;color:var(--ink-3);f
 
 <nav><div class="wrap">
   <a class="brand" href="../">
-    <img src="../assets/cassus-logo.png" alt="Cassus Media">
+    <img class="paul" src="../assets/paul.png" alt="">
+    <img class="wordmark" src="../assets/cassus-logo.png" alt="Cassus Media">
     <span class="bdiv"></span>
     <span class="bops">Operations</span>
   </a>
@@ -258,7 +260,15 @@ footer{border-top:1px solid var(--line);padding:34px 0 56px;color:var(--ink-3);f
   <p>Everything on this page runs in your browser. Nothing is sent, stored, or connected to a live
   system, and the figures shown are examples rather than anyone's real numbers.</p>
   <p style="margin-top:14px"><a href="../">Back to the overview</a></p>
-  <p style="margin-top:18px">© 2026 Cassus Media</p>
+  <div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line);
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <img src="../assets/unvent-mark.svg" alt="" style="width:30px;height:30px;border-radius:7px;flex:none">
+    <div style="font-size:13px;line-height:1.5">
+      <b style="color:var(--ink-2);font-weight:600">Built and run by Unvent Automations</b><br>
+      <span>Every system on this page is one they build and maintain</span>
+    </div>
+    <span style="margin-left:auto;font-size:13px">© 2026 Cassus Media</span>
+  </div>
 </div></footer>
 
 <script>
