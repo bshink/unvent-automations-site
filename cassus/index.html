@@ -73,6 +73,7 @@ section{padding:60px 0;border-bottom:1px solid var(--line)}
 .shead p{color:var(--ink-2);margin:0;font-size:16.5px}
 
 /* cards */
+.cards>*{min-width:0}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:16px}
 .card{background:var(--paper-2);border:1px solid var(--line);border-radius:13px;padding:20px}
 .card h3{font-size:16.5px;margin-bottom:7px}
@@ -107,6 +108,35 @@ ul.plain li b{color:var(--ink);font-weight:620}
 
 footer{padding:46px 0 60px;color:var(--ink-3);font-size:13.5px}
 footer b{color:var(--ink-2);font-weight:500}
+
+/* ---- phones ---- */
+@media(max-width:760px){
+  nav .wrap{height:auto;padding-top:11px;padding-bottom:11px;flex-wrap:wrap;row-gap:9px}
+  .nlinks{display:flex;margin-left:0;width:100%;gap:16px;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  .nlinks::-webkit-scrollbar{display:none}
+  .nlinks a{white-space:nowrap;font-size:13.5px}
+  .brand .paul{height:38px}
+  .brand .wordmark{height:22px}
+  .bops{font-size:10px}
+  #how,#build,#limits{scroll-margin-top:12px}
+  .hero{padding:40px 0 34px}
+  section{padding:44px 0}
+  h1{font-size:30px;line-height:1.1}
+  .lede{font-size:16.5px}
+  .shead h2{font-size:24px}
+  .shead{margin-bottom:26px}
+  .wrap{padding:0 18px}
+  .cards{grid-template-columns:1fr}
+  ul.plain li{font-size:15px}
+  .note{padding:15px 16px}
+  .flow{padding:18px}
+}
+@media(max-width:400px){
+  h1{font-size:27px}
+  .brand .wordmark{height:19px}
+  .brand .bdiv,.bops{display:none}
+}
 </style>
 </head>
 <body>
@@ -131,14 +161,15 @@ footer b{color:var(--ink-2);font-weight:500}
 <div id="top" class="hero"><div class="wrap hgrid">
   <div>
     <div class="eye">Cassus Media · Operations</div>
-    <h1>The work you keep in your head, running on its own.</h1>
-    <p class="lede">A quote nobody chased because Thursday happened. An invoice that sat in drafts for
-    nine days. The same customer detail typed into three different places. None of it has a line item,
-    so nobody fixes it, and it happens again next week.</p>
+    <h1>You should not have to be the one who remembers.</h1>
+    <p class="lede">Every business has a handful of jobs that only get done when somebody thinks of them.
+    A quote nobody chased because Thursday happened. An invoice sitting in drafts for nine days. The
+    same customer detail typed into three different places. None of it shows up as a cost, so nobody
+    ever fixes it, and it all happens again next week.</p>
     <ul class="plain">
-      <li><b>Built for your business.</b> No two have looked the same.</li>
-      <li><b>First systems live in about a week.</b> Starting with whatever is costing you most.</li>
-      <li><b>Month to month.</b> Thirty days notice, and you keep what we built.</li>
+      <li><b>Built around how you already work.</b> We have never built the same thing twice.</li>
+      <li><b>Running in about a week.</b> We start with whatever is costing you the most.</li>
+      <li><b>Month to month.</b> Thirty days notice, and what we built stays yours.</li>
     </ul>
   </div>
   <div class="flow">
@@ -158,7 +189,7 @@ footer b{color:var(--ink-2);font-weight:500}
 <section id="how"><div class="wrap">
   <div class="shead">
     <div class="k">01 · How it works</div>
-    <h2>We look first. Then we build.</h2>
+    <h2>We look before we build anything.</h2>
     <p>You have run this for years. We have been looking at it since Tuesday. Only one of us should be
     doing most of the talking on the first call.</p>
   </div>
@@ -188,7 +219,7 @@ footer b{color:var(--ink-2);font-weight:500}
 <section id="build"><div class="wrap">
   <div class="shead">
     <div class="k">02 · What we build</div>
-    <h2>If it repeats, it can run itself.</h2>
+    <h2>If you do it every week, it can run itself.</h2>
     <p>Anything that happens on a schedule, or only ever breaks because somebody was busy, tired, or
     never told. Grouped below by the problem you would actually describe out loud.</p>
   </div>
