@@ -82,6 +82,7 @@ h1{font-size:clamp(28px,4vw,44px);line-height:1.08;max-width:19ch;margin-bottom:
   font-size:11px;font-weight:700;color:#fff;margin-top:2px}
 .t-in{background:var(--ice)}.t-out{background:var(--go)}.t-warn{background:var(--beak)}.t-bad{background:var(--stop)}
 .ev b{display:block;font-size:14.5px}
+.ev span b{display:inline;font-size:inherit}
 .ev span{font-size:13.5px;color:var(--ink-2)}
 .ev em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--ink-3);display:block;margin-top:2px}
 .empty{color:var(--ink-3);font-size:14.5px;text-align:center;padding:74px 20px}
@@ -112,6 +113,46 @@ h1{font-size:clamp(28px,4vw,44px);line-height:1.08;max-width:19ch;margin-bottom:
 .met.good b{color:var(--go)}.met.warn b{color:var(--beak)}.met.bad b{color:var(--stop)}
 
 footer{border-top:1px solid var(--line);padding:34px 0 56px;color:var(--ink-3);font-size:13.5px}
+
+/* ---- interactive demo ---- */
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.stat{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:10px 15px;min-width:118px}
+.stat b{display:block;font-family:var(--mono);font-size:21px;line-height:1.2}
+.stat span{font-size:10.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.08em}
+.stat.g b{color:var(--go)} .stat.w b{color:var(--beak)} .stat.r b{color:var(--stop)}
+
+.board{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.col{background:var(--paper-2);border:1px solid var(--line);border-radius:11px;padding:10px;min-height:250px;transition:.14s}
+.col.over{background:var(--beak-soft);border-color:var(--beak)}
+.col h4{margin:0 0 9px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:500;display:flex;justify-content:space-between}
+.jc{background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 11px;margin-bottom:8px;
+  cursor:grab;font-size:13.5px;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:.12s}
+.jc:hover{border-color:var(--ink-3);transform:translateY(-1px)}
+.jc:active{cursor:grabbing}
+.jc.drag{opacity:.4}
+.jc.sel{border-color:var(--beak);box-shadow:0 0 0 2px var(--beak-soft)}
+.jc b{display:block;font-weight:620;margin-bottom:2px}
+.jc span{color:var(--ink-2);font-size:12.5px}
+.jc em{font-style:normal;display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:4px}
+.hintbar{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+.hintbar b{color:var(--ink-2)}
+
+.rules{background:var(--paper-2);border:1px solid var(--line);border-radius:11px;padding:16px;margin-bottom:16px}
+.rules h4{margin:0 0 12px;font-size:13.5px}
+.rrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13.5px;margin-bottom:9px;color:var(--ink-2)}
+.rrow:last-child{margin-bottom:0}
+input[type=number],select,input[type=text]{font-family:var(--mono);font-size:13px;padding:5px 8px;
+  border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);width:62px}
+select{width:auto;font-family:var(--sans)} input[type=text]{width:170px;font-family:var(--sans)}
+input:focus,select:focus{outline:2px solid var(--beak);outline-offset:1px}
+
+.form{display:grid;gap:11px;background:var(--paper-2);border:1px solid var(--line);border-radius:11px;padding:16px}
+.form label{font-size:12.5px;color:var(--ink-2);display:block;margin-bottom:4px;font-weight:600}
+.form input[type=text],.form select{width:100%}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:560px){.f2{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -125,132 +166,95 @@ footer{border-top:1px solid var(--line);padding:34px 0 56px;color:var(--ink-3);f
     <span class="bdiv"></span>
     <span class="bops">Operations</span>
   </a>
-  <a class="back" href="../">← Back to the overview</a>
+  <a class="back" href="../">&#8592; Back to the overview</a>
 </div></nav>
 
 <div class="head"><div class="wrap">
   <div class="eye">Live demo</div>
-  <h1>Press the buttons. Watch what you stop having to do.</h1>
-  <p class="lede">Four of these systems, running right here in your browser. Nothing asks for an
-  account, nothing is sent, and no data leaves this page. The numbers below are made up. A real build
-  runs on your actual work.</p>
+  <h1>Not a video. Actually move things around.</h1>
+  <p class="lede">This is a small working version of three systems we build. Drag jobs between stages,
+  change the follow-up rules and watch them run, add an enquiry and see where it lands. It all runs in
+  your browser, nothing is sent anywhere, and the three tabs are connected to each other.</p>
 </div></div>
 
 <div class="wrap">
+  <div class="bar" id="stats"></div>
+
   <div class="tabs" role="tablist">
-    <button class="tab" role="tab" aria-selected="true" data-p="p2">Invoice follow-up</button>
-    <button class="tab" role="tab" aria-selected="false" data-p="p3">Intake capture</button>
-    <button class="tab" role="tab" aria-selected="false" data-p="p4">The operations board</button>
-    <button class="tab" role="tab" aria-selected="false" data-p="p5">A CRM built for you</button>
+    <button class="tab" role="tab" aria-selected="true" data-p="pA">Your job board</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="pB">Invoice follow-up</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="pC">New enquiry</button>
   </div>
 
-  <!-- 2 -->
-  <div class="panel" id="p2" role="tabpanel">
+  <!-- A -->
+  <div class="panel" id="pA" role="tabpanel" style="grid-template-columns:1fr">
+    <div>
+      <div class="hintbar"><b>Drag a job into another column.</b> On a phone, tap a job then tap the
+      column you want it in. Each move fires the thing that stage is supposed to do, and it shows up
+      in the activity list underneath.</div>
+      <div class="board" id="board"></div>
+      <div class="act" style="border:1px solid var(--line);border-radius:11px;margin-top:12px">
+        <button class="btn" id="addJob">Add a job</button>
+        <button class="btn ghost" id="resetAll">Reset everything</button>
+        <span class="hint">Drop a job in <b>Invoiced</b> and it appears on the follow-up tab.</span>
+      </div>
+      <h3 style="font-size:14px;margin:26px 0 10px">What happened</h3>
+      <div id="log" style="background:var(--paper-2);border:1px solid var(--line);border-radius:11px;
+        padding:6px 16px;max-height:250px;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- B -->
+  <div class="panel" id="pB" role="tabpanel" hidden style="grid-template-columns:1fr">
+    <div>
+      <div class="hintbar"><b>These are your rules, so change them.</b> Then run the weeks and watch
+      your own rules play out against the invoices.</div>
+      <div class="rules">
+        <h4>Follow-up rules</h4>
+        <div class="rrow">First reminder at <input type="number" id="r1" value="7" min="1" max="120"> days overdue,
+          by <select id="c1"><option>email</option><option>text</option><option>email and text</option></select></div>
+        <div class="rrow">Then every <input type="number" id="r2" value="7" min="1" max="60"> days after that</div>
+        <div class="rrow">Escalate to a person at <input type="number" id="r3" value="45" min="1" max="200"> days overdue</div>
+        <div class="rrow">Stop chasing after <input type="number" id="r4" value="180" min="10" max="999"> days</div>
+      </div>
+      <div id="ar"></div>
+      <div class="act" style="border:1px solid var(--line);border-radius:11px;margin-top:12px">
+        <button class="btn" id="week">Run one week</button>
+        <button class="btn ghost" id="addInv">Add an invoice</button>
+        <span class="hint" id="wk">Week 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="panel" id="pC" role="tabpanel" hidden>
     <div class="explain">
-      <h2>The money you already earned.</h2>
-      <p>Your accounting software sends a couple of reminder emails and then gives up, right around the
-      point an invoice actually needs work. After that, chasing it is somebody's unpleasant afternoon,
-      so it does not happen.</p>
-      <p>This keeps going, reads the reply, and brings you in when the answer actually needs a person.
-      It does not get embarrassed about asking.</p>
-      <div class="what"><b>What you end up with</b>
-        Money you already earned, collected weeks earlier, without anyone having to make the
-        uncomfortable phone call.</div>
+      <h2>Type it once. Nobody retypes it.</h2>
+      <p>This is the form a customer fills in, or the shape of what gets captured when one calls. Fill
+      it in and submit it.</p>
+      <p>Watch what happens: it gets sorted by urgency, routed to whoever should own it, and it turns
+      into a real job on the board on the first tab. Nobody copies it anywhere.</p>
+      <div class="what"><b>Try this</b>
+        Put something urgent in, submit, then go back to the job board and look at the first column.</div>
     </div>
     <div class="stage">
-      <div class="sbar"><div class="dots"><i></i><i></i><i></i></div><span>accounts receivable</span></div>
+      <div class="sbar"><div class="dots"><i></i><i></i><i></i></div><span>enquiry form</span></div>
       <div class="screen">
-        <div class="mets">
-          <div class="met bad"><b id="m-out">$18,400</b><span>Outstanding</span></div>
-          <div class="met warn"><b id="m-90">3</b><span>Past 90 days</span></div>
-          <div class="met good"><b id="m-in">$0</b><span>Recovered</span></div>
+        <div class="form">
+          <div><label for="nName">Customer name</label><input type="text" id="nName" placeholder="Dana Whitfield"></div>
+          <div class="f2">
+            <div><label for="nJob">What do they need</label><input type="text" id="nJob" placeholder="No hot water"></div>
+            <div><label for="nUrg">How soon</label><select id="nUrg">
+              <option>Same day</option><option>This week</option><option>No rush</option></select></div>
+          </div>
+          <div class="f2">
+            <div><label for="nVal">Rough value</label><input type="text" id="nVal" placeholder="1800"></div>
+            <div><label for="nSrc">Where from</label><select id="nSrc">
+              <option>Website form</option><option>Phone call</option><option>Referral</option><option>Social</option></select></div>
+          </div>
+          <button class="btn" id="submitJob" style="margin-top:4px">Submit the enquiry</button>
         </div>
-        <div id="s2"></div>
-      </div>
-      <div class="act">
-        <button class="btn" id="b2">Run one week</button>
-        <button class="btn ghost" id="r2">Reset</button>
-        <span class="hint" id="h2">Week 0</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3 -->
-  <div class="panel" id="p3" role="tabpanel" hidden>
-    <div class="explain">
-      <h2>Typed once, by nobody.</h2>
-      <p>Somebody writes it on a pad. Later it gets typed into the scheduler. Later again the address
-      gets corrected because it was written down wrong. Three touches, two of them pure loss.</p>
-      <p>Here the enquiry produces the record itself. Name, service, address, urgency, source. Structured,
-      in one place, the moment it comes in.</p>
-      <div class="what"><b>What you end up with</b>
-        A job record that never got retyped, never lost a detail, and is already in the same shape as
-        every other job you have.</div>
-    </div>
-    <div class="stage">
-      <div class="sbar"><div class="dots"><i></i><i></i><i></i></div><span>intake · live</span></div>
-      <div class="screen" id="s3"><div class="empty">Press <b>Take a call</b> to watch a record build.</div></div>
-      <div class="act">
-        <button class="btn" id="b3">Take a call</button>
-        <button class="btn ghost" id="r3">Reset</button>
-        <span class="hint" id="h3">Jobs captured: 0</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 4 -->
-  <div class="panel" id="p4" role="tabpanel" hidden>
-    <div class="explain">
-      <h2>Three numbers, not thirty.</h2>
-      <p>Most dashboards answer questions nobody asked. This one answers the only three you actually have
-      on a Friday: what got handled, what is sitting waiting on a person, and what fell through.</p>
-      <p>This is your operation, not your marketing. Campaign reporting comes to you separately and this
-      does not try to duplicate it.</p>
-      <div class="what"><b>What you end up with</b>
-        A week where the thing you forgot was not expensive, because it did not depend on you
-        remembering it.</div>
-    </div>
-    <div class="stage">
-      <div class="sbar"><div class="dots"><i></i><i></i><i></i></div><span>operations · this week</span></div>
-      <div class="screen">
-        <div class="mets">
-          <div class="met good"><b id="d-h">0</b><span>Handled</span></div>
-          <div class="met warn"><b id="d-w">0</b><span>Waiting on a person</span></div>
-          <div class="met bad"><b id="d-d">0</b><span>Dropped</span></div>
-        </div>
-        <div id="s4"><div class="empty">Press <b>Run the week</b>.</div></div>
-      </div>
-      <div class="act">
-        <button class="btn" id="b4">Run the week</button>
-        <button class="btn ghost" id="r4">Reset</button>
-        <span class="hint">Illustrative. A real build runs their work.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5 -->
-  <div class="panel" id="p5" role="tabpanel" hidden>
-    <div class="explain">
-      <h2>Not a CRM. Your CRM.</h2>
-      <p>Every off-the-shelf CRM asks you to describe your business in somebody else's words. Stages
-      that do not match how your work moves, required fields nobody fills, and four things you
-      actually need living in a spreadsheet next to it.</p>
-      <p>This one is built around the process you already have. Your stages, your language, your fields.
-      And because we built it, the automations sit inside it instead of bolted on alongside.</p>
-      <div class="what"><b>What you end up with</b>
-        One place that matches how you already think, that your people will actually use, and that
-        does not charge you per seat to add the apprentice.</div>
-    </div>
-    <div class="stage">
-      <div class="sbar"><div class="dots"><i></i><i></i><i></i></div><span>ridgeline heating · pipeline</span></div>
-      <div class="screen">
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:15px" id="crm-stages"></div>
-        <div id="s5"></div>
-      </div>
-      <div class="act">
-        <button class="btn" id="b5">Advance the job</button>
-        <button class="btn ghost" id="r5">Reset</button>
-        <span class="hint" id="h5">Stage 1 of 6</span>
+        <div id="nOut" style="margin-top:16px"></div>
       </div>
     </div>
   </div>
@@ -258,7 +262,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 56px;color:var(--ink-3);f
 
 <footer><div class="wrap">
   <p>Everything on this page runs in your browser. Nothing is sent, stored, or connected to a live
-  system, and the figures shown are examples rather than anyone's real numbers.</p>
+  system, and the figures are examples rather than anyone's real numbers.</p>
   <p style="margin-top:14px"><a href="../">Back to the overview</a></p>
   <div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line);
     display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -267,186 +271,243 @@ footer{border-top:1px solid var(--line);padding:34px 0 56px;color:var(--ink-3);f
       <b style="color:var(--ink-2);font-weight:600">Built and run by Unvent Automations</b><br>
       <span>Every system on this page is one they build and maintain</span>
     </div>
-    <span style="margin-left:auto;font-size:13px">© 2026 Cassus Media</span>
+    <span style="margin-left:auto;font-size:13px">&#169; 2026 Cassus Media</span>
   </div>
 </div></footer>
 
 <script>
 (function(){
-  "use strict";
-  var $=function(id){return document.getElementById(id)};
-  var el=function(h){var d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild};
+"use strict";
+var $=function(i){return document.getElementById(i)};
+var el=function(h){var d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild};
+var esc=function(t){var d=document.createElement('div');d.textContent=t==null?'':t;return d.innerHTML};
+var money=function(n){return '$'+Number(n||0).toLocaleString()};
 
-  // tabs
-  var tabs=[].slice.call(document.querySelectorAll('.tab'));
-  tabs.forEach(function(t){
-    t.addEventListener('click',function(){
-      tabs.forEach(function(x){
-        x.setAttribute('aria-selected', x===t?'true':'false');
-        $(x.dataset.p).hidden = x!==t;
-      });
-    });
+var STAGES=['Enquiry','Quoted','Scheduled','Done','Invoiced'];
+// what each stage is supposed to set off, in the owner's words
+var FIRE={
+  Enquiry:'Acknowledged in under a minute and logged. Nobody typed it.',
+  Quoted:'Quote sent, and follow-up scheduled so it does not die unchased.',
+  Scheduled:'Customer confirmed and reminded. That is one less no-show.',
+  Done:'Photos filed against the job and a review asked for.',
+  Invoiced:'Invoice raised the same day. Now on the follow-up tab.'
+};
+
+var SEED=[
+  {id:1,name:'Whitfield',job:'No hot water',stage:'Enquiry',val:1800,urg:'Same day',src:'Phone call'},
+  {id:2,name:'Alvarado Builders',job:'Panel upgrade',stage:'Quoted',val:4200,urg:'This week',src:'Referral'},
+  {id:3,name:'Brennan Restaurant',job:'Walk-in cooler service',stage:'Scheduled',val:2850,urg:'This week',src:'Website form'},
+  {id:4,name:'Ferris Dental',job:'Rooftop unit replace',stage:'Done',val:6100,urg:'No rush',src:'Website form'}
+];
+var SEEDINV=[
+  {id:101,who:'Kimura Holdings',amt:2100,days:19,sent:0,st:'open'},
+  {id:102,who:'Whitlock Property',amt:4200,days:52,sent:0,st:'open'}
+];
+
+var S, nid=200, week=0;
+function fresh(){
+  S={jobs:SEED.map(function(j){var c={};for(var k in j)c[k]=j[k];return c}),
+     inv:SEEDINV.map(function(i){var c={};for(var k in i)c[k]=i[k];return c}),
+     log:[]};
+  week=0; nid=200;
+}
+function save(){try{localStorage.setItem('cm_demo',JSON.stringify({S:S,week:week,nid:nid}))}catch(e){}}
+function load(){
+  try{var r=JSON.parse(localStorage.getItem('cm_demo'));
+    if(r&&r.S&&r.S.jobs){S=r.S;week=r.week||0;nid=r.nid||200;return true}}catch(e){}
+  return false;
+}
+function note(txt,kind){
+  S.log.unshift({t:txt,k:kind||'out',w:week});
+  if(S.log.length>40)S.log.pop();
+}
+
+/* ---------- render ---------- */
+function stats(){
+  var open=S.inv.filter(function(i){return i.st!=='paid'});
+  var out=open.reduce(function(t,i){return t+i.amt},0);
+  var got=S.inv.filter(function(i){return i.st==='paid'}).reduce(function(t,i){return t+i.amt},0);
+  var live=S.jobs.filter(function(j){return j.stage!=='Invoiced'}).length;
+  var pipe=S.jobs.filter(function(j){return j.stage!=='Invoiced'}).reduce(function(t,j){return t+(+j.val||0)},0);
+  $('stats').innerHTML='';
+  [['',live,'Jobs live'],['',money(pipe),'In the pipeline'],
+   ['r',money(out),'Owed to you'],['g',money(got),'Collected'],
+   ['w',open.filter(function(i){return i.st==='esc'}).length,'Needs you']]
+  .forEach(function(x){
+    $('stats').appendChild(el('<div class="stat '+x[0]+'"><b>'+x[1]+'</b><span>'+x[2]+'</span></div>'));
   });
+}
 
-  var T=[]; // timers, cleared on reset
-  function clearT(){T.forEach(clearTimeout);T=[]}
-  function at(ms,fn){T.push(setTimeout(fn,ms))}
-
-  /* ---------- 2. invoice follow-up ---------- */
-  var INV0=[
-    {n:'Whitlock Property Group',a:4200,d:112,st:'open'},
-    {n:'Brennan Restaurant Co.',a:2850,d:96,st:'open'},
-    {n:'Ferris Dental',a:6100,d:91,st:'open'},
-    {n:'Alvarado Builders',a:3150,d:47,st:'open'},
-    {n:'Kimura Holdings',a:2100,d:19,st:'open'}
-  ];
-  var inv,wk;
-  function renderInv(){
-    var s=$('s2'); s.innerHTML='';
-    inv.forEach(function(r){
-      var cls = r.st==='paid'?'a-paid' : r.d>90?'a-bad' : r.d>60?'a-warn':'a-ok';
-      var lbl = r.st==='paid' ? 'paid' : r.d+' days';
-      var note = r.st==='paid' ? '<span style="color:var(--go)">Cleared</span>'
-               : r.st==='esc' ? '<span style="color:var(--beak)">Escalated to owner, asked for a call</span>'
-               : r.st==='rep' ? '<span style="color:var(--ice)">Replied, promised Friday</span>'
-               : (r.sent ? '<span>Reminder '+r.sent+' sent</span>' : '<span>Not contacted yet</span>');
-      s.appendChild(el('<div class="inv"><b>'+r.n+'<br><span style="font-weight:400;font-size:12.5px;color:var(--ink-2)">'+note+'</span></b>'+
-        '<span class="age '+cls+'">'+lbl+'</span><span class="amt">$'+r.a.toLocaleString()+'</span></div>'));
+function board(){
+  var b=$('board'); b.innerHTML='';
+  STAGES.forEach(function(st){
+    var items=S.jobs.filter(function(j){return j.stage===st});
+    var col=el('<div class="col" data-st="'+st+'"><h4><span>'+st+'</span><span>'+items.length+'</span></h4></div>');
+    items.forEach(function(j){
+      var c=el('<div class="jc" draggable="true" data-id="'+j.id+'">'+
+        '<b>'+esc(j.name)+'</b><span>'+esc(j.job)+'</span>'+
+        '<em>'+money(j.val)+' &#183; '+esc(j.urg)+'</em></div>');
+      c.addEventListener('dragstart',function(e){
+        e.dataTransfer.setData('text/plain',String(j.id));
+        e.dataTransfer.effectAllowed='move';
+        c.classList.add('drag');
+      });
+      c.addEventListener('dragend',function(){c.classList.remove('drag')});
+      c.addEventListener('click',function(e){e.stopPropagation();pick(j.id)});
+      col.appendChild(c);
     });
-    var out=inv.filter(function(r){return r.st!=='paid'}).reduce(function(t,r){return t+r.a},0);
-    var got=inv.filter(function(r){return r.st==='paid'}).reduce(function(t,r){return t+r.a},0);
-    $('m-out').textContent='$'+out.toLocaleString();
-    $('m-in').textContent='$'+got.toLocaleString();
-    $('m-90').textContent=inv.filter(function(r){return r.st!=='paid'&&r.d>90}).length;
-    $('h2').textContent='Week '+wk;
+    col.addEventListener('dragover',function(e){e.preventDefault();col.classList.add('over')});
+    col.addEventListener('dragleave',function(){col.classList.remove('over')});
+    col.addEventListener('drop',function(e){
+      e.preventDefault(); col.classList.remove('over');
+      move(+e.dataTransfer.getData('text/plain'),st);
+    });
+    col.addEventListener('click',function(){ if(sel!=null) move(sel,st) });
+    b.appendChild(col);
+  });
+  // keep the selected card highlighted for tap-to-move
+  if(sel!=null){
+    var n=b.querySelector('.jc[data-id="'+sel+'"]');
+    if(n)n.classList.add('sel');
   }
-  function resetInv(){
-    clearT(); wk=0;
-    inv=INV0.map(function(r){var c={};for(var k in r)c[k]=r[k];c.sent=0;return c});
-    renderInv();
+}
+
+var sel=null;
+function pick(id){ sel = (sel===id? null : id); board(); }
+
+function move(id,to){
+  var j=null,i;
+  for(i=0;i<S.jobs.length;i++) if(S.jobs[i].id===id) j=S.jobs[i];
+  if(!j||j.stage===to){ sel=null; board(); return; }
+  var from=j.stage; j.stage=to; sel=null;
+  note('<b>'+esc(j.name)+'</b> moved from '+from+' to '+to+'. '+FIRE[to],'out');
+  if(to==='Invoiced' && !S.inv.some(function(v){return v.jobId===id})){
+    S.inv.push({id:nid++,jobId:id,who:j.name,amt:+j.val||0,days:0,sent:0,st:'open'});
+    note('Invoice for <b>'+esc(j.name)+'</b> raised at '+money(j.val)+' and added to follow-up.','warn');
   }
-  $('b2').addEventListener('click',function(){
-    wk++;
-    inv.forEach(function(r,i){
-      if(r.st==='paid') return;
-      r.d+=7; r.sent=(r.sent||0)+1;
-      if(wk===1&&i===4) r.st='rep';
-      if(wk===2&&i===4) r.st='paid';
-      if(wk===2&&i===0) r.st='esc';
-      if(wk===3&&i===0) r.st='paid';
-      if(wk===3&&i===3) r.st='rep';
-      if(wk===4&&i===3) r.st='paid';
-      if(wk===4&&i===1) r.st='esc';
-    });
-    renderInv();
-    if(wk>=4) this.disabled=true;
-  });
-  $('r2').addEventListener('click',function(){resetInv();$('b2').disabled=false});
-  resetInv();
+  all();
+}
 
-  /* ---------- 3. intake ---------- */
-  var caught=0;
-  var FIELDS=[
-    ['Caller','Dana Whitfield'],
-    ['Number','(814) 555-0193'],
-    ['Service','Water heater, no hot water'],
-    ['Address','1207 Bellaire Ave, Altoona PA'],
-    ['Urgency','Same day'],
-    ['Existing customer','Yes, last job Mar 2025'],
-    ['Source','Google, called the listing']
-  ];
-  $('b3').addEventListener('click',function(){
-    var b=this;b.disabled=true;
-    var s=$('s3');s.innerHTML='';
-    s.appendChild(el('<div class="ev"><div class="tick t-in">↓</div><div><b>Call connected</b><span>Answered on the second ring.</span><em>9:07 AM</em></div></div>'));
-    FIELDS.forEach(function(f,i){
-      at(520+i*430,function(){
-        s.appendChild(el('<div class="ev"><div class="tick t-out">✓</div><div><b>'+f[0]+'</b><span>'+f[1]+'</span></div></div>'));
-        s.scrollTop=s.scrollHeight;
-      });
-    });
-    at(520+FIELDS.length*430+300,function(){
-      caught++;$('h3').textContent='Jobs captured: '+caught;
-      s.appendChild(el('<div class="ev"><div class="tick t-warn">→</div><div><b>Written to the job board</b><span>Nobody typed any of this. It was never on a pad.</span><em>9:09 AM · 1 min 52 sec call</em></div></div>'));
-      s.scrollTop=s.scrollHeight; b.disabled=false;
-    });
+function logs(){
+  var L=$('log'); L.innerHTML='';
+  if(!S.log.length){L.appendChild(el('<div class="empty" style="padding:26px">Move a job and it shows up here.</div>'));return}
+  S.log.forEach(function(e){
+    L.appendChild(el('<div class="ev"><div class="tick t-'+e.k+'">&#8226;</div><div>'+
+      '<span>'+e.t+'</span><em>week '+e.w+'</em></div></div>'));
   });
-  $('r3').addEventListener('click',function(){
-    clearT();caught=0;$('h3').textContent='Jobs captured: 0';$('b3').disabled=false;
-    $('s3').innerHTML='<div class="empty">Press <b>Take a call</b> to watch a record build.</div>';
-  });
+}
 
-  /* ---------- 4. board ---------- */
-  var WEEK=[
-    ['t-out','Quote followed up','Alvarado Builders, third touch, they answered.','Mon 8:02 AM','h'],
-    ['t-out','Review request sent','After the Bellaire Ave job closed out.','Mon 4:31 PM','h'],
-    ['t-in','Call captured','No heat, Tussey Lane. Logged urgent.','Tue 4:15 PM','h'],
-    ['t-warn','Waiting on a person','Ferris Dental asked for a call back about scope.','Tue 5:40 PM','w'],
-    ['t-out','Invoice drafted','Raised the day the work finished, not Sunday night.','Wed 6:12 PM','h'],
-    ['t-bad','Dropped','Voicemail with no callback number. Nothing to work with.','Thu 11:04 AM','d'],
-    ['t-warn','Waiting on a person','Permit inspection needs a date only the owner can pick.','Thu 2:19 PM','w'],
-    ['t-out','Reactivation reply','Customer from 2023 booked a service.','Fri 9:48 AM','h']
-  ];
-  $('b4').addEventListener('click',function(){
-    var b=this;b.disabled=true;
-    var s=$('s4');s.innerHTML='';
-    var c={h:0,w:0,d:0};
-    WEEK.forEach(function(r,i){
-      at(i*460,function(){
-        s.appendChild(el('<div class="ev"><div class="tick '+r[0]+'">•</div><div><b>'+r[1]+'</b><span>'+r[2]+'</span><em>'+r[3]+'</em></div></div>'));
-        c[r[4]]++;$('d-h').textContent=c.h;$('d-w').textContent=c.w;$('d-d').textContent=c.d;
-        s.scrollTop=s.scrollHeight;
-        if(i===WEEK.length-1) b.disabled=false;
-      });
-    });
+function ar(){
+  var A=$('ar'); A.innerHTML=''; var R0=rules();
+  if(!S.inv.length){A.appendChild(el('<div class="empty">No invoices yet. Drag a job into Invoiced on the first tab.</div>'));return}
+  var wrap=el('<div style="background:var(--paper-2);border:1px solid var(--line);border-radius:11px;padding:4px 16px"></div>');
+  S.inv.forEach(function(v){
+    var cls=v.st==='paid'?'a-paid':v.days>90?'a-bad':v.days>45?'a-warn':'a-ok';
+    var lbl=v.st==='paid'?'paid':v.days+' days';
+    var sub=v.st==='paid'?'<span style="color:var(--go)">Cleared</span>'
+      :v.st==='esc'?'<span style="color:var(--beak)">Escalated. Waiting on you to call.</span>'
+      :v.st==='stopped'?'<span style="color:var(--ink-3)">Chasing stopped by your rule</span>'
+      :v.sent?'<span>'+v.sent+' reminder'+(v.sent>1?'s':'')+' sent by '+esc(rules().c1)+'</span>'
+      :(v.days>=R0.r3?'<span style="color:var(--beak)">Past your '+R0.r3+' day line. Escalates on the next run.</span>'
+        :v.days>=R0.r1?'<span>Due a reminder on the next run</span>'
+        :'<span>Not due a reminder yet, your rule says '+R0.r1+' days</span>');
+    wrap.appendChild(el('<div class="inv"><b>'+esc(v.who)+'<br><span style="font-weight:400;font-size:12.5px">'+
+      sub+'</span></b><span class="age '+cls+'">'+lbl+'</span><span class="amt">'+money(v.amt)+'</span></div>'));
   });
-  $('r4').addEventListener('click',function(){
-    clearT();$('d-h').textContent='0';$('d-w').textContent='0';$('d-d').textContent='0';$('b4').disabled=false;
-    $('s4').innerHTML='<div class="empty">Press <b>Run the week</b>.</div>';
-  });
+  A.appendChild(wrap);
+}
 
-  /* ---------- 5. custom CRM ---------- */
-  var STAGES=['Enquiry','Quoted','Scheduled','On site','Invoiced','Paid'];
-  var STEPS=[
-    {f:[['Job','No heat upstairs, 418 Tussey Lane'],['Source','Missed call, texted back'],['Contact','D. Whitfield · (814) 555-0142']],
-     a:'Logged from the call. Nobody typed it.'},
-    {f:[['Quote','$1,840, replace ignitor and flame sensor'],['Sent','Tue 5:02 PM, text and email'],['Follow-up','Scheduled: Thu, then Mon']],
-     a:'Follow-up scheduled the moment the quote went out.'},
-    {f:[['Booked','Thu 8:00 AM, 2 hr window'],['Tech','Marco'],['Customer confirmed','Yes, replied to the reminder']],
-     a:'Reminder sent automatically. No-show risk handled.'},
-    {f:[['Arrived','Thu 8:06 AM'],['Parts used','Ignitor, flame sensor'],['Photos','3 attached by the tech']],
-     a:'Parts pulled from stock count. Reorder alert armed.'},
-    {f:[['Invoice','$1,840, drafted Thu 10:41 AM'],['Terms','Net 15'],['Warranty','Registered with the manufacturer']],
-     a:'Drafted the day the work finished, not Sunday night.'},
-    {f:[['Paid','Fri 2:15 PM, 1 day, no chase'],['Review','Requested Fri 3:00 PM'],['Next','Maintenance reminder set for Oct 2027']],
-     a:'Closed. The next job is already scheduled to ask for itself.'}
-  ];
-  var stg=0;
-  function renderCRM(){
-    var bar=$('crm-stages'); bar.innerHTML='';
-    STAGES.forEach(function(n,i){
-      var on=i<=stg;
-      bar.appendChild(el('<div style="text-align:center;font-size:11.5px;'+
-        'font-family:var(--mono);padding:7px 5px;border-radius:7px;border:1px solid '+
-        (on?'var(--ink)':'var(--line)')+';background:'+(on?'var(--ink)':'#fff')+';color:'+
-        (on?'#fff':'var(--ink-3)')+'">'+n+'</div>'));
-    });
-    var s=$('s5'); s.innerHTML='';
-    for(var i=0;i<=stg;i++){
-      STEPS[i].f.forEach(function(f){
-        s.appendChild(el('<div class="ev"><div class="tick t-out">✓</div><div><b>'+f[0]+
-          '</b><span>'+f[1]+'</span></div></div>'));
-      });
-      s.appendChild(el('<div class="ev"><div class="tick t-warn">→</div><div><b>'+STAGES[i]+
-        '</b><span>'+STEPS[i].a+'</span></div></div>'));
+function rules(){
+  return {r1:+$('r1').value||7,r2:+$('r2').value||7,r3:+$('r3').value||45,
+          r4:+$('r4').value||180,c1:$('c1').value};
+}
+
+function runWeek(){
+  var R=rules(); week++;
+  S.inv.forEach(function(v){
+    if(v.st==='paid'||v.st==='stopped') return;
+    v.days+=7;
+    if(v.days>R.r4){ v.st='stopped'; note('Stopped chasing <b>'+esc(v.who)+'</b> at '+v.days+' days, per your rule.','bad'); return; }
+    if(v.days>=R.r3 && v.st!=='esc'){ v.st='esc'; note('<b>'+esc(v.who)+'</b> passed '+R.r3+' days. Escalated to you for a call.','warn'); }
+    var due = v.sent===0 ? v.days>=R.r1 : v.days >= R.r1 + v.sent*R.r2;
+    if(due){
+      v.sent++;
+      note('Reminder '+v.sent+' sent to <b>'+esc(v.who)+'</b> by '+R.c1+' at '+v.days+' days.','out');
+      // a chased invoice sometimes actually pays, and more reminders help
+      if(Math.random() < 0.13 + v.sent*0.09){
+        v.st='paid';
+        note('<b>'+esc(v.who)+'</b> paid '+money(v.amt)+' after reminder '+v.sent+'.','out');
+      }
     }
-    s.scrollTop=s.scrollHeight;
-    $('h5').textContent='Stage '+(stg+1)+' of '+STAGES.length;
-    $('b5').disabled = stg>=STAGES.length-1;
-  }
-  $('b5').addEventListener('click',function(){ if(stg<STAGES.length-1){stg++;renderCRM()} });
-  $('r5').addEventListener('click',function(){ stg=0; renderCRM() });
-  renderCRM();
+  });
+  $('wk').textContent='Week '+week;
+  all();
+}
+
+/* ---------- actions ---------- */
+$('addJob').addEventListener('click',function(){
+  var names=['Tussey Lane','Bellaire Ave','Logan Valley','Pleasant Gap','Sinking Spring'];
+  var jobs=['Boiler service','Leak repair','Annual inspection','Thermostat install','Duct clean'];
+  var j={id:nid++,name:names[Math.floor(Math.random()*names.length)],
+    job:jobs[Math.floor(Math.random()*jobs.length)],stage:'Enquiry',
+    val:[900,1400,2200,3100][Math.floor(Math.random()*4)],urg:'This week',src:'Website form'};
+  S.jobs.push(j); note('New job <b>'+esc(j.name)+'</b> added to Enquiry.','in'); all();
+});
+
+$('addInv').addEventListener('click',function(){
+  var v={id:nid++,who:['Hartley & Co','Redland Group','Novak Sons'][Math.floor(Math.random()*3)],
+    amt:[1200,2600,3900][Math.floor(Math.random()*3)],days:[12,33,61][Math.floor(Math.random()*3)],sent:0,st:'open'};
+  S.inv.push(v); note('Invoice added for <b>'+esc(v.who)+'</b> at '+money(v.amt)+'.','in'); all();
+});
+
+$('week').addEventListener('click',runWeek);
+
+$('resetAll').addEventListener('click',function(){
+  fresh(); $('wk').textContent='Week 0'; all();
+});
+
+$('submitJob').addEventListener('click',function(){
+  var n=$('nName').value.trim()||'New customer';
+  var w=$('nJob').value.trim()||'Enquiry';
+  var u=$('nUrg').value, src=$('nSrc').value;
+  var v=parseInt(($('nVal').value||'').replace(/[^0-9]/g,''),10)||1200;
+  var j={id:nid++,name:n,job:w,stage:'Enquiry',val:v,urg:u,src:src};
+  S.jobs.push(j);
+  var owner = u==='Same day' ? 'the on-call tech' : u==='This week' ? 'the scheduler' : 'the office';
+  var out=$('nOut'); out.innerHTML='';
+  [['in','Captured',esc(n)+' &#183; '+esc(w)+' &#183; '+money(v)+' &#183; from '+esc(src)],
+   ['out','Sorted','Marked <b>'+esc(u)+'</b>, so it goes to '+owner+'.'],
+   ['out','Acknowledged',esc(n)+' got a reply confirming you have it. No one typed it.'],
+   ['warn','On the board','It is the newest card in <b>Enquiry</b> on the first tab. Go look.']]
+  .forEach(function(r,i){
+    setTimeout(function(){
+      out.appendChild(el('<div class="ev"><div class="tick t-'+r[0]+'">&#10003;</div><div><b>'+r[1]+'</b><span>'+r[2]+'</span></div></div>'));
+    }, i*430);
+  });
+  note('Enquiry from <b>'+esc(n)+'</b> captured and routed to '+owner+'.','in');
+  ['nName','nJob','nVal'].forEach(function(id){$(id).value=''});
+  all();
+});
+
+['r1','r2','r3','r4','c1'].forEach(function(id){
+  $(id).addEventListener('change',function(){ ar(); });
+});
+
+/* tabs */
+var tabs=[].slice.call(document.querySelectorAll('.tab'));
+tabs.forEach(function(t){
+  t.addEventListener('click',function(){
+    tabs.forEach(function(x){
+      x.setAttribute('aria-selected', x===t?'true':'false');
+      $(x.dataset.p).hidden = x!==t;
+    });
+  });
+});
+
+function all(){ stats(); board(); logs(); ar(); save(); }
+if(!load()) fresh();
+$('wk').textContent='Week '+week;
+all();
 })();
 </script>
 </body>
