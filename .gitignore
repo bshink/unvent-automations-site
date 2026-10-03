@@ -1,2 +1,4 @@
 .DS_Store
 *.zip
+.security-audit/
+.env
