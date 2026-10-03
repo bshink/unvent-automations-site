@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demos - Unvent Automations</title>
+<meta name="description" content="Working demos built on real public records. Open one and click around.">
+<link rel="canonical" href="https://unventautomations.com/demos/">
+<meta name="theme-color" content="#0A0B0D">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Unvent Automations">
+<meta property="og:title" content="Demos - Unvent Automations">
+<meta property="og:description" content="Working demos built on real public records. Open one and click around.">
+<meta property="og:url" content="https://unventautomations.com/demos/">
+<meta property="og:image" content="https://unventautomations.com/og-image.png?v2">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/f.css">
+<style>
+.demos{padding:40px 0 72px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px;padding:0;list-style:none}
+.tab{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--fg-2);background:transparent;
+  border:1px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;transition:color .16s,border-color .16s,background .16s}
+.tab:hover{color:var(--fg)}
+.tab[aria-selected="true"]{color:#05130C;background:var(--on);border-color:var(--on);font-weight:600}
+.dhead{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin:0 0 14px}
+.dhead p{color:var(--fg-2);font-size:16px;max-width:70ch;margin:0}
+.dhead a{margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--fg-2);white-space:nowrap}
+.dhead a:hover{color:var(--fg)}
+.frame{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#F2F0EB;
+  height:min(860px,calc(100vh - 180px));min-height:620px}
+.frame iframe{display:block;width:100%;height:100%;border:0}
+.note{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--fg-3);margin:12px 0 0}
+@media(max-width:720px){
+  .demos{padding:28px 0 56px}
+  .dhead a{margin-left:0}
+  .frame{height:82svh;min-height:520px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav aria-label="Primary"><div class="wrap">
+  <a class="brand" href="/">unvent<span>/</span>automations</a>
+  <div class="links">
+    <a href="/#how">How we work</a>
+    <a href="/#build">What we build</a>
+    <a href="/#limits">Where we stop</a>
+    <a href="/about/">Who we are</a>
+  </div>
+  <a href="/demos/" class="ndemo" aria-current="page">Demos</a>
+  <a href="https://calendly.com/andre-unventautomations/30min" class="ncta">Book<span class="nx"> 30 min</span></a>
+</div></nav>
+
+<main id="main">
+
+<header class="pagehead"><div class="wrap">
+  <p class="e">Demos</p>
+  <h1>Open one and click around.</h1>
+  <p class="sub">Each demo runs on real public records. The businesses in them are samples. Nothing here sends anything.</p>
+</div></header>
+
+<section class="demos"><div class="wrap">
+  <div class="tabs" role="tablist" aria-label="Demos" id="tabs"></div>
+  <div id="panel" role="tabpanel">
+    <div class="dhead"><p id="desc"></p><a id="full" href="#" target="_blank" rel="noopener">Open full screen &#8599;</a></div>
+    <div class="frame"><iframe id="ifr" title="Demo" loading="lazy"></iframe></div>
+    <p class="note" id="note"></p>
+  </div>
+</div></section>
+
+</main>
+
+<footer><div class="wrap">
+  <span class="c">&copy; <span id="yy">2026</span> Unvent Automations &middot; Los Angeles, California</span>
+  <div class="fl">
+    <a href="/#how">How we work</a>
+    <a href="/#build">What we build</a>
+    <a href="/#limits">Where we stop</a>
+    <a href="/about/">Who we are</a>
+    <a href="/demos/">Demos</a>
+    <a href="https://calendly.com/andre-unventautomations/30min">Book a call</a>
+  </div>
+</div></footer>
+
+<script>
+// Add new demos here. The first one is the default tab.
+var DEMOS = [
+  {
+    id: 'pool-permits',
+    tab: 'Pool permits',
+    src: '/demos/pool-permits/',
+    desc: 'Someone two streets off your Tuesday route pulls a permit for a new pool. You know the week it is filed, before anyone else has knocked on that door.',
+    note: 'Permits are City of Los Angeles records, shown to the block. The route and the company are samples.'
+  }
+];
+
+(function () {
+  var tabs = document.getElementById('tabs');
+  var ifr = document.getElementById('ifr');
+  var panel = document.getElementById('panel');
+  function show(id, focus) {
+    var d = DEMOS.filter(function (x) { return x.id === id; })[0] || DEMOS[0];
+    Array.prototype.forEach.call(tabs.children, function (b) {
+      var on = b.dataset.id === d.id;
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      b.tabIndex = on ? 0 : -1;
+      if (on && focus) b.focus();
+    });
+    panel.setAttribute('aria-labelledby', 'tab-' + d.id);
+    document.getElementById('desc').textContent = d.desc;
+    document.getElementById('note').textContent = d.note;
+    document.getElementById('full').href = d.src;
+    ifr.title = d.tab + ' demo';
+    if (ifr.getAttribute('src') !== d.src + '?embed=1') ifr.src = d.src + '?embed=1';
+    if (location.hash !== '#' + d.id) history.replaceState(null, '', '#' + d.id);
+  }
+  DEMOS.forEach(function (d) {
+    var b = document.createElement('button');
+    b.className = 'tab'; b.type = 'button'; b.role = 'tab';
+    b.setAttribute('role', 'tab'); b.id = 'tab-' + d.id; b.dataset.id = d.id;
+    b.setAttribute('aria-controls', 'panel');
+    b.textContent = d.tab;
+    b.addEventListener('click', function () { show(d.id); });
+    tabs.appendChild(b);
+  });
+  tabs.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    var i = DEMOS.findIndex(function (d) { return d.id === document.activeElement.dataset.id; });
+    if (i < 0) return;
+    i = (i + (e.key === 'ArrowRight' ? 1 : -1) + DEMOS.length) % DEMOS.length;
+    show(DEMOS[i].id, true);
+  });
+  show(location.hash.slice(1));
+  document.getElementById('yy').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

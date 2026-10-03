@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Pool permit alert · Unvent Automations</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.0/maplibre-gl.css" integrity="sha512-KIMsMWIdnoG9OwZa+oaIafmbDonqck1UCmq+/zcUi2aaZ97N9QE6TqpTM+n36EO40HGh64hU/375zxtjx7WTyQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{
+  color-scheme:light only;
+  --ink:#1F1D1A; --ink-2:#5C5850; --ink-3:#8E897F; --ink-4:#B9B4AA;
+  --paper:#FFFFFF; --bg:#F4F2EE; --bg-2:#EDEAE4; --line:#E6E2DA;
+  --sun:#F5C53D; --sun-deep:#D9A514; --sun-ink:#3B2F05; --sun-soft:#FCF3D6;
+  --route:#2E2B26;
+  --sans:'Sora',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --shadow:0 0 0 1px rgba(60,48,20,.07),0 1px 2px rgba(60,48,20,.05),0 10px 28px -10px rgba(60,48,20,.18),0 2px 6px -2px rgba(60,48,20,.06);
+  --ease:cubic-bezier(.32,.72,0,1);
+  --nav:46px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font-family:inherit}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* nav */
+nav{height:var(--nav);background:var(--paper);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding:0 18px;position:relative;z-index:5}
+.brand{font-weight:600;font-size:14px;text-decoration:none;letter-spacing:-.01em}
+.brand span{color:var(--sun-deep)}
+.crumb{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+nav .back{margin-left:auto;font-size:12.5px;color:var(--ink-2);text-decoration:none}
+nav .back:hover{color:var(--ink)}
+
+/* app shell: full-bleed map with floating cards */
+.app{position:relative;height:calc(100vh - var(--nav));height:calc(100dvh - var(--nav));overflow:hidden}
+#map{position:absolute;inset:0;background:var(--bg-2)}
+.card{background:var(--paper);border-radius:14px;box-shadow:var(--shadow)}
+.left{position:absolute;top:14px;left:14px;width:320px;display:flex;flex-direction:column;gap:10px;z-index:2}
+.rail{position:absolute;top:14px;right:14px;bottom:40px;width:300px;z-index:2;
+  display:flex;flex-direction:column;overflow:hidden}
+.scrub{position:absolute;left:14px;right:328px;bottom:14px;z-index:2}
+
+/* greeting */
+.greet{padding:15px 16px 16px}
+.eye{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.eye i{width:6px;height:6px;border-radius:50%;background:var(--sun);display:block;flex:none}
+.greet h1{font-size:19px;line-height:1.2;letter-spacing:-.02em;font-weight:600;margin:0 0 7px}
+.greet p{margin:0 0 13px;color:var(--ink-2);font-size:12.5px;text-wrap:pretty}
+.greet p b{color:var(--ink);font-weight:600}
+.btns{display:flex;gap:7px;flex-wrap:wrap}
+.btn{font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;border:1px solid transparent;
+  cursor:pointer;transition:background-color .3s var(--ease),border-color .3s var(--ease),transform .2s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn.sun{background:var(--sun);color:var(--sun-ink);border-color:#E8B52A}
+.btn.sun:hover{background:#F0BC2A}
+.btn.ghost{background:var(--paper);color:var(--ink-2);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink-4);color:var(--ink)}
+.btn.wide{width:100%;padding:10px 12px;font-size:12.5px}
+
+/* big number */
+.big{padding:14px 16px 13px}
+.lbl{font-size:11px;color:var(--ink-3)}
+.bigrow{display:flex;align-items:baseline;gap:9px;margin:3px 0 10px}
+.bignum{font-family:var(--mono);font-size:34px;font-weight:500;letter-spacing:-.03em;line-height:1}
+.bigsub{font-size:11.5px;color:var(--ink-2)}
+.chart svg{display:block;width:100%;height:54px}
+.axis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);margin-top:5px}
+
+/* rail */
+.rhead{padding:14px 16px 0}
+.rhead h2{font-size:13.5px;font-weight:600;letter-spacing:-.01em;margin:0}
+.rhead .lbl{margin-top:2px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:12px 16px 0}
+.tile{background:var(--bg);border-radius:9px;padding:9px 10px}
+.tile b{display:block;font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:-.02em;line-height:1.15}
+.tile span{display:block;font-size:10.5px;color:var(--ink-2);line-height:1.3;margin-top:2px}
+.tile.hi{background:var(--sun-soft)}
+.tile.full{grid-column:1/-1;display:flex;align-items:baseline;gap:9px}
+.tile.full span{margin:0}
+.ract{padding:12px 16px 4px}
+.sect{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  padding:12px 16px 7px;display:flex;justify-content:space-between}
+.bars{padding:0 16px}
+.bar{display:grid;grid-template-columns:92px 1fr 22px;align-items:center;gap:8px;font-size:11.5px;margin-bottom:5px}
+.bar em{font-style:normal;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar i{display:block;height:7px;border-radius:4px;background:var(--bg-2);overflow:hidden}
+.bar i s{display:block;height:100%;background:var(--sun);border-radius:4px;transition:width .5s var(--ease)}
+.bar b{font-family:var(--mono);font-weight:500;text-align:right;font-size:11px}
+.feed{list-style:none;margin:0;padding:0 16px 30px;overflow:auto;flex:1;min-height:0;
+  -webkit-mask-image:linear-gradient(#000 calc(100% - 28px),transparent);mask-image:linear-gradient(#000 calc(100% - 28px),transparent)}
+.feed li{display:flex;gap:9px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.feed li:first-child{border-top:none}
+.feed li:focus-visible,.sheet li:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;border-radius:6px}
+.feed li:hover b{text-decoration:underline;text-decoration-color:var(--ink-4)}
+.feed .dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--sun);margin-top:4px;
+  box-shadow:0 0 0 3px var(--sun-soft)}
+.feed b{display:block;font-weight:500;font-size:12px}
+.feed span{display:block;font-size:11px;color:var(--ink-3)}
+.feed .none{color:var(--ink-3);font-size:12px;cursor:default}
+
+/* scrubber */
+.scrub{padding:10px 14px 9px}
+.srow{display:flex;align-items:center;gap:12px}
+.play{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--paper);
+  display:grid;place-items:center;cursor:pointer;transition:border-color .3s var(--ease)}
+.play:hover{border-color:var(--ink-4)}
+.play svg{width:11px;height:11px;fill:var(--ink)}
+.when{flex:none;width:96px}
+.when b{display:block;font-family:var(--mono);font-size:13px;font-weight:500}
+.when span{font-size:10.5px;color:var(--ink-3)}
+.track{flex:1;min-width:0;position:relative}
+.hist{display:flex;align-items:flex-end;gap:1px;height:26px}
+.hist i{flex:1;background:var(--sun);border-radius:1px;min-height:2px;transition:background-color .3s var(--ease)}
+.hist i.zero{background:var(--bg-2)}
+.hist i.off{background:var(--bg-2)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:3px 0 0;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-moz-range-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--paper);border:2px solid var(--ink);margin-top:-5.5px;cursor:grab}
+input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);cursor:grab}
+.saxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+.source{font-size:10.5px;color:var(--ink-3);margin:7px 0 0;padding-top:7px;border-top:1px solid var(--line)}
+
+/* map overlays */
+.maplibregl-popup-content{border-radius:11px;padding:11px 13px 12px;box-shadow:var(--shadow);font-family:var(--sans)}
+.maplibregl-popup-tip{display:none}
+.maplibregl-popup-close-button{font-size:15px;color:var(--ink-3);padding:2px 7px}
+.pop .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.pop b{display:block;font-size:13px;font-weight:600;letter-spacing:-.01em;padding-right:14px}
+.pop .n{color:var(--ink-2);font-size:11.5px;margin-bottom:8px}
+.pop dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:11.5px}
+.pop dt{color:var(--ink-3)}
+.pop dd{margin:0;font-family:var(--mono);font-size:11px}
+.pop .dist{margin-top:9px;font-size:11.5px;font-weight:500;background:var(--sun-soft);border-radius:6px;padding:5px 8px}
+.pop .dist.far{background:var(--bg)}
+.stop{width:22px;height:22px;border-radius:50%;background:var(--route);color:#fff;border:2px solid #fff;
+  font-family:var(--mono);font-size:10.5px;font-weight:500;display:grid;place-items:center;
+  box-shadow:0 1px 4px rgba(30,25,15,.3);cursor:default}
+.maplibregl-ctrl-attrib{font-size:10.5px}
+
+/* call list panel */
+.sheet{position:absolute;z-index:4;top:14px;right:328px;width:340px;max-height:calc(100% - 120px);
+  display:flex;flex-direction:column;opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .3s var(--ease),transform .2s var(--ease)}
+.sheet.on{opacity:1;transform:none;pointer-events:auto}
+.sheet header{padding:14px 16px 10px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.sheet h3{margin:0;font-size:14px;font-weight:600;letter-spacing:-.01em}
+.sheet header p{margin:2px 0 0;font-size:11px;color:var(--ink-3)}
+.sheet .x{margin-left:auto;border:none;background:none;font-size:16px;color:var(--ink-3);cursor:pointer;padding:0 2px}
+.sheet ol{list-style:none;margin:0;padding:4px 16px 8px;overflow:auto}
+.sheet li{display:grid;grid-template-columns:20px 1fr auto;gap:9px;padding:9px 0;border-top:1px solid var(--line);align-items:start}
+.sheet li:first-child{border-top:none}
+.sheet li[data-id]{cursor:pointer}
+.sheet li .i{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);padding-top:2px}
+.sheet li b{display:block;font-size:12px;font-weight:500}
+.sheet li span{display:block;font-size:11px;color:var(--ink-3)}
+.sheet li .d{font-family:var(--mono);font-size:11px;text-align:right;white-space:nowrap}
+.sheet footer{padding:10px 16px 13px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-3)}
+
+/* phone: map on top, everything else in normal flow */
+@media (max-width:720px){
+  nav{padding:0 16px}
+  .crumb{display:none}
+  .app{height:auto;overflow:visible;display:flex;flex-direction:column;padding-bottom:24px}
+  #map{position:relative;inset:auto;height:56vh;height:56svh;order:0}
+  .left,.rail,.scrub,.sheet{position:static;width:auto;margin:10px 16px 0}
+  .left{order:1}
+  .sheet{order:2;max-height:none;display:none}
+  .sheet.on{display:flex}
+  .scrub{order:3}
+  .rail{order:4;overflow:visible}
+  .feed{overflow:visible;-webkit-mask-image:none;mask-image:none;padding-bottom:14px}
+  .when{width:84px}
+}
+</style>
+<script>if(window.self!==window.top||/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed')</script>
+<style>html.embed{--nav:0px}html.embed body>nav{display:none}</style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <a class="brand" href="/">unvent<span>/</span>automations</a>
+  <span class="crumb">Demo · Pool permit alert</span>
+  <a class="back" href="/demos/">&#8592; All demos</a>
+</nav>
+
+<main class="app">
+  <div id="map" role="region" aria-label="Map of new pool permits and the sample route"></div>
+
+  <section class="left">
+    <div class="card greet">
+      <div class="eye"><i></i>Sample route - Larkspur Pool Co.</div>
+      <h1 id="hello">Good afternoon, Marisol.</h1>
+      <p id="summary">Loading the latest city permit records.</p>
+      <div class="btns">
+        <button class="btn sun" id="openList2" type="button">Open the call list</button>
+        <button class="btn ghost" id="replay" type="button">Replay since Jul 1</button>
+      </div>
+    </div>
+    <div class="card big">
+      <div class="lbl">Within 2 mi of your route, last 30 days</div>
+      <div class="bigrow"><span class="bignum" id="big30">-</span><span class="bigsub" id="big30sub"></span></div>
+      <div class="chart" id="weekly" aria-label="Weekly count of permits near the route"></div>
+      <div class="axis"><span id="wkStart"></span><span>Weekly, near the route</span><span id="wkEnd"></span></div>
+    </div>
+  </section>
+
+  <aside class="card rail" aria-label="This week">
+    <div class="rhead">
+      <h2>This week in city records</h2>
+      <div class="lbl" id="weekRange"></div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><b id="tCity">-</b><span>new pool permits, citywide</span></div>
+      <div class="tile hi"><b id="tNear">-</b><span>within 2 mi of your route</span></div>
+      <div class="tile full"><b id="tMed">-</b><span>median permit value, last 30 days citywide</span></div>
+    </div>
+    <div class="ract"><button class="btn sun wide" id="openList" type="button">Build the call list</button></div>
+    <div class="sect"><span>Near the route, by area</span><span>30 days</span></div>
+    <div class="bars" id="bars"></div>
+    <div class="sect"><span>Near your route</span><span>Newest first</span></div>
+    <ul class="feed" id="feed"></ul>
+  </aside>
+
+  <section class="card sheet" id="sheet" aria-label="Call list" aria-hidden="true">
+    <header>
+      <div>
+        <h3>Call list, last 30 days</h3>
+        <p id="sheetSub"></p>
+      </div>
+      <button class="x" id="closeList" type="button" aria-label="Close">&#215;</button>
+    </header>
+    <ol id="sheetList"></ol>
+    <footer>Sample. Nothing is sent from this page. Addresses shown to the block.</footer>
+  </section>
+
+  <section class="card scrub" aria-label="Timeline">
+    <div class="srow">
+      <button class="play" id="play" type="button" aria-label="Play the timeline">
+        <svg viewBox="0 0 10 10" id="playIcon"><path d="M2 1l7 4-7 4z"/></svg>
+      </button>
+      <div class="when"><b id="whenDate">-</b><span id="whenCount"></span></div>
+      <div class="track">
+        <div class="hist" id="hist"></div>
+        <input type="range" id="range" min="0" max="0" value="0" step="1" aria-label="Show permits filed up to this date">
+        <div class="saxis"><span id="sStart"></span><span id="sEnd"></span></div>
+      </div>
+    </div>
+    <p class="source" id="source">Permit data: City of Los Angeles public records. Route and company are sample data. Addresses shown to the block.</p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.0/maplibre-gl.js" integrity="sha512-rOFgoUgWaVi69JW1dzBu6PWF9xKW9rxYfY5u2SexFABHhWk0qUWkJoWNz4UuZRMvSXsNZG66+tU5B+HlwWF5kA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ---------- sample route (hand-placed, fictional company) ----------
+  var ROUTE_NAME = 'Tuesday route';
+  var STOPS = [
+    [-118.5560, 34.1610], // Tarzana
+    [-118.5420, 34.1665],
+    [-118.5265, 34.1590],
+    [-118.5095, 34.1525], // Encino
+    [-118.4985, 34.1470],
+    [-118.4880, 34.1455],
+    [-118.4790, 34.1540],
+    [-118.4650, 34.1560], // Sherman Oaks
+    [-118.4480, 34.1595]
+  ];
+  var RADIUS_MI = 2;
+  var DAY = 86400000;
+
+  // ---------- geometry ----------
+  var LAT0 = 34.16, LON0 = -118.50;
+  var KX = Math.cos(LAT0 * Math.PI / 180) * 69.172, KY = 69.0;
+  function toXY(lon, lat) { return [(lon - LON0) * KX, (lat - LAT0) * KY]; }
+  function toLL(x, y) { return [x / KX + LON0, y / KY + LAT0]; }
+  function haversineMi(a, b) {
+    var R = 3958.8, r = Math.PI / 180;
+    var dLat = (b[1] - a[1]) * r, dLon = (b[0] - a[0]) * r;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(a[1] * r) * Math.cos(b[1] * r) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  var ROUTE_XY = STOPS.map(function (s) { return toXY(s[0], s[1]); });
+  function closestOnRoute(x, y) {
+    var best = null, bd = Infinity;
+    for (var i = 0; i < ROUTE_XY.length - 1; i++) {
+      var a = ROUTE_XY[i], b = ROUTE_XY[i + 1];
+      var dx = b[0] - a[0], dy = b[1] - a[1];
+      var t = ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy);
+      t = Math.max(0, Math.min(1, t));
+      var px = a[0] + t * dx, py = a[1] + t * dy;
+      var d = (x - px) * (x - px) + (y - py) * (y - py);
+      if (d < bd) { bd = d; best = [px, py]; }
+    }
+    return best;
+  }
+  // Minimum point-to-segment distance: nearest point found on the local plane, measured by haversine.
+  function distToRoute(lon, lat) {
+    var xy = toXY(lon, lat);
+    var c = closestOnRoute(xy[0], xy[1]);
+    return haversineMi([lon, lat], toLL(c[0], c[1]));
+  }
+  // 2 mile buffer ring: cast rays from the route's middle and keep the farthest in-buffer point.
+  function bufferRing() {
+    var cx = 0, cy = 0;
+    ROUTE_XY.forEach(function (p) { cx += p[0]; cy += p[1]; });
+    cx /= ROUTE_XY.length; cy /= ROUTE_XY.length;
+    var ring = [];
+    for (var a = 0; a < 360; a += 2) {
+      var ux = Math.cos(a * Math.PI / 180), uy = Math.sin(a * Math.PI / 180), last = 0;
+      for (var r = 0; r < 9; r += 0.02) {
+        var x = cx + ux * r, y = cy + uy * r, c = closestOnRoute(x, y);
+        if (Math.hypot(x - c[0], y - c[1]) <= RADIUS_MI) last = r;
+      }
+      ring.push(toLL(cx + ux * last, cy + uy * last));
+    }
+    ring.push(ring[0]);
+    return ring;
+  }
+
+  // ---------- formatting ----------
+  var MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function parseD(s) { var p = s.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]); }
+  function fmtD(ms) { var d = new Date(ms); return MON[d.getUTCMonth()] + ' ' + d.getUTCDate(); }
+  function money(v) { return v > 0 ? '$' + Math.round(v).toLocaleString('en-US') : 'Not listed'; }
+  function moneyShort(v) { return v >= 1000 ? '$' + Math.round(v / 1000) + 'k' : money(v); }
+  function mi(d) { return d < 0.05 ? 'under 0.1 mi' : d.toFixed(1) + ' mi'; }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function median(a) { if (!a.length) return 0; a = a.slice().sort(function (x, y) { return x - y; }); var m = a.length >> 1; return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2; }
+  function plural(n, one, many) { return n === 1 ? one : many; }
+
+  var hr = new Date().getHours();
+  document.getElementById('hello').textContent =
+    (hr < 12 ? 'Good morning' : hr < 17 ? 'Good afternoon' : 'Good evening') + ', Marisol.';
+
+  // ---------- state ----------
+  var S = { rows: [], since: 0, end: 0, cutoff: 0, refreshed: '', mapReady: false, rendered: false, final: false };
+  var qc = /[?&]qc=1\b/.test(location.search);
+
+  // ---------- map ----------
+  var map = new maplibregl.Map({
+    container: 'map',
+    style: 'https://tiles.openfreemap.org/styles/positron',
+    center: [-118.50, 34.16],
+    zoom: 11.6,
+    attributionControl: { compact: false },
+    cooperativeGestures: window.matchMedia('(max-width:720px)').matches
+  });
+  var isPhone = function () { return window.matchMedia('(max-width:720px)').matches; };
+  // withSheet: the call-list sheet floats left of the rail (340px wide + 14px gap), so keep pins out from under it.
+  function framePad(withSheet) {
+    if (isPhone()) return { top: 30, bottom: 50, left: 20, right: 20 };
+    return { top: 40, bottom: 110, left: 350, right: 330 + (withSheet ? 354 : 0) };
+  }
+
+  map.on('load', function () {
+    var ring = bufferRing();
+    map.addSource('buffer', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Polygon', coordinates: [ring] } } });
+    map.addLayer({ id: 'buffer-fill', type: 'fill', source: 'buffer', paint: { 'fill-color': '#F5C53D', 'fill-opacity': 0.07 } });
+    map.addLayer({ id: 'buffer-line', type: 'line', source: 'buffer', paint: { 'line-color': '#C9971A', 'line-width': 1.2, 'line-dasharray': [3, 2], 'line-opacity': 0.75 } });
+    map.addSource('route', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: STOPS } } });
+    map.addLayer({ id: 'route-casing', type: 'line', source: 'route', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': 6 } });
+    map.addLayer({ id: 'route-line', type: 'line', source: 'route', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#2E2B26', 'line-width': 2.6 } });
+
+    map.addSource('permits', { type: 'geojson', data: { type: 'FeatureCollection', features: [] }, promoteId: 'id' });
+    map.addLayer({ id: 'pins-glow', type: 'circle', source: 'permits', paint: {
+      'circle-color': '#F5C53D',
+      'circle-radius': ['case', ['get', 'near'], 16, 10],
+      'circle-blur': 1,
+      'circle-opacity': ['case', ['get', 'near'], 0.75, 0.4]
+    } });
+    map.addLayer({ id: 'pins', type: 'circle', source: 'permits', paint: {
+      'circle-color': ['case', ['get', 'near'], '#F2B705', '#F7D676'],
+      'circle-radius': ['case', ['get', 'near'], 5.5, 3.6],
+      'circle-stroke-color': ['case', ['get', 'near'], '#1F1D1A', '#FFFFFF'],
+      'circle-stroke-width': ['case', ['get', 'near'], 1.5, 1]
+    } });
+
+    STOPS.forEach(function (s, i) {
+      var el = document.createElement('div');
+      el.className = 'stop';
+      el.textContent = i + 1;
+      el.title = 'Stop ' + (i + 1) + ', sample ' + ROUTE_NAME;
+      new maplibregl.Marker({ element: el }).setLngLat(s).addTo(map);
+    });
+
+    map.on('click', 'pins', function (e) { openPopup(e.features[0].properties.id); });
+    map.on('mouseenter', 'pins', function () { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'pins', function () { map.getCanvas().style.cursor = ''; });
+
+    var b = new maplibregl.LngLatBounds();
+    ring.forEach(function (c) { b.extend(c); });
+    map.fitBounds(b, { padding: framePad(), duration: 0 });
+
+    S.mapReady = true;
+    if (S.rows.length) pushToMap();
+  });
+
+  var byId = {};
+  var popup = new maplibregl.Popup({ closeButton: true, maxWidth: '260px', offset: 10 });
+  function openPopup(id) {
+    var r = byId[id]; if (!r) return;
+    popup.setLngLat([r.lon, r.lat]).setHTML(
+      '<div class="pop"><div class="k">New pool permit</div><b>' + esc(r.block) + '</b>' +
+      '<div class="n">' + esc(r.cnc) + '</div>' +
+      '<dl><dt>Permit value</dt><dd>' + money(r.valuation) + '</dd><dt>Issued</dt><dd>' + fmtD(r.t) + '</dd></dl>' +
+      '<div class="dist' + (r.near ? '' : ' far') + '">' + mi(r.dist) + ' from your ' + ROUTE_NAME + '</div></div>'
+    ).addTo(map);
+  }
+  function flyTo(id) {
+    var r = byId[id]; if (!r) return;
+    map.easeTo({ center: [r.lon, r.lat], zoom: Math.max(map.getZoom(), 13), padding: framePad(sheet.classList.contains('on')), duration: 600 });
+    openPopup(id);
+  }
+
+  function pushToMap() {
+    var feats = S.rows.map(function (r) {
+      return { type: 'Feature', id: r.id, properties: { id: r.id, near: r.near, t: r.day }, geometry: { type: 'Point', coordinates: [r.lon, r.lat] } };
+    });
+    map.getSource('permits').setData({ type: 'FeatureCollection', features: feats });
+    applyCutoff();
+    qcReady();
+  }
+  function qcReady() {
+    if (!qc || S.rendered || !S.final || !S.mapReady || !S.rows.length) return;
+    S.rendered = true;
+    map.once('idle', function () {
+      var shown = S.rows.filter(function (r) { return r.t <= S.cutoff; }).length;
+      var inSource = map.querySourceFeatures('permits').length;
+      document.title = 'READY ' + (inSource > 0 ? shown : 0);
+    });
+    map.triggerRepaint();
+  }
+  window.__settle = function (source) {
+    document.documentElement.dataset.source = source;
+    S.final = true;
+    qcReady();
+  };
+  function applyCutoff() {
+    if (!S.mapReady) return;
+    var day = Math.round((S.cutoff - S.since) / DAY);
+    var f = ['<=', ['get', 't'], day];
+    map.setFilter('pins', f);
+    map.setFilter('pins-glow', f);
+  }
+
+  // ---------- render everything from rows ----------
+  function setData(rows, meta) {
+    meta = meta || {};
+    S.since = parseD(meta.since || '2026-07-01');
+    S.refreshed = meta.refreshed || '';
+    byId = {};
+    S.rows = rows.filter(function (r) { return isFinite(r.lat) && isFinite(r.lon) && r.issue_date; }).map(function (r) {
+      var t = parseD(r.issue_date), d = distToRoute(r.lon, r.lat);
+      var o = { id: r.id, block: r.block, cnc: r.cnc, valuation: r.valuation || 0, lat: r.lat, lon: r.lon,
+        t: t, day: Math.round((t - S.since) / DAY), dist: d, near: d <= RADIUS_MI };
+      byId[o.id] = o;
+      return o;
+    });
+    S.end = S.rows.reduce(function (m, r) { return Math.max(m, r.t); }, S.since);
+    S.cutoff = S.end;
+
+    var range = document.getElementById('range');
+    range.max = Math.round((S.end - S.since) / DAY);
+    range.value = range.max;
+    document.getElementById('sStart').textContent = fmtD(S.since);
+    document.getElementById('sEnd').textContent = fmtD(S.end);
+    document.getElementById('source').textContent = 'City records run through ' + fmtD(S.end) +
+      (S.refreshed ? ', last refreshed by the city ' + fmtD(parseD(S.refreshed)) + ', ' + S.refreshed.slice(0, 4) : '') +
+      '. Route and company are sample data. Addresses shown to the block.';
+    buildHist();
+    renderPanels();
+    if (S.mapReady) pushToMap();
+  }
+  window.setData = setData;
+
+  function inWindow(endMs, days, nearOnly) {
+    var start = endMs - (days - 1) * DAY;
+    return S.rows.filter(function (r) { return r.t >= start && r.t <= endMs && (!nearOnly || r.near); });
+  }
+
+  function renderPanels() {
+    var asOf = S.cutoff, latest = asOf === S.end;
+    var wk = inWindow(asOf, 7), wkNear = wk.filter(function (r) { return r.near; });
+    var m30 = inWindow(asOf, 30), m30Near = m30.filter(function (r) { return r.near; });
+    var range = fmtD(asOf - 6 * DAY) + ' - ' + fmtD(asOf);
+
+    // greeting
+    var lead = latest ? 'In the latest week of city records (' + range + '), ' : 'In the week of ' + range + ', ';
+    document.getElementById('summary').innerHTML = esc(lead) + '<b>' + wk.length + ' new pool ' + plural(wk.length, 'permit was', 'permits were') +
+      ' filed</b> across Los Angeles. <b>' + wkNear.length + ' ' + plural(wkNear.length, 'is', 'are') + ' within 2 miles of your ' + ROUTE_NAME + '.</b>';
+
+    // big number + weekly bars
+    document.getElementById('big30').textContent = m30Near.length;
+    document.getElementById('big30sub').textContent = 'of ' + m30.length + ' citywide';
+    var weeks = Math.ceil((S.end - S.since + DAY) / (7 * DAY));
+    var counts = [];
+    for (var w = 0; w < weeks; w++) counts.push(0);
+    S.rows.forEach(function (r) { if (r.near && r.t <= asOf) counts[Math.floor(r.day / 7)]++; });
+    var maxC = Math.max.apply(null, counts.concat([1]));
+    var W = 280, H = 54, gap = 4, bw = (W - gap * (weeks - 1)) / weeks, svg = '';
+    var cut30 = asOf - 29 * DAY;
+    counts.forEach(function (c, i) {
+      var wEnd = S.since + (i * 7 + 6) * DAY;
+      var h = c ? Math.max(4, c / maxC * (H - 12)) : 2;
+      var hot = wEnd >= cut30 && S.since + i * 7 * DAY <= asOf;
+      svg += '<rect x="' + (i * (bw + gap)).toFixed(1) + '" y="' + (H - h).toFixed(1) + '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) +
+        '" rx="2" fill="' + (hot ? '#F5C53D' : '#E3DFD6') + '"><title>Week of ' + fmtD(S.since + i * 7 * DAY) + ': ' + c + '</title></rect>';
+      if (c) svg += '<text x="' + (i * (bw + gap) + bw / 2).toFixed(1) + '" y="' + (H - h - 3).toFixed(1) + '" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#8E897F">' + c + '</text>';
+    });
+    document.getElementById('weekly').innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">' + svg + '</svg>';
+    document.getElementById('wkStart').textContent = fmtD(S.since);
+    document.getElementById('wkEnd').textContent = fmtD(asOf);
+
+    // rail tiles
+    document.getElementById('weekRange').textContent = range + (latest ? ', the newest week on file' : '');
+    document.getElementById('tCity').textContent = wk.length;
+    document.getElementById('tNear').textContent = wkNear.length;
+    document.getElementById('tMed').textContent = moneyShort(median(m30.map(function (r) { return r.valuation; }).filter(function (v) { return v > 0; })));
+
+    // bars by area (near the route, 30 days)
+    var by = {};
+    m30Near.forEach(function (r) { by[r.cnc] = (by[r.cnc] || 0) + 1; });
+    var areas = Object.keys(by).sort(function (a, b) { return by[b] - by[a]; }).slice(0, 5);
+    var top = areas.length ? by[areas[0]] : 1;
+    document.getElementById('bars').innerHTML = areas.length ? areas.map(function (a) {
+      return '<div class="bar"><em>' + esc(a) + '</em><i><s style="width:' + (by[a] / top * 100).toFixed(0) + '%"></s></i><b>' + by[a] + '</b></div>';
+    }).join('') : '<div class="bar"><em>None yet</em><i></i><b>0</b></div>';
+
+    // feed: near the route, newest first
+    var feed = S.rows.filter(function (r) { return r.near && r.t <= asOf; })
+      .sort(function (a, b) { return b.t - a.t || a.dist - b.dist; }).slice(0, 12);
+    document.getElementById('feed').innerHTML = feed.length ? feed.map(function (r) {
+      return '<li data-id="' + esc(r.id) + '" tabindex="0" role="button"><i class="dot"></i><div><b>' + esc(r.block) + ', ' + esc(r.cnc) + '</b><span>' +
+        fmtD(r.t) + ' · ' + mi(r.dist) + ' from route</span></div></li>';
+    }).join('') : '<li class="none">Nothing near the route yet.</li>';
+
+    // call list sheet: near the route, last 30 days, closest first
+    var list = m30Near.slice().sort(function (a, b) { return a.dist - b.dist; });
+    document.getElementById('sheetSub').textContent = list.length + ' new pool ' + plural(list.length, 'permit', 'permits') +
+      ' within 2 mi of your route, issued ' + fmtD(asOf - 29 * DAY) + ' - ' + fmtD(asOf) + '. Closest first.';
+    document.getElementById('sheetList').innerHTML = list.length ? list.map(function (r, i) {
+      return '<li data-id="' + esc(r.id) + '" tabindex="0" role="button"><span class="i">' + (i + 1) + '</span><div><b>' + esc(r.block) + '</b><span>' + esc(r.cnc) +
+        ' · issued ' + fmtD(r.t) + ' · ' + money(r.valuation) + '</span></div><span class="d">' + mi(r.dist) + '</span></li>';
+    }).join('') : '<li><span class="i"></span><div><span>Nothing within 2 miles in these 30 days.</span></div><span></span></li>';
+
+    // scrubber label
+    document.getElementById('whenDate').textContent = fmtD(asOf);
+    var shown = S.rows.filter(function (r) { return r.t <= asOf; }).length;
+    document.getElementById('whenCount').textContent = shown + ' on the map';
+    document.querySelectorAll('#hist i').forEach(function (el) { el.classList.toggle('off', +el.dataset.d > asOf); });
+  }
+
+  function buildHist() {
+    var days = Math.round((S.end - S.since) / DAY) + 1, c = [];
+    for (var i = 0; i < days; i++) c.push(0);
+    S.rows.forEach(function (r) { if (r.day >= 0 && r.day < days) c[r.day]++; });
+    var mx = Math.max.apply(null, c.concat([1]));
+    document.getElementById('hist').innerHTML = c.map(function (n, i) {
+      return '<i data-d="' + (S.since + i * DAY) + '" class="' + (n ? '' : 'zero') + '" style="height:' + (n ? Math.max(12, n / mx * 100) : 8) + '%" title="' + fmtD(S.since + i * DAY) + ': ' + n + '"></i>';
+    }).join('');
+  }
+
+  // ---------- interactions ----------
+  var range = document.getElementById('range');
+  function setCutoff(day) {
+    S.cutoff = S.since + day * DAY;
+    applyCutoff();
+    renderPanels();
+  }
+  range.addEventListener('input', function () { stop(); setCutoff(+range.value); });
+
+  var timer = null;
+  var playIcon = document.getElementById('playIcon');
+  function stop() {
+    if (timer) { clearInterval(timer); timer = null; }
+    playIcon.innerHTML = '<path d="M2 1l7 4-7 4z"/>';
+  }
+  function play() {
+    if (timer) { stop(); return; }
+    if (+range.value >= +range.max) range.value = 0;
+    playIcon.innerHTML = '<path d="M1.5 1h2.5v8H1.5zM6 1h2.5v8H6z"/>';
+    timer = setInterval(function () {
+      var v = +range.value + 1;
+      if (v > +range.max) { stop(); return; }
+      range.value = v;
+      setCutoff(v);
+    }, 90);
+  }
+  document.getElementById('play').addEventListener('click', play);
+  document.getElementById('replay').addEventListener('click', function () { stop(); range.value = 0; setCutoff(0); play(); });
+
+  var sheet = document.getElementById('sheet');
+  function openSheet() {
+    sheet.classList.add('on'); sheet.setAttribute('aria-hidden', 'false');
+    if (isPhone()) sheet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function closeSheet() { sheet.classList.remove('on'); sheet.setAttribute('aria-hidden', 'true'); }
+  document.getElementById('openList').addEventListener('click', openSheet);
+  document.getElementById('openList2').addEventListener('click', openSheet);
+  document.getElementById('closeList').addEventListener('click', closeSheet);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
+  function listClick(e) {
+    var li = e.target.closest('li[data-id]'); if (!li) return;
+    if (isPhone()) document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+    flyTo(li.dataset.id);
+  }
+  document.getElementById('feed').addEventListener('click', listClick);
+  document.getElementById('sheetList').addEventListener('click', listClick);
+  function listKey(e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    if (!e.target.closest('li[data-id]')) return;
+    e.preventDefault(); listClick(e);
+  }
+  document.getElementById('feed').addEventListener('keydown', listKey);
+  document.getElementById('sheetList').addEventListener('keydown', listKey);
+
+  // ---------- data ----------
+  window.__snapMeta = { since: '2026-07-01' };
+  window.__snap = fetch('./permits.json', { cache: 'no-cache' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (d) {
+      window.__snapMeta = { since: d.since, refreshed: d.refreshed };
+      setData(d.rows || [], window.__snapMeta);
+    })
+    .catch(function () {
+      document.getElementById('summary').textContent = 'The permit records did not load. Refresh the page to try again.';
+      if (qc) document.title = 'ERROR';
+    });
+})();
+</script>
+<script type="module">
+import { SOQL_URL, WILDFIRE_APN_URL, isNewPool, anonymize, excludeParcels, latestRefresh } from './anonymize.mjs';
+
+async function live() {
+  var off = /[?&]offline=1\b/.test(location.search);
+  var url = off ? SOQL_URL.replace('data.lacity.org', 'data.lacity.invalid') : SOQL_URL;
+  var apnUrl = off ? WILDFIRE_APN_URL.replace('data.lacity.org', 'data.lacity.invalid') : WILDFIRE_APN_URL;
+  var ctl = new AbortController();
+  var timer = setTimeout(function () { ctl.abort(); }, 4000);
+  try {
+    var both = await Promise.all([fetch(url, { signal: ctl.signal }), fetch(apnUrl, { signal: ctl.signal })]);
+    // If the wildfire parcel list is missing, keep the snapshot rather than show unfiltered live rows.
+    if (!both[0].ok || !both[1].ok) return false;
+    var all = await both[0].json(), apns = await both[1].json();
+    if (!Array.isArray(all) || !Array.isArray(apns) || !apns.length) return false;
+    var raw = excludeParcels(all, new Set(apns.map(function (a) { return String(a.apn); })));
+    var seen = {}, rows = [];
+    raw.filter(isNewPool).map(anonymize).forEach(function (r) {
+      if (!r.id || seen[r.id]) return;
+      seen[r.id] = 1; rows.push(r);
+    });
+    if (!rows.length) return false;
+    rows.sort(function (a, b) { return a.issue_date < b.issue_date ? 1 : a.issue_date > b.issue_date ? -1 : 0; });
+    window.setData(rows, { since: window.__snapMeta.since, refreshed: latestRefresh(all) || window.__snapMeta.refreshed });
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+await window.__snap;
+var ok = false;
+try { ok = await live(); } catch (e) { ok = false; }
+window.__settle(ok ? 'live' : 'snapshot');
+</script>
+</body>
+</html>
