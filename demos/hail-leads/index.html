@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Hail lead finder · Unvent Automations</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.0/maplibre-gl.css" integrity="sha512-KIMsMWIdnoG9OwZa+oaIafmbDonqck1UCmq+/zcUi2aaZ97N9QE6TqpTM+n36EO40HGh64hU/375zxtjx7WTyQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{
+  color-scheme:light only;
+  --ink:#1F1D1A; --ink-2:#5C5850; --ink-3:#8E897F; --ink-4:#B9B4AA;
+  --paper:#FFFFFF; --bg:#F4F2EE; --bg-2:#EDEAE4; --line:#E6E2DA;
+  --sun:#F5C53D; --sun-deep:#D9A514; --sun-ink:#3B2F05; --sun-soft:#FCF3D6;
+  --route:#2E2B26;
+  --sans:'Sora',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --shadow:0 0 0 1px rgba(60,48,20,.07),0 1px 2px rgba(60,48,20,.05),0 10px 28px -10px rgba(60,48,20,.18),0 2px 6px -2px rgba(60,48,20,.06);
+  --ease:cubic-bezier(.32,.72,0,1);
+  --nav:46px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font-family:inherit}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* nav */
+nav{height:var(--nav);background:var(--paper);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding:0 18px;position:relative;z-index:5}
+.brand{font-weight:600;font-size:14px;text-decoration:none;letter-spacing:-.01em}
+.brand span{color:var(--sun-deep)}
+.crumb{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+nav .back{margin-left:auto;font-size:12.5px;color:var(--ink-2);text-decoration:none}
+nav .back:hover{color:var(--ink)}
+
+/* app shell: full-bleed map with floating cards */
+.app{position:relative;height:calc(100vh - var(--nav));height:calc(100dvh - var(--nav));overflow:hidden}
+#map{position:absolute;inset:0;background:var(--bg-2)}
+.card{background:var(--paper);border-radius:14px;box-shadow:var(--shadow)}
+.left{position:absolute;top:14px;left:14px;width:320px;display:flex;flex-direction:column;gap:10px;z-index:2}
+.rail{position:absolute;top:14px;right:14px;bottom:40px;width:300px;z-index:2;
+  display:flex;flex-direction:column;overflow:hidden}
+.scrub{position:absolute;left:14px;right:328px;bottom:14px;z-index:2}
+
+/* greeting */
+.greet{padding:15px 16px 16px}
+.eye{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.eye i{width:6px;height:6px;border-radius:50%;background:var(--sun);display:block;flex:none}
+.greet h1{font-size:19px;line-height:1.2;letter-spacing:-.02em;font-weight:600;margin:0 0 7px}
+.greet p{margin:0 0 13px;color:var(--ink-2);font-size:12.5px;text-wrap:pretty}
+.greet p b{color:var(--ink);font-weight:600}
+.btns{display:flex;gap:7px;flex-wrap:wrap}
+.btn{font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;border:1px solid transparent;
+  cursor:pointer;transition:background-color .3s var(--ease),border-color .3s var(--ease),transform .2s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn.sun{background:var(--sun);color:var(--sun-ink);border-color:#E8B52A}
+.btn.sun:hover{background:#F0BC2A}
+.btn.ghost{background:var(--paper);color:var(--ink-2);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink-4);color:var(--ink)}
+.btn.wide{width:100%;padding:10px 12px;font-size:12.5px}
+
+/* legend */
+.legend{padding:11px 16px 12px}
+.ramp{height:8px;border-radius:4px;margin:6px 0 4px;
+  background:linear-gradient(90deg,#F7D23E 0%,#F7A632 20%,#EF6B2E 40%,#E33B32 55%,#D23A9A 75%,#7A3FC6 100%)}
+.ramp-ax{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+.keys{display:flex;gap:14px;margin-top:9px;font-size:11px;color:var(--ink-2)}
+.keys span{display:flex;align-items:center;gap:6px}
+.keys .kd{width:8px;height:8px;border-radius:50%;background:#C2410C;box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px rgba(0,0,0,.12)}
+.keys .kp{font-family:var(--mono);font-size:9px;background:var(--route);color:#fff;border-radius:4px;padding:1px 4px}
+
+/* rail */
+.rhead{padding:14px 16px 0}
+.rhead h2{font-size:13.5px;font-weight:600;letter-spacing:-.01em;margin:0}
+.rhead .lbl{margin-top:2px}
+.lbl{font-size:11px;color:var(--ink-3)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:12px 16px 0}
+.tile{background:var(--bg);border-radius:9px;padding:9px 10px}
+.tile b{display:block;font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:-.02em;line-height:1.15}
+.tile span{display:block;font-size:10.5px;color:var(--ink-2);line-height:1.3;margin-top:2px}
+.tile.hi{background:var(--sun-soft)}
+.ract{padding:12px 16px 4px}
+.live{margin:8px 16px 0;font-size:11px;color:var(--ink-2);display:flex;gap:7px;align-items:center}
+.live i{width:6px;height:6px;border-radius:50%;background:#2F9E5B;flex:none;box-shadow:0 0 0 3px #E2F3E8}
+.live[hidden]{display:none}
+.rscroll{flex:1;min-height:0;overflow:auto;padding-bottom:30px;
+  -webkit-mask-image:linear-gradient(#000 calc(100% - 28px),transparent);mask-image:linear-gradient(#000 calc(100% - 28px),transparent)}
+.sect{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  padding:12px 16px 7px;display:flex;justify-content:space-between}
+.bars{padding:0 16px}
+.bar{display:grid;grid-template-columns:104px 1fr 50px;align-items:center;gap:8px;font-size:11.5px;margin-bottom:5px}
+.bar em{font-style:normal;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar em small{display:block;font-family:var(--mono);font-size:10px;line-height:1.2;color:var(--ink-3)}
+.bar i{display:block;height:7px;border-radius:4px;background:var(--bg-2);overflow:hidden}
+.bar i s{display:block;height:100%;border-radius:4px;transition:width .5s var(--ease)}
+.bar b{font-family:var(--mono);font-weight:500;text-align:right;font-size:11px}
+.feed{list-style:none;margin:0;padding:0 16px}
+.feed li{display:flex;gap:9px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.feed li:first-child{border-top:none}
+.feed li:focus-visible,.sheet li:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;border-radius:6px}
+.feed li:hover b{text-decoration:underline;text-decoration-color:var(--ink-4)}
+.feed .dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:4px}
+.feed b{display:block;font-weight:500;font-size:12px}
+.feed span{display:block;font-size:11px;color:var(--ink-3)}
+.feed .none{color:var(--ink-3);font-size:12px;cursor:default}
+
+/* scrubber */
+.scrub{padding:10px 14px 9px}
+.srow{display:flex;align-items:center;gap:12px}
+.play{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--paper);
+  display:grid;place-items:center;cursor:pointer;transition:border-color .3s var(--ease)}
+.play:hover{border-color:var(--ink-4)}
+.play svg{width:11px;height:11px;fill:var(--ink)}
+.when{flex:none;width:104px}
+.when b{display:block;font-family:var(--mono);font-size:13px;font-weight:500}
+.when span{font-size:10.5px;color:var(--ink-3)}
+.track{flex:1;min-width:0;position:relative}
+.hist{display:flex;align-items:flex-end;gap:2px;height:26px}
+.hist i{flex:1;background:#EF8A2E;border-radius:1px;min-height:2px;transition:background-color .3s var(--ease)}
+.hist i.zero,.hist i.off{background:var(--bg-2)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;margin:3px 0 0;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-moz-range-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--paper);border:2px solid var(--ink);margin-top:-5.5px;cursor:grab}
+input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);cursor:grab}
+.saxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+.source{font-size:10.5px;color:var(--ink-3);margin:7px 0 0;padding-top:7px;border-top:1px solid var(--line)}
+
+/* map overlays */
+.maplibregl-popup-content{border-radius:11px;padding:11px 13px 12px;box-shadow:var(--shadow);font-family:var(--sans)}
+.maplibregl-popup-tip{display:none}
+.maplibregl-popup-close-button{font-size:15px;color:var(--ink-3);padding:2px 7px}
+.pop .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.pop b{display:block;font-size:13px;font-weight:600;letter-spacing:-.01em;padding-right:14px}
+.pop .n{color:var(--ink-2);font-size:11.5px;margin-bottom:8px}
+.pop dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:11.5px}
+.pop dt{color:var(--ink-3)}
+.pop dd{margin:0;font-family:var(--mono);font-size:11px}
+.pop .dist{margin-top:9px;font-size:11.5px;font-weight:500;background:var(--sun-soft);border-radius:6px;padding:5px 8px}
+.spc{font-family:var(--mono);font-size:9px;font-weight:500;background:var(--route);color:#fff;border:1px solid #fff;
+  border-radius:5px;padding:0 4px;line-height:22px;box-shadow:0 1px 4px rgba(30,25,15,.3);cursor:pointer;white-space:nowrap}
+.spc[hidden]{display:none}
+.maplibregl-ctrl-attrib{font-size:10.5px}
+
+/* knock list panel */
+.sheet{position:absolute;z-index:4;top:14px;right:328px;width:360px;max-height:calc(100% - 120px);
+  display:flex;flex-direction:column;opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .3s var(--ease),transform .2s var(--ease)}
+.sheet.on{opacity:1;transform:none;pointer-events:auto}
+.sheet header{padding:14px 16px 10px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.sheet h3{margin:0;font-size:14px;font-weight:600;letter-spacing:-.01em}
+.sheet header p{margin:2px 0 0;font-size:11px;color:var(--ink-3)}
+.sheet .x{margin-left:auto;border:none;background:none;font-size:16px;color:var(--ink-3);cursor:pointer;padding:0 2px}
+.sheet ol{list-style:none;margin:0;padding:4px 16px 8px;overflow:auto}
+.sheet li{display:grid;grid-template-columns:20px 1fr auto;gap:9px;padding:9px 0;border-top:1px solid var(--line);align-items:start}
+.sheet li:first-child{border-top:none}
+.sheet li[data-id]{cursor:pointer}
+.sheet li[data-id]:hover b{text-decoration:underline;text-decoration-color:var(--ink-4)}
+.sheet li.sel{background:var(--sun-soft);border-radius:6px}
+.sheet li .i{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);padding-top:2px}
+.sheet li b{display:block;font-size:12px;font-weight:500}
+.sheet li span{display:block;font-size:11px;color:var(--ink-3)}
+.sheet li .d{font-family:var(--mono);font-size:11px;text-align:right;white-space:nowrap;padding-right:4px}
+.sheet footer{padding:10px 16px 13px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-3)}
+
+/* phone: map on top, everything else in normal flow */
+@media (max-width:720px){
+  nav{padding:0 16px}
+  .crumb{display:none}
+  .app{height:auto;overflow:visible;display:flex;flex-direction:column;padding-bottom:24px}
+  #map{position:relative;inset:auto;height:56vh;height:56svh;order:0}
+  .left,.rail,.scrub,.sheet{position:static;width:auto;margin:10px 16px 0}
+  .left{order:1}
+  .sheet{order:2;max-height:none;display:none}
+  .sheet.on{display:flex}
+  .scrub{order:3}
+  .rail{order:4;overflow:visible}
+  .rscroll{overflow:visible;-webkit-mask-image:none;mask-image:none;padding-bottom:14px}
+  .when{width:84px}
+}
+</style>
+<script>if(window.self!==window.top||/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed')</script>
+<style>html.embed{--nav:0px}html.embed body>nav{display:none}</style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <a class="brand" href="/">unvent<span>/</span>automations</a>
+  <span class="crumb">Demo · Hail lead finder</span>
+  <a class="back" href="/demos/">&#8592; All demos</a>
+</nav>
+
+<main class="app">
+  <div id="map" role="region" aria-label="Map of Saturday night's hail and the homes it hit"></div>
+
+  <section class="left">
+    <div class="card greet">
+      <div class="eye"><i></i>Sample company - Quillan Roofing</div>
+      <h1 id="hello">Good morning, Wes.</h1>
+      <p id="summary">Loading Saturday night's hail.</p>
+      <div class="btns">
+        <button class="btn sun" id="openList2" type="button">Build the knock list</button>
+        <button class="btn ghost" id="replay" type="button">Replay the storm</button>
+      </div>
+    </div>
+    <div class="card legend">
+      <div class="lbl">Radar hail size, largest so far</div>
+      <div class="ramp"></div>
+      <div class="ramp-ax"><span>0.75 in</span><span>1.5</span><span>2</span><span>2.75 in+</span></div>
+      <div class="keys"><span><i class="kd"></i>About 100 m of homes</span><span><i class="kp">1.75</i>Spotter report</span></div>
+    </div>
+  </section>
+
+  <aside class="card rail" aria-label="Saturday night's hail">
+    <div class="rhead">
+      <h2>Saturday night's hail</h2>
+      <div class="lbl" id="railSub"></div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><b id="t1">-</b><span>homes hit by 1 in or more</span></div>
+      <div class="tile"><b id="t15">-</b><span>homes hit by 1.5 in or more</span></div>
+      <div class="tile"><b id="t2">-</b><span>homes hit by 2 in or more</span></div>
+      <div class="tile hi"><b id="tOld">-</b><span id="tOldLbl">built before 2006, hit by 1.5 in or more</span></div>
+    </div>
+    <div class="live" id="live" data-source="pending" hidden><i></i><span id="liveText"></span></div>
+    <div class="ract"><button class="btn sun wide" id="openList" type="button">Build the knock list</button></div>
+    <div class="rscroll">
+      <div class="sect"><span>Homes by hail size</span><span id="barsWhen"></span></div>
+      <div class="bars" id="bars"></div>
+      <div class="sect"><span>Hardest-hit streets</span><span>Homes</span></div>
+      <ul class="feed" id="feed"></ul>
+    </div>
+  </aside>
+
+  <section class="card sheet" id="sheet" aria-label="Knock list" aria-hidden="true">
+    <header>
+      <div>
+        <h3>Knock list: free roof inspections</h3>
+        <p id="sheetSub"></p>
+      </div>
+      <button class="x" id="closeList" type="button" aria-label="Close">&#215;</button>
+    </header>
+    <ol id="sheetList"></ol>
+    <footer>Sample. Nothing is sent from this page. Homes shown as ~100 m areas.</footer>
+  </section>
+
+  <section class="card scrub" aria-label="Storm timeline">
+    <div class="srow">
+      <button class="play" id="play" type="button" aria-label="Play the storm">
+        <svg viewBox="0 0 10 10" id="playIcon"><path d="M2 1l7 4-7 4z"/></svg>
+      </button>
+      <div class="when"><b id="whenTime">-</b><span id="whenCount"></span></div>
+      <div class="track">
+        <div class="hist" id="hist"></div>
+        <input type="range" id="range" min="0" max="0" value="0" step="1" aria-label="Show hail up to this time">
+        <div class="saxis"><span id="sStart"></span><span id="sEnd"></span></div>
+      </div>
+    </div>
+    <p class="source">Hail is radar-estimated from NOAA data, with spotter reports, for the night of April 25, 2026. Homes are Tarrant Appraisal District records, shown as ~100 m areas. The company is a sample.</p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.0/maplibre-gl.js" integrity="sha512-rOFgoUgWaVi69JW1dzBu6PWF9xKW9rxYfY5u2SexFABHhWk0qUWkJoWNz4UuZRMvSXsNZG66+tU5B+HlwWF5kA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="module">
+import { decodeRow, parseSpcCsv, TIERS, TIER_NAMES, SPC_TODAY_URL, mmToIn } from './hail.mjs';
+
+// ---------- formatting ----------
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtN = (n) => n.toLocaleString('en-US');
+const about = (n) => n >= 10000 ? fmtN(Math.round(n / 1000) * 1000) : fmtN(n);
+const inch = (mm) => mmToIn(mm).toFixed(1) + ' in';
+const inch2 = (mm) => mmToIn(mm).toFixed(2) + ' in';
+const decade = (y) => Math.floor(y / 10) * 10 + 's';
+const builtRange = (b) => !b.yearMin ? 'year built not listed' : decade(b.yearMin) === decade(b.yearMax) ? 'built ' + decade(b.yearMin) : 'built ' + decade(b.yearMin) + '-' + decade(b.yearMax);
+const mi = (d) => d < 0.1 ? 'under 0.1 mi' : d.toFixed(1) + ' mi';
+function haversineMi(lat1, lon1, lat2, lon2) {
+  const R = 3958.8, r = Math.PI / 180, dLat = (lat2 - lat1) * r, dLon = (lon2 - lon1) * r;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+// "12:35 AM" -> minutes after 10:00 PM
+function minsAfter10(t) {
+  const m = /^(\d+):(\d+) (AM|PM)$/.exec(t); if (!m) return 0;
+  let v = ((+m[1] % 12) + (m[3] === 'PM' ? 12 : 0)) * 60 + +m[2];
+  if (v < 12 * 60) v += 1440;
+  return v - 22 * 60;
+}
+
+
+// ---------- tiers and colours ----------
+// Tier index 0 = under 0.75 in, 1..7 = TIERS[0..6] (0.75, 1, 1.5, 1.75, 2, 2.5, 2.75 in).
+const DOT = ['#D9B53A', '#E0A800', '#E07B12', '#D9541F', '#C9302C', '#B5267A', '#8E2CA8', '#5B2DA6'];
+const tierIdx = (mm) => { let i = 0; TIERS.forEach((t, k) => { if (mmToIn(mm) + 1e-9 >= t) i = k + 1; }); return i; };
+const thrMm = (inches) => inches * 25.4 - 1e-6; // mm >= thrMm  <=>  mmToIn(mm) >= inches
+
+// ---------- state ----------
+const qc = /[?&]qc=1\b/.test(location.search);
+const St = { frame: 0, last: 0, blocks: [], frames: [], spc: [], mapReady: false, dataReady: false, rendered: false, final: false, sel: null };
+
+// ---------- map ----------
+const isPhone = () => window.matchMedia('(max-width:720px)').matches;
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://tiles.openfreemap.org/styles/positron',
+  center: [-97.36, 32.78],
+  zoom: 10.6,
+  attributionControl: { compact: false },
+  cooperativeGestures: isPhone()
+});
+// withSheet: the knock list floats left of the rail (360px wide + 14px gap), so keep the target out from under it.
+function framePad(withSheet) {
+  if (isPhone()) return { top: 30, bottom: 50, left: 20, right: 20 };
+  return { top: 40, bottom: 120, left: 350, right: 330 + (withSheet ? 374 : 0) };
+}
+const hasGlobal = typeof map.setGlobalStateProperty === 'function';
+
+// ---------- heat band: MESH grid -> bilinear upsample -> colour ramp -> blur -> image source ----------
+const UP = 12;
+const RAMP = [ // inches, r, g, b, alpha
+  [0.62, 247, 210, 62, 0], [0.75, 247, 210, 62, 0.3], [1.0, 247, 166, 50, 0.46], [1.5, 239, 107, 46, 0.56],
+  [1.75, 227, 59, 50, 0.6], [2.25, 210, 58, 154, 0.64], [2.75, 122, 63, 198, 0.68]];
+function rampAt(v) {
+  if (v <= RAMP[0][0]) return null;
+  if (v >= RAMP[RAMP.length - 1][0]) return RAMP[RAMP.length - 1].slice(1);
+  for (let i = 1; i < RAMP.length; i++) if (v <= RAMP[i][0]) {
+    const a = RAMP[i - 1], b = RAMP[i], t = (v - a[0]) / (b[0] - a[0]);
+    return [0, 1, 2, 3].map((k) => a[k + 1] + (b[k + 1] - a[k + 1]) * t);
+  }
+}
+const heatCache = [];
+let G = null;
+function heatURL(k) {
+  if (heatCache[k]) return heatCache[k];
+  const { rows, cols } = G, grid = St.frames[k];
+  const W = cols * UP, H = rows * UP;
+  const c1 = document.createElement('canvas'); c1.width = W; c1.height = H;
+  const ctx = c1.getContext('2d'), img = ctx.createImageData(W, H), d = img.data;
+  const at = (r, c) => grid[Math.max(0, Math.min(rows - 1, r)) * cols + Math.max(0, Math.min(cols - 1, c))];
+  for (let y = 0; y < H; y++) {
+    const gy = (y + 0.5) / UP - 0.5, r0 = Math.floor(gy), fy = gy - r0;
+    for (let x = 0; x < W; x++) {
+      const gx = (x + 0.5) / UP - 0.5, c0 = Math.floor(gx), fx = gx - c0;
+      const v = (at(r0, c0) * (1 - fx) + at(r0, c0 + 1) * fx) * (1 - fy) + (at(r0 + 1, c0) * (1 - fx) + at(r0 + 1, c0 + 1) * fx) * fy;
+      const col = rampAt(mmToIn(v)); if (!col) continue;
+      const o = (y * W + x) * 4;
+      // feather the edge of the study box so the band does not end on a hard line
+      const edge = Math.min(1, Math.min(x, W - 1 - x, y, H - 1 - y) / (UP * 5));
+      d[o] = col[0]; d[o + 1] = col[1]; d[o + 2] = col[2]; d[o + 3] = col[3] * 255 * edge;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+  const c2 = document.createElement('canvas'); c2.width = W; c2.height = H;
+  const x2 = c2.getContext('2d'); x2.filter = 'blur(5px)'; x2.drawImage(c1, 0, 0);
+  return (heatCache[k] = c2.toDataURL('image/png'));
+}
+
+// ---------- data ----------
+const EMPTY = { type: 'FeatureCollection', features: [] };
+Promise.all([
+  fetch('./storm.json', { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+  fetch('./blocks.json', { cache: 'no-cache' }).then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+]).then(([storm, blocks]) => {
+  G = storm.mesh;
+  const N = G.rows * G.cols;
+  St.frameTimes = storm.frames.map((f) => f.t);
+  St.frames = storm.frames.map((f) => { const a = new Float32Array(N); f.cells.forEach(([r, c, mm]) => { a[r * G.cols + c] = mm; }); return a; });
+  St.last = St.frames.length - 1;
+  St.spc = storm.spc.map(([lat, lon, size, t, loc], i) => ({ i, lat, lon, inches: size / 100, t, loc, m: minsAfter10(t) }));
+  const cellOf = (lat, lon) => Math.floor((G.lat0 + 0.005 - lat) / 0.01) * G.cols + Math.floor((lon - (G.lon0 - 0.005)) / 0.01);
+  St.blocks = blocks.rows.map((row, id) => {
+    const b = decodeRow(row, blocks);
+    b.id = id; b.row = row;
+    const cell = b.gridIdx != null ? b.gridIdx : cellOf(b.lat, b.lon);
+    // block hail at each frame; the final frame is the block's own night max (meshMm)
+    b.mmAt = St.frames.map((g, k) => (k === St.last ? b.mm : Math.min(b.mm, g[cell] || 0)));
+    // first frame at which the block reaches each tier (99 = never); v = first frame on the map
+    b.first = TIERS.map((t) => { const k = b.mmAt.findIndex((v) => v >= thrMm(t)); return k < 0 ? 99 : k; });
+    const kv = b.mmAt.findIndex((v) => v >= 19); b.v = kv < 0 ? St.last : kv;
+    return b;
+  });
+  St.frame = St.last;
+  St.dataReady = true;
+  setupScrubber();
+  writeSummary();
+  renderPanels();
+  if (St.mapReady) pushToMap();
+}).catch(() => {
+  document.getElementById('summary').textContent = 'The storm data did not load. Refresh the page to try again.';
+  if (qc) document.title = 'ERROR';
+});
+
+function writeSummary() {
+  const B = St.blocks, maxMm = Math.max(...B.map((b) => b.mm));
+  const sum = (inches) => B.reduce((s, b) => s + (b.mm >= thrMm(inches) ? b.homes : 0), 0);
+  const top = rankedAt(St.last).slice(0, 12);
+  const streets = [...new Set(top.map((b) => b.street))].filter((s) => s !== 'Unknown street').slice(0, 2);
+  const first = St.spc.reduce((a, r) => (r.m < a.m ? r : a), St.spc[0]);
+  const near = nearestReport(top[0], St.last);
+  const spcTop = St.spc.reduce((a, r) => (r.inches > a.inches ? r : a), St.spc[0]);
+  const spcPlace = String(spcTop.loc).replace(/^\d+(\.\d+)?\s+[NSEW]{1,3}\s+/i, '');
+  const endT = stormEnd();
+  const radarTop = Math.round(mmToIn(maxMm) * 10) / 10;
+  document.getElementById('summary').innerHTML =
+    'Radar hail up to <b>' + radarTop.toFixed(1) + ' in</b> fell across Fort Worth and Tarrant County between ' + esc(first.t) + ' and ' + esc(endT) +
+    (spcTop.inches > radarTop + 0.05 ? ', with a ' + (+spcTop.inches.toFixed(2)) + ' in stone reported near ' + esc(spcPlace) : '') + '. ' +
+    'About <b>' + about(sum(1)) + ' homes</b> were hit by 1 in or more, and <b>' + about(sum(1.5)) + '</b> by 1.5 in or more. ' +
+    'The heaviest fell around ' + esc(streets.join(' and ')) +
+    (near && near.d < 1 ? ', where a ' + near.r.inches.toFixed(2) + ' in report came in at ' + esc(near.r.t) + '.' : '.');
+}
+// The storm ends at the last frame whose cells changed from the frame before it.
+function stormEnd() {
+  const sig = (f) => { let h = 0; for (let i = 0; i < f.length; i++) h = (h * 31 + (f[i] * 7 + i)) % 2147483647; return h; };
+  let k = St.last;
+  while (k > 0 && St.frames[k].length === St.frames[k - 1].length && sig(St.frames[k]) === sig(St.frames[k - 1])) k--;
+  return St.frameTimes[k];
+}
+// Same order as rankBlocks in hail.mjs (hail, then oldest median year built, then more homes), at frame k.
+function rankedAt(k) {
+  return St.blocks.filter((b) => b.mmAt[k] >= 19).sort((a, b) => b.mmAt[k] - a.mmAt[k] || (a.yearMed || 9999) - (b.yearMed || 9999) || b.homes - a.homes);
+}
+
+function nearestReport(b, k) {
+  if (!b) return null;
+  let best = null;
+  St.spc.forEach((r) => {
+    if (r.m > k * 10) return;
+    const d = haversineMi(b.lat, b.lon, r.lat, r.lon);
+    if (!best || d < best.d) best = { r, d };
+  });
+  return best;
+}
+
+// ---------- panels ----------
+function renderPanels() {
+  const k = St.frame, B = St.blocks;
+  const homesAt = (inches) => B.reduce((s, b) => s + (b.mmAt[k] >= thrMm(inches) ? b.homes : 0), 0);
+  const old15 = B.reduce((s, b) => s + (b.mmAt[k] >= thrMm(1.5) ? b.builtBefore2006 : 0), 0);
+  document.getElementById('t1').textContent = fmtN(homesAt(1));
+  document.getElementById('t15').textContent = fmtN(homesAt(1.5));
+  document.getElementById('t2').textContent = fmtN(homesAt(2));
+  document.getElementById('tOld').textContent = fmtN(old15);
+  const t = St.frameTimes[k];
+  document.getElementById('railSub').textContent = k === St.last
+    ? 'April 25, ' + St.frameTimes[0] + ' to ' + t + ', the whole night, in mapped areas'
+    : 'April 25, ' + St.frameTimes[0] + ' to ' + t + ' so far, in mapped areas';
+  document.getElementById('barsWhen').textContent = 'Through ' + t;
+
+  // bars: homes whose largest hail so far falls in each size band
+  const BANDS = [[1, 1.5], [1.5, 1.75], [1.75, 2], [2, 2.5], [2.5, 2.75], [2.75, 99]];
+  const counts = BANDS.map(([lo, hi]) => B.reduce((s, b) => s + (b.mmAt[k] >= thrMm(lo) && b.mmAt[k] < thrMm(hi) ? b.homes : 0), 0));
+  const mx = Math.max(1, ...counts);
+  document.getElementById('bars').innerHTML = BANDS.map(([lo, hi], i) =>
+    '<div class="bar"><em>' + TIER_NAMES[lo] + '<small>' + (hi > 50 ? lo + ' in+' : lo + ' to ' + hi + ' in') + '</small></em><i><s style="width:' + (counts[i] / mx * 100).toFixed(1) + '%;background:' + DOT[TIERS.indexOf(lo) + 1] + '"></s></i><b>' + fmtN(counts[i]) + '</b></div>'
+  ).join('');
+
+  // hardest-hit streets: largest hail on the street, then homes on it
+  const by = new Map();
+  B.forEach((b) => {
+    if (b.mmAt[k] < thrMm(1) || b.street === 'Unknown street') return;
+    let s = by.get(b.street);
+    if (!s) by.set(b.street, (s = { street: b.street, mm: 0, homes: 0, best: b }));
+    s.homes += b.homes;
+    if (b.mmAt[k] > s.mm || (b.mmAt[k] === s.mm && b.homes > s.best.homes)) { s.mm = b.mmAt[k]; s.best = b; }
+  });
+  const streets = [...by.values()].sort((a, b) => b.mm - a.mm || b.homes - a.homes).slice(0, 8);
+  document.getElementById('feed').innerHTML = streets.length ? streets.map((s) =>
+    '<li data-id="' + s.best.id + '" tabindex="0" role="button"><i class="dot" style="background:' + DOT[tierIdx(s.mm)] + '"></i><div><b>' + esc(s.street) + '</b><span>' +
+    inch(s.mm) + ' radar hail · ' + builtRange(s.best) + '</span></div><span class="num" style="margin-left:auto;font-size:11px;color:var(--ink-2)">' + fmtN(s.homes) + '</span></li>'
+  ).join('') : '<li class="none">No 1 in hail yet at this point in the night.</li>';
+
+  // knock list
+  const list = rankedAt(k).slice(0, 25);
+  document.getElementById('sheetSub').textContent = list.length
+    ? (() => { const mx = rankedAt(k)[0].mmAt[k], tied = rankedAt(k).filter((b) => b.mmAt[k] === mx).length; return list.length + ' of ' + tied + ' areas at ' + inch(mx) + '. '; })() + 'The areas with the largest radar hail through ' + t + ', oldest homes first within each size. Worth offering a free inspection.'
+    : 'No hail on the map yet at ' + t + '.';
+  document.getElementById('sheetList').innerHTML = list.map((b, i) => {
+    const n = nearestReport(b, k);
+    return '<li data-id="' + b.id + '" tabindex="0" role="button"' + (St.sel === b.id ? ' class="sel"' : '') + '><span class="i">' + (i + 1) + '</span><div><b>' + esc(b.label) + '</b><span>' +
+      b.homes + ' homes · ' + builtRange(b) + (b.yearMed ? ', median ' + b.yearMed : '') + '</span><span>' +
+      (n ? 'Nearest spotter report ' + n.r.inches.toFixed(2) + ' in, ' + esc(n.r.t) + ', ' + mi(n.d) + ' away' : 'No spotter report yet') +
+      '</span></div><span class="d">' + inch(b.mmAt[k]) + '</span></li>';
+  }).join('');
+
+  // scrubber label
+  document.getElementById('whenTime').textContent = t;
+  const onMap = B.filter((b) => b.v <= k).length;
+  document.getElementById('whenCount').textContent = fmtN(onMap) + ' areas';
+  document.querySelectorAll('#hist i').forEach((el) => el.classList.toggle('off', +el.dataset.k > k));
+}
+
+// ---------- map layers ----------
+const FRAME = hasGlobal ? ['global-state', 'frame'] : null;
+function tierExpr(F) {
+  return ['+'].concat(TIERS.map((t, i) => ['case', ['<=', ['get', 'a' + i], F], 1, 0]));
+}
+function layerSpecs(F) {
+  return {
+    filter: ['<=', ['get', 'v'], F],
+    color: ['match', tierExpr(F)].concat(DOT.flatMap((c, i) => [i, c])).concat([DOT[0]])
+  };
+}
+
+map.on('load', () => {
+  if (hasGlobal) map.setGlobalStateProperty('frame', St.frame);
+  const b = { top: 32.96, bottom: 32.62, left: -97.56, right: -97.10 };
+  map.addSource('heat', { type: 'image', url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+    coordinates: [[b.left, b.top], [b.right, b.top], [b.right, b.bottom], [b.left, b.bottom]] });
+  const firstSymbol = (map.getStyle().layers.find((l) => l.type === 'symbol') || {}).id;
+  map.addLayer({ id: 'heat', type: 'raster', source: 'heat', paint: { 'raster-opacity': 0.95, 'raster-fade-duration': 0, 'raster-resampling': 'linear' } }, firstSymbol);
+
+  map.addSource('blocks', { type: 'geojson', data: EMPTY });
+  const F = FRAME || St.frame, s = layerSpecs(F);
+  map.addLayer({ id: 'blocks', type: 'circle', source: 'blocks', filter: s.filter, paint: {
+    'circle-color': s.color,
+    'circle-radius': ['interpolate', ['linear'], ['zoom'],
+      10, ['interpolate', ['linear'], ['get', 'h'], 4, 0.9, 40, 1.6],
+      13, ['interpolate', ['linear'], ['get', 'h'], 4, 2.6, 40, 4.6],
+      16, ['interpolate', ['linear'], ['get', 'h'], 4, 6, 40, 11]],
+    'circle-opacity': ['interpolate', ['linear'], ['zoom'], 9.5, 0, 10.5, 0.55, 12, 0.95],
+    'circle-stroke-color': '#FFFFFF',
+    'circle-stroke-width': ['interpolate', ['linear'], ['zoom'], 11, 0, 13, 0.8],
+    'circle-stroke-opacity': 0.9
+  } });
+  map.addSource('sel', { type: 'geojson', data: EMPTY });
+  map.addLayer({ id: 'sel', type: 'circle', source: 'sel', paint: { 'circle-radius': 13, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': '#1F1D1A', 'circle-stroke-width': 2 } });
+
+  map.on('click', 'blocks', (e) => openPopup(+e.features[0].properties.id));
+  map.on('mouseenter', 'blocks', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'blocks', () => { map.getCanvas().style.cursor = ''; });
+
+  St.mapReady = true;
+  if (St.dataReady) pushToMap();
+});
+
+const spcMarkers = [];
+function pushToMap() {
+  const feats = St.blocks.map((b) => {
+    const p = { id: b.id, h: b.homes, v: b.v };
+    b.first.forEach((k, i) => { p['a' + i] = k; });
+    return { type: 'Feature', properties: p, geometry: { type: 'Point', coordinates: [b.lon, b.lat] } };
+  });
+  map.getSource('blocks').setData({ type: 'FeatureCollection', features: feats });
+  St.spc.forEach((r) => {
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = 'spc'; el.textContent = r.inches.toFixed(2);
+    el.setAttribute('aria-label', 'Spotter report, ' + r.inches.toFixed(2) + ' in at ' + r.t);
+    el.addEventListener('click', (e) => { e.stopPropagation(); openReport(r); });
+    spcMarkers.push({ r, el, m: new maplibregl.Marker({ element: el }).setLngLat([r.lon, r.lat]).addTo(map) });
+  });
+  // frame the night's 2 in+ homes
+  const bb = new maplibregl.LngLatBounds();
+  St.blocks.forEach((b) => { if (b.mm >= thrMm(2)) bb.extend([b.lon, b.lat]); });
+  map.fitBounds(bb, { padding: framePad(), duration: 0 });
+  applyFrame();
+  qcReady();
+}
+function applyFrame() {
+  if (!St.mapReady) return;
+  const k = St.frame;
+  map.getSource('heat').updateImage({ url: heatURL(k) });
+  if (hasGlobal) map.setGlobalStateProperty('frame', k);
+  else { const s = layerSpecs(k); map.setFilter('blocks', s.filter); map.setPaintProperty('blocks', 'circle-color', s.color); }
+  spcMarkers.forEach((o) => { o.el.hidden = o.r.m > k * 10; });
+}
+
+function qcReady() {
+  if (!qc || St.rendered || !St.final || !St.mapReady || !St.dataReady) return;
+  St.rendered = true;
+  map.once('idle', () => {
+    const shown = St.blocks.filter((b) => b.v <= St.frame).length;
+    const inSource = map.querySourceFeatures('blocks').length;
+    document.title = 'READY ' + (inSource > 0 ? shown : 0);
+  });
+  map.triggerRepaint();
+}
+window.__settle = (source) => {
+  document.documentElement.dataset.source = source;
+  St.final = true;
+  qcReady();
+};
+
+// ---------- popups ----------
+const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '270px', offset: 12 });
+popup.on('close', () => { St.sel = null; if (map.getSource('sel')) map.getSource('sel').setData(EMPTY); });
+function openPopup(id) {
+  const b = St.blocks[id]; if (!b) return;
+  const k = St.frame, n = nearestReport(b, k);
+  St.sel = id;
+  map.getSource('sel').setData({ type: 'Feature', geometry: { type: 'Point', coordinates: [b.lon, b.lat] } });
+  popup.setLngLat([b.lon, b.lat]).setHTML(
+    '<div class="pop"><div class="k">About 100 m of homes</div><b>' + esc(b.label) + '</b>' +
+    '<div class="n">' + b.homes + ' single-family homes</div>' +
+    '<dl><dt>Radar hail</dt><dd>' + inch2(b.mmAt[k]) + (k === St.last ? '' : ' by ' + esc(St.frameTimes[k])) + '</dd>' +
+    '<dt>Year built</dt><dd>' + (b.yearMin ? (b.yearMin === b.yearMax ? b.yearMin : b.yearMin + '-' + b.yearMax) + ', median ' + b.yearMed : 'Not listed') + '</dd>' +
+    '<dt>Built before 2006</dt><dd>' + b.builtBefore2006 + ' of ' + b.homes + '</dd>' +
+    (n ? '<dt>Spotter report</dt><dd>' + n.r.inches.toFixed(2) + ' in, ' + esc(n.r.t) + ', ' + mi(n.d) + ' away</dd>' : '') +
+    '</dl><div class="dist">Worth offering a free roof inspection</div></div>'
+  ).addTo(map);
+  document.querySelectorAll('#sheetList li').forEach((li) => li.classList.toggle('sel', +li.dataset.id === id));
+}
+function openReport(r) {
+  popup.setLngLat([r.lon, r.lat]).setHTML(
+    '<div class="pop"><div class="k">Spotter report</div><b>' + r.inches.toFixed(2) + ' in hail</b>' +
+    '<div class="n">Reported at ' + esc(r.t) + ', ' + esc(r.loc) + '</div>' +
+    '<dl><dt>Size</dt><dd>' + r.inches.toFixed(2) + ' in' + (TIER_NAMES[r.inches] ? ' (' + TIER_NAMES[r.inches].toLowerCase() + ')' : '') + '</dd><dt>Time</dt><dd>' + esc(r.t) + '</dd></dl></div>'
+  ).addTo(map);
+}
+function flyTo(id) {
+  const b = St.blocks[id]; if (!b) return;
+  map.easeTo({ center: [b.lon, b.lat], zoom: Math.max(map.getZoom(), 14), padding: framePad(sheet.classList.contains('on')), duration: 600 });
+  openPopup(id);
+}
+
+// ---------- scrubber ----------
+const range = document.getElementById('range');
+function setupScrubber() {
+  range.max = St.last; range.value = St.last;
+  document.getElementById('sStart').textContent = St.frameTimes[0];
+  document.getElementById('sEnd').textContent = St.frameTimes[St.last];
+  // homes newly reaching 1 in during each 10 minutes
+  const idx1 = TIERS.indexOf(1), c = St.frameTimes.map(() => 0);
+  St.blocks.forEach((b) => { if (b.first[idx1] < 99) c[b.first[idx1]] += b.homes; });
+  const mx = Math.max(1, ...c);
+  document.getElementById('hist').innerHTML = c.map((n, i) =>
+    '<i data-k="' + i + '" class="' + (n ? '' : 'zero') + '" style="height:' + (n ? Math.max(12, n / mx * 100) : 8) + '%" title="' + St.frameTimes[i] + ': ' + fmtN(n) + ' homes newly hit by 1 in"></i>').join('');
+}
+function setFrame(k) { St.frame = k; range.value = k; applyFrame(); renderPanels(); if (St.sel != null && popup.isOpen()) openPopup(St.sel); }
+range.addEventListener('input', () => { stop(); setFrame(+range.value); });
+let timer = null;
+const playIcon = document.getElementById('playIcon');
+function stop() { if (timer) { clearInterval(timer); timer = null; } playIcon.innerHTML = '<path d="M2 1l7 4-7 4z"/>'; }
+function play() {
+  if (timer) { stop(); return; }
+  if (+range.value >= +range.max) { range.value = 0; setFrame(0); }
+  playIcon.innerHTML = '<path d="M1.5 1h2.5v8H1.5zM6 1h2.5v8H6z"/>';
+  timer = setInterval(() => {
+    const v = +range.value + 1;
+    if (v > +range.max) { stop(); return; }
+    range.value = v; setFrame(v);
+  }, 450);
+}
+document.getElementById('play').addEventListener('click', play);
+document.getElementById('replay').addEventListener('click', () => { stop(); range.value = 0; setFrame(0); play(); });
+
+// ---------- knock list ----------
+const sheet = document.getElementById('sheet');
+function openSheet() {
+  sheet.classList.add('on'); sheet.setAttribute('aria-hidden', 'false');
+  if (isPhone()) sheet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function closeSheet() { sheet.classList.remove('on'); sheet.setAttribute('aria-hidden', 'true'); }
+document.getElementById('openList').addEventListener('click', openSheet);
+document.getElementById('openList2').addEventListener('click', openSheet);
+document.getElementById('closeList').addEventListener('click', closeSheet);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+function listClick(e) {
+  const li = e.target.closest('li[data-id]'); if (!li) return;
+  if (isPhone()) document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+  flyTo(+li.dataset.id);
+}
+function listKey(e) {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  if (!e.target.closest('li[data-id]')) return;
+  e.preventDefault(); listClick(e);
+}
+['feed', 'sheetList'].forEach((id) => {
+  document.getElementById(id).addEventListener('click', listClick);
+  document.getElementById(id).addEventListener('keydown', listKey);
+});
+window.__hail = { St, openSheet, flyTo, setFrame };
+
+// ---------- live strip: spotter hail reports nationwide, yesterday and today ----------
+async function live() {
+  const off = /[?&]offline=1\b/.test(location.search);
+  const base = off ? SPC_TODAY_URL.replace('www.spc.noaa.gov', 'spc.invalid') : SPC_TODAY_URL;
+  const ctl = new AbortController();
+  const tm = setTimeout(() => ctl.abort(), 4000);
+  try {
+    const res = await Promise.all([base, base.replace('today_hail', 'yesterday_hail')].map((u) => fetch(u, { signal: ctl.signal })));
+    if (!res.every((r) => r.ok)) return false;
+    const txt = await Promise.all(res.map((r) => r.text()));
+    const n = txt.reduce((s, t) => s + parseSpcCsv(t).length, 0);
+    const el = document.getElementById('live');
+    document.getElementById('liveText').textContent = n
+      ? 'Hail reports nationwide, yesterday and today so far: ' + fmtN(n) + '.'
+      : 'No hail reported nationwide yesterday or today so far.';
+    el.dataset.source = 'live'; el.hidden = false;
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    clearTimeout(tm);
+  }
+}
+let ok = false;
+try { ok = await live(); } catch (e) { ok = false; }
+if (!ok) document.getElementById('live').dataset.source = 'unavailable';
+window.__settle(ok ? 'live' : 'snapshot');
+</script>
+</body>
+</html>
