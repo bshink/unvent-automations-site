@@ -2,3 +2,4 @@
 *.zip
 .security-audit/
 .env
+CLAUDE.md
