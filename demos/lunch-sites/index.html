@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Job-site lunch finder · Unvent Automations</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.0/maplibre-gl.css" integrity="sha512-KIMsMWIdnoG9OwZa+oaIafmbDonqck1UCmq+/zcUi2aaZ97N9QE6TqpTM+n36EO40HGh64hU/375zxtjx7WTyQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{
+  color-scheme:light only;
+  --ink:#1F1D1A; --ink-2:#5C5850; --ink-3:#8E897F; --ink-4:#B9B4AA;
+  --paper:#FFFFFF; --bg:#F4F2EE; --bg-2:#EDEAE4; --line:#E6E2DA;
+  --sun:#F5C53D; --sun-deep:#D9A514; --sun-ink:#3B2F05; --sun-soft:#FCF3D6;
+  --route:#2E2B26;
+  --st-found:#A8794A; --st-struct:#D9A514; --st-int:#7E9070; --st-fin:#6F87A0; --st-prog:#B3AC9F;
+  --sans:'Sora',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --shadow:0 0 0 1px rgba(60,48,20,.07),0 1px 2px rgba(60,48,20,.05),0 10px 28px -10px rgba(60,48,20,.18),0 2px 6px -2px rgba(60,48,20,.06);
+  --ease:cubic-bezier(.32,.72,0,1);
+  --nav:46px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
+  font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font-family:inherit}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* nav */
+nav{height:var(--nav);background:var(--paper);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding:0 18px;position:relative;z-index:5}
+.brand{font-weight:600;font-size:14px;text-decoration:none;letter-spacing:-.01em}
+.brand span{color:var(--sun-deep)}
+.crumb{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+nav .back{margin-left:auto;font-size:12.5px;color:var(--ink-2);text-decoration:none}
+nav .back:hover{color:var(--ink)}
+
+/* app shell */
+.app{position:relative;height:calc(100vh - var(--nav));height:calc(100dvh - var(--nav));overflow:hidden}
+#map{position:absolute;inset:0;background:var(--bg-2)}
+.card{background:var(--paper);border-radius:14px;box-shadow:var(--shadow)}
+.left{position:absolute;top:14px;left:14px;width:320px;display:flex;flex-direction:column;gap:10px;z-index:2}
+.rail{position:absolute;top:14px;right:14px;bottom:40px;width:300px;z-index:2;
+  display:flex;flex-direction:column;overflow:hidden}
+.scrub{position:absolute;left:14px;right:328px;bottom:14px;z-index:2}
+
+/* greeting */
+.greet{padding:15px 16px 16px}
+.eye{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.eye i{width:6px;height:6px;border-radius:50%;background:var(--sun);display:block;flex:none}
+.greet h1{font-size:19px;line-height:1.2;letter-spacing:-.02em;font-weight:600;margin:0 0 7px}
+.greet p{margin:0 0 12px;color:var(--ink-2);font-size:12.5px;text-wrap:pretty}
+.greet p b{color:var(--ink);font-weight:600}
+.btns{display:flex;gap:7px;flex-wrap:wrap}
+.btn{font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;border:1px solid transparent;
+  cursor:pointer;transition:background-color .3s var(--ease),border-color .3s var(--ease),transform .2s var(--ease)}
+.btn:active{transform:translateY(1px)}
+.btn.sun{background:var(--sun);color:var(--sun-ink);border-color:#E8B52A}
+.btn.sun:hover{background:#F0BC2A}
+.btn.ghost{background:var(--paper);color:var(--ink-2);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink-4);color:var(--ink)}
+.btn.wide{width:100%;padding:10px 12px;font-size:12.5px}
+.special{margin-top:12px;font-size:11px;color:var(--sun-ink);background:var(--sun-soft);border-radius:8px;padding:7px 9px;text-wrap:pretty}
+.special b{font-weight:600}
+.special em{font-style:normal;color:var(--ink-3)}
+.live{margin:9px 0 0;font-size:11px;color:var(--ink-2);display:flex;gap:7px;align-items:center}
+.live i{width:6px;height:6px;border-radius:50%;background:#2F9E5B;flex:none;box-shadow:0 0 0 3px #E2F3E8}
+.live[hidden]{display:none}
+
+/* lunch window */
+.lunch{padding:14px 16px 13px}
+.lunch h2{font-size:13.5px;font-weight:600;letter-spacing:-.01em;margin:0 0 4px;text-wrap:balance}
+.lunch p{margin:0;color:var(--ink-2);font-size:12px;text-wrap:pretty}
+.lunch .note{font-size:10.5px;color:var(--ink-3);margin-top:9px}
+.tl{position:relative;height:22px;margin:12px 0 0;background:var(--bg);border-radius:6px}
+.tl .win{position:absolute;top:0;bottom:0;background:var(--sun);border-radius:6px}
+.tl .now{position:absolute;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:var(--ink);border-radius:1px;transition:left .2s var(--ease)}
+.tlax{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--ink-3);margin-top:4px}
+
+/* rail */
+.rhead{padding:14px 16px 0}
+.rhead h2{font-size:13.5px;font-weight:600;letter-spacing:-.01em;margin:0}
+.lbl{font-size:11px;color:var(--ink-3)}
+.rhead .lbl{margin-top:2px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:12px 16px 0}
+.tile{background:var(--bg);border-radius:9px;padding:9px 10px}
+.tile b{display:block;font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:-.02em;line-height:1.15}
+.tile span{display:block;font-size:10.5px;color:var(--ink-2);line-height:1.3;margin-top:2px}
+.tile.hi{background:var(--sun-soft)}
+.tile.full{grid-column:1/-1}
+.tile.full b{font-size:19px}
+.ract{padding:12px 16px 4px}
+.sect{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+  padding:12px 16px 7px;display:flex;justify-content:space-between}
+.bars{padding:0 16px}
+.bar{display:grid;grid-template-columns:166px 1fr 20px;align-items:center;gap:8px;font-size:11.5px;margin-bottom:5px}
+.bar em{font-style:normal;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+.bar em u{flex:none;width:8px;height:8px;border-radius:50%;display:block}
+.bar i{display:block;height:7px;border-radius:4px;background:var(--bg-2);overflow:hidden}
+.bar i s{display:block;height:100%;border-radius:4px;transition:width .5s var(--ease)}
+.bar b{font-family:var(--mono);font-weight:500;text-align:right;font-size:11px}
+.feed{list-style:none;margin:0;padding:0 16px 30px;overflow:auto;flex:1;min-height:0;
+  -webkit-mask-image:linear-gradient(#000 calc(100% - 28px),transparent);mask-image:linear-gradient(#000 calc(100% - 28px),transparent)}
+.feed li{display:flex;gap:9px;padding:8px 0;border-top:1px solid var(--line);cursor:pointer}
+.feed li:first-child{border-top:none}
+.feed li:focus-visible,.sheet li:focus-visible{outline:2px solid var(--ink);outline-offset:-2px;border-radius:6px}
+.feed li:hover b{text-decoration:underline;text-decoration-color:var(--ink-4)}
+.feed .dot{flex:none;width:8px;height:8px;border-radius:50%;margin-top:4px}
+.feed b{display:block;font-weight:500;font-size:12px}
+.feed span{display:block;font-size:11px;color:var(--ink-3)}
+.feed .none{color:var(--ink-3);font-size:12px;cursor:default}
+
+/* clock scrubber */
+.scrub{padding:10px 14px 9px}
+.srow{display:flex;align-items:center;gap:12px}
+.play{flex:none;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--paper);
+  display:grid;place-items:center;cursor:pointer;transition:border-color .3s var(--ease)}
+.play:hover{border-color:var(--ink-4)}
+.play svg{width:11px;height:11px;fill:var(--ink)}
+.when{flex:none;width:118px}
+.when b{display:block;font-family:var(--mono);font-size:13px;font-weight:500}
+.when span{font-size:10.5px;color:var(--ink-3)}
+.track{flex:1;min-width:0;position:relative}
+.lane{position:relative;height:18px;background:var(--bg);border-radius:4px}
+.lane .row{position:absolute;left:0;right:0;height:12px}
+.lane .win{position:absolute;top:0;bottom:0;background:var(--sun-soft);border-left:1px solid var(--sun-deep);border-right:1px solid var(--sun-deep)}
+.lane .tick{position:absolute;top:0;width:20px;height:12px;margin-left:-10px;border-radius:3px;background:var(--route);color:#fff;
+  font-family:var(--mono);font-size:8px;line-height:12px;text-align:center}
+.lane .dep{position:absolute;top:1px;bottom:1px;width:2px;margin-left:-1px;background:var(--ink-3);border-radius:1px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:16px;background:transparent;margin:3px 0 0;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-moz-range-track{height:3px;background:var(--line);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--paper);border:2px solid var(--ink);margin-top:-5.5px;cursor:grab}
+input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);cursor:grab}
+.saxis{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--ink-3)}
+.source{font-size:10.5px;color:var(--ink-3);margin:7px 0 0;padding-top:7px;border-top:1px solid var(--line);text-wrap:pretty}
+
+/* map overlays */
+.maplibregl-popup-content{border-radius:11px;padding:11px 13px 12px;box-shadow:var(--shadow);font-family:var(--sans)}
+.maplibregl-popup-tip{display:none}
+.maplibregl-popup-close-button{font-size:15px;color:var(--ink-3);padding:2px 7px}
+.pop .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+.pop b{display:block;font-size:13px;font-weight:600;letter-spacing:-.01em;padding-right:14px}
+.pop .n{color:var(--ink-2);font-size:11.5px;margin-bottom:8px}
+.pop dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-size:11.5px}
+.pop dt{color:var(--ink-3)}
+.pop dd{margin:0;font-size:11.5px;color:var(--ink)}
+.pop .two{border-top:1px solid var(--line);margin-top:8px;padding-top:8px}
+.pop .dist{margin-top:9px;font-size:11.5px;font-weight:500;background:var(--sun-soft);border-radius:6px;padding:5px 8px}
+.pop .dist.far{background:var(--bg)}
+.stop{min-width:26px;height:22px;padding:0 4px;border-radius:11px;background:var(--route);color:#fff;border:2px solid #fff;
+  font-family:var(--mono);font-size:10px;font-weight:500;display:grid;place-items:center;
+  box-shadow:0 1px 4px rgba(30,25,15,.3);cursor:pointer;transition:opacity .3s var(--ease),background-color .3s var(--ease)}
+.stop.done{opacity:.45}
+.depot{display:flex;align-items:center;gap:5px;background:var(--paper);border-radius:7px;padding:3px 4px 3px 7px;
+  box-shadow:var(--shadow);font-size:10.5px;font-weight:600;white-space:nowrap}
+.depot i{width:14px;height:14px;border-radius:4px;background:var(--route);display:block}
+.depot em{font-style:normal;font-weight:400;color:var(--ink-3)}
+.truck{position:relative;width:28px;height:28px;border-radius:50%;background:var(--sun);border:2px solid var(--route);display:grid;place-items:center;
+  box-shadow:0 2px 8px rgba(30,25,15,.35)}
+.truck svg{width:16px;height:16px}
+.truck b{position:absolute;top:-6px;right:-7px;min-width:15px;height:15px;border-radius:8px;border:1.5px solid #fff;color:#fff;
+  font-family:var(--mono);font-size:8.5px;font-weight:500;line-height:12px;text-align:center}
+.maplibregl-ctrl-attrib{font-size:10.5px}
+
+/* run sheet */
+.sheet{position:absolute;z-index:4;top:14px;right:328px;width:350px;max-height:calc(100% - 120px);
+  display:flex;flex-direction:column;opacity:0;transform:translateY(8px);pointer-events:none;
+  transition:opacity .3s var(--ease),transform .2s var(--ease)}
+.sheet.on{opacity:1;transform:none;pointer-events:auto}
+.sheet header{padding:14px 16px 10px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:flex-start}
+.sheet h3{margin:0;font-size:14px;font-weight:600;letter-spacing:-.01em}
+.sheet header p{margin:2px 0 0;font-size:11px;color:var(--ink-3);text-wrap:pretty}
+.sheet .x{margin-left:auto;border:none;background:none;font-size:16px;color:var(--ink-3);cursor:pointer;padding:0 2px}
+.sheet ol{list-style:none;margin:0;padding:4px 16px 8px;overflow:auto}
+.sheet li{display:grid;grid-template-columns:22px 1fr auto;gap:9px;padding:9px 0;border-top:1px solid var(--line);align-items:start}
+.sheet li:first-child{border-top:none}
+.sheet li[data-id]{cursor:pointer}
+.sheet li{grid-template-columns:26px 1fr auto}
+.sheet li .i{width:26px;height:20px;border-radius:10px;background:var(--route);color:#fff;font-family:var(--mono);font-size:9.5px;display:grid;place-items:center;margin-top:1px}
+.sheet li.th{display:flex;align-items:center;gap:8px;padding:11px 0 3px;border-top:1px solid var(--line);font-size:12px;font-weight:600}
+.sheet li.th:first-child{border-top:none}
+.sheet li.th u{flex:none;width:12px;height:4px;border-radius:2px;display:block}
+.sheet li.th em{font-style:normal;font-weight:400;color:var(--ink-3);font-size:11px;margin-left:auto;font-family:var(--mono)}
+.sheet li.th + li{border-top:none}
+.sheet li.more{display:block;font-size:11px;color:var(--ink-2);background:var(--bg);border-radius:8px;padding:8px 10px;margin:8px 0 2px;border-top:none}
+.sheet li b{display:block;font-size:12px;font-weight:500}
+.sheet li span{display:block;font-size:11px;color:var(--ink-3)}
+.sheet li .d{font-family:var(--mono);font-size:11px;text-align:right;white-space:nowrap;color:var(--ink)}
+.sheet li .d small{display:block;font-family:var(--sans);font-size:10px;color:var(--ink-3)}
+.sheet footer{padding:10px 16px 13px;border-top:1px solid var(--line);font-size:11px;color:var(--ink-3)}
+
+/* phone */
+@media (max-width:720px){
+  nav{padding:0 16px}
+  .crumb{display:none}
+  .app{height:auto;overflow:visible;display:flex;flex-direction:column;padding-bottom:24px}
+  #map{position:relative;inset:auto;height:56vh;height:56svh;order:0}
+  .left{display:contents}
+  .greet,.lunch,.rail,.scrub,.sheet{position:static;width:auto;margin:10px 16px 0}
+  .greet{order:1}
+  .sheet{order:2;max-height:none;display:none}
+  .sheet.on{display:flex}
+  .lunch{order:3}
+  .scrub{order:4}
+  .rail{order:5;overflow:visible}
+  .feed{overflow:visible;-webkit-mask-image:none;mask-image:none;padding-bottom:14px}
+  .when{width:100px}
+}
+</style>
+<script>if(window.self!==window.top||/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed')</script>
+<style>html.embed{--nav:0px}html.embed body>nav{display:none}</style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <a class="brand" href="/">unvent<span>/</span>automations</a>
+  <span class="crumb">Demo · Job-site lunch finder</span>
+  <a class="back" href="/demos/">&#8592; All demos</a>
+</nav>
+
+<main class="app">
+  <div id="map" role="region" aria-label="Map of active job sites, the sample depot, and the sample truck routes"></div>
+
+  <section class="left">
+    <div class="card greet">
+      <div class="eye"><i></i>Sample fleet - Figueroa Fleet Kitchens</div>
+      <h1 id="hello">Good morning, Teo.</h1>
+      <p id="summary">Loading the latest city inspection records.</p>
+      <div class="btns">
+        <button class="btn sun" id="openRun" type="button">Build Tuesday's run</button>
+        <button class="btn ghost" id="playMorning" type="button">Play the morning</button>
+      </div>
+      <div class="special"><b>Hard hat special:</b> 15% off for anyone in a hard hat or vest. <em>Sample.</em></div>
+      <div class="live" id="live" hidden><i></i><span id="liveText"></span></div>
+    </div>
+    <div class="card lunch">
+      <h2>Crews that start at 6:30 are eating by 11:30.</h2>
+      <p>Plan to be at the gate 10:45 to 11:30.</p>
+      <div class="tl" id="tl" aria-hidden="true"><div class="win" id="tlWin"></div><div class="now" id="tlNow"></div></div>
+      <div class="tlax"><span>9:30 AM</span><span>at the gate 10:45 to 11:30</span><span>12:30 PM</span></div>
+      <div class="note">Typical, not measured. California requires a meal break before the end of the fifth hour.</div>
+    </div>
+  </section>
+
+  <aside class="card rail" aria-label="Near the depot">
+    <div class="rhead">
+      <h2>Job sites near the depot</h2>
+      <div class="lbl" id="railSub"></div>
+    </div>
+    <div class="tiles">
+      <div class="tile"><b id="tCity">-</b><span>active sites citywide</span></div>
+      <div class="tile hi"><b id="tNear">-</b><span>within 3 mi of the depot</span></div>
+      <div class="tile"><b id="tWeek">-</b><span id="tWeekLbl">near the depot, inspected in the latest week</span></div>
+      <div class="tile"><b id="tStops">-</b><span id="tStopsLbl">stops, all inside the lunch window</span></div>
+      <div class="tile full"><b id="tBig">-</b><span id="tBigLbl">biggest project nearby</span></div>
+    </div>
+    <div class="ract"><button class="btn sun wide" id="openRun2" type="button">Build Tuesday's run</button></div>
+    <div class="sect"><span>Near the depot, by stage</span><span>Sites</span></div>
+    <div class="bars" id="bars"></div>
+    <div class="sect"><span>Newest inspections nearby</span><span>Newest first</span></div>
+    <ul class="feed" id="feed"></ul>
+  </aside>
+
+  <section class="card sheet" id="sheet" aria-label="Tuesday lunch run" aria-hidden="true">
+    <header>
+      <div>
+        <h3>Tuesday lunch run</h3>
+        <p id="sheetSub"></p>
+      </div>
+      <button class="x" id="closeRun" type="button" aria-label="Close">&#215;</button>
+    </header>
+    <ol id="sheetList"></ol>
+    <footer>Sample. Nothing is sent from this page. Ask the site super before you park on site.</footer>
+  </section>
+
+  <section class="card scrub" aria-label="Morning clock">
+    <div class="srow">
+      <button class="play" id="play" type="button" aria-label="Play the morning">
+        <svg viewBox="0 0 10 10" id="playIcon"><path d="M2 1l7 4-7 4z"/></svg>
+      </button>
+      <div class="when"><b id="whenTime">-</b><span id="whenNote"></span></div>
+      <div class="track">
+        <div class="lane" id="lane"></div>
+        <input type="range" id="range" min="570" max="750" value="645" step="1" aria-label="Time of day">
+        <div class="saxis"><span>9:30 AM</span><span>12:30 PM</span></div>
+      </div>
+    </div>
+    <p class="source" id="source">Sites are City of Los Angeles permits with a city inspection in the last 60 days, shown to the block. Project size comes from the permit, not a headcount. The fleet, the depot, and the routes are samples.</p>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.24.0/maplibre-gl.js" integrity="sha512-rOFgoUgWaVi69JW1dzBu6PWF9xKW9rxYfY5u2SexFABHhWk0qUWkJoWNz4UuZRMvSXsNZG66+tU5B+HlwWF5kA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="module">
+import { PERMITS_URL, inspectionsUrl, isCandidate, groupSites, cutoffFor, blockFrom, EXCLUDE_BLOCK } from './sites.mjs';
+import { DEPOT, RADIUS_MI, WINDOW, CLOCK, STOP_MIN, ROAD_FACTOR, MPH, miles, nearDepot, planFleet, fmtClock } from './route.mjs';
+
+const qc = /[?&]qc=1\b/.test(location.search);
+const offline = /[?&]offline=1\b/.test(location.search);
+const DAY = 864e5;
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const parseD = (s) => { const p = s.split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]); };
+const fmtD = (s) => { const d = new Date(parseD(s)); return MON[d.getUTCMonth()] + ' ' + d.getUTCDate(); };
+const addDays = (s, n) => new Date(parseD(s) + n * DAY).toISOString().slice(0, 10);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const plural = (n, one, many) => (n === 1 ? one : many);
+const mi = (d) => (d < 0.05 ? 'under 0.1 mi' : d.toFixed(1) + ' mi');
+const size = (v) => (v >= 1e9 ? '$' + (v / 1e9).toFixed(1) + 'B' : v >= 1e6 ? '$' + Math.round(v / 1e6) + 'M' : '$' + Math.round(v / 1e3) + 'k');
+const shortArea = (a) => String(a || '').replace(/^Downtown Los Angeles$/, 'Downtown');
+const STAGES = ['foundation and concrete', 'structure and framing', 'interior', 'finishing up', 'in progress'];
+const STAGE_COLOR = { 'foundation and concrete': '#A8794A', 'structure and framing': '#D9A514', interior: '#7E9070', 'finishing up': '#6F87A0', 'in progress': '#B3AC9F' };
+const tier = (v) => (v >= 150e6 ? 3 : v >= 50e6 ? 2 : v >= 10e6 ? 1 : 0);
+// One muted color per truck.
+const TRUCK_COLOR = ['#2F4B6E', '#A0472E', '#3F6B4A', '#6A4F7E'];
+const tcol = (n) => TRUCK_COLOR[(n - 1) % TRUCK_COLOR.length];
+const andList = (a) => (a.length < 3 ? a.join(' and ') : a.slice(0, -1).join(', ') + ', and ' + a[a.length - 1]);
+
+const S = { sites: [], asOf: '', near: [], plan: { trucks: [], stops: [], problems: [], uncoveredSites: 0 }, byId: {}, stopOf: {}, clock: WINDOW[0],
+  mapReady: false, rendered: false, final: false, live: null, routeError: false };
+
+// ---------- map ----------
+const isPhone = () => window.matchMedia('(max-width:720px)').matches;
+const sheet = document.getElementById('sheet');
+// The run sheet floats left of the rail (350px wide + 14px gap): keep pins and popups out from under it.
+function framePad(withSheet) {
+  if (isPhone()) return { top: 30, bottom: 40, left: 20, right: 20 };
+  return { top: 40, bottom: 120, left: 350, right: 330 + (withSheet ? 364 : 0) };
+}
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://tiles.openfreemap.org/styles/positron',
+  center: [DEPOT.lon, DEPOT.lat],
+  zoom: 12.2,
+  attributionControl: { compact: false },
+  cooperativeGestures: isPhone()
+});
+
+function ringCoords() {
+  const out = [], kx = 69.172 * Math.cos(DEPOT.lat * Math.PI / 180), ky = 69.0;
+  for (let a = 0; a <= 360; a += 4) {
+    const r = a * Math.PI / 180;
+    out.push([DEPOT.lon + Math.cos(r) * RADIUS_MI / kx, DEPOT.lat + Math.sin(r) * RADIUS_MI / ky]);
+  }
+  return out;
+}
+
+let stopMarkers = [], truckMarkers = [], depotMarker;
+const TRUCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#2E2B26" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h11v9H2zM13 9h4l4 4v2h-8z"/><circle cx="6" cy="17" r="2" fill="#F5C53D"/><circle cx="17" cy="17" r="2" fill="#F5C53D"/></svg>';
+map.on('load', () => {
+  const ring = ringCoords();
+  map.addSource('ring', { type: 'geojson', data: { type: 'Feature', geometry: { type: 'Polygon', coordinates: [ring] } } });
+  map.addLayer({ id: 'ring-fill', type: 'fill', source: 'ring', paint: { 'fill-color': '#F5C53D', 'fill-opacity': 0.06 } });
+  map.addLayer({ id: 'ring-line', type: 'line', source: 'ring', paint: { 'line-color': '#C9971A', 'line-width': 1.2, 'line-dasharray': [3, 2], 'line-opacity': 0.75 } });
+  map.addSource('routes', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'route-casing', type: 'line', source: 'routes', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#FFFFFF', 'line-width': 6 } });
+  map.addLayer({ id: 'route-line', type: 'line', source: 'routes', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': ['get', 'color'], 'line-width': 2.6, 'line-dasharray': [2, 1.4] } });
+  map.addSource('sites', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+  map.addLayer({ id: 'sites', type: 'circle', source: 'sites', paint: {
+    'circle-color': ['match', ['get', 'stage'], ...STAGES.flatMap((s) => [s, STAGE_COLOR[s]]), '#B3AC9F'],
+    'circle-radius': ['interpolate', ['linear'], ['zoom'], 10, ['+', 2.5, ['*', 1.6, ['get', 'tier']]], 14, ['+', 5, ['*', 3, ['get', 'tier']]]],
+    'circle-stroke-color': ['case', ['get', 'near'], '#1F1D1A', '#FFFFFF'],
+    'circle-stroke-width': ['case', ['get', 'near'], 1.3, 1],
+    'circle-opacity': 1, 'circle-stroke-opacity': 1,
+    'circle-opacity-transition': { duration: 300 }, 'circle-stroke-opacity-transition': { duration: 300 }
+  } });
+  map.on('click', 'sites', (e) => { popup.options.anchor = undefined; openPopup(e.features[0].properties.id); });
+  map.on('mouseenter', 'sites', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'sites', () => { map.getCanvas().style.cursor = ''; });
+
+  const dep = document.createElement('div');
+  dep.className = 'depot';
+  dep.innerHTML = 'Depot <em>sample</em><i></i>';
+  depotMarker = new maplibregl.Marker({ element: dep, anchor: 'right', offset: [7, 0] }).setLngLat([DEPOT.lon, DEPOT.lat]).addTo(map);
+
+
+  const b = new maplibregl.LngLatBounds();
+  ring.forEach((c) => b.extend(c));
+  map.fitBounds(b, { padding: framePad(), duration: 0 });
+  S.mapReady = true;
+  if (S.sites.length) pushToMap();
+});
+
+// ---------- popups ----------
+const popup = new maplibregl.Popup({ closeButton: true, maxWidth: '270px', offset: 12 });
+function siteBlock(r) {
+  return '<dl><dt>Stage</dt><dd>' + esc(r.stage) + '</dd><dt>Last inspection</dt><dd>' + fmtD(r.lastInsp) + '</dd>' +
+    '<dt>Inspections, latest week</dt><dd>' + (r.insp7 || 0) + '</dd><dt>Inspections, 60 days</dt><dd>' + r.insp60 + '</dd><dt>Project size</dt><dd>' + size(r.valuation) + ', from the permit</dd></dl>';
+}
+function openPopup(id) {
+  const r = S.byId[id]; if (!r) return;
+  const st = S.stopOf[id];
+  const group = st ? st.sites : [r];
+  const dist = miles(DEPOT, r);
+  let html = '<div class="pop"><div class="k">' + (st ? 'Stop ' + st.label + ' · Truck ' + st.truck + ' · in the window' : 'Active job site') + '</div>' +
+    '<b>' + esc(r.block) + '</b><div class="n">' + esc(r.area) + (group.length > 1 ? ' · ' + group.length + ' active sites on this block' : '') + '</div>';
+  html += group.map((g, i) => '<div class="' + (i ? 'two' : '') + '">' + siteBlock(g) + '</div>').join('');
+  html += '<div class="dist' + (dist <= RADIUS_MI ? '' : ' far') + '">' + mi(dist) + ' from the depot' +
+    (st ? ' · arrive about ' + fmtClock(st.arrive) + ', estimate' : '') + '</div></div>';
+  popup.setLngLat([r.lon, r.lat]).setHTML(html).addTo(map);
+}
+function flyTo(id) {
+  const r = S.byId[id]; if (!r) return;
+  openPopup(id);
+  const pad = framePad(sheet.classList.contains('on'));
+  if (!isPhone()) {
+    // Seat the pin low enough that the popup opens above it, clear of the clock card at the bottom.
+    const mapBox = map.getContainer().getBoundingClientRect();
+    const scrubTop = document.querySelector('.scrub').getBoundingClientRect().top - mapBox.top;
+    const el = popup.getElement(), ph = el ? el.offsetHeight : 260;
+    pad.bottom = Math.max(pad.bottom, mapBox.height - scrubTop + 24);
+    pad.top = Math.max(pad.top, Math.min(ph + 40, mapBox.height - pad.bottom - 40));
+    popup.options.anchor = 'bottom';
+    openPopup(id);
+  }
+  map.easeTo({ center: [r.lon, r.lat], zoom: Math.max(map.getZoom(), 14), padding: pad, duration: 600 });
+}
+
+// ---------- render ----------
+function pushToMap() {
+  const feats = S.sites.map((r) => ({ type: 'Feature', properties: { id: r.id, stage: r.stage, tier: tier(r.valuation), near: r.near },
+    geometry: { type: 'Point', coordinates: [r.lon, r.lat] } }));
+  map.getSource('sites').setData({ type: 'FeatureCollection', features: feats });
+  map.getSource('routes').setData({ type: 'FeatureCollection', features: S.plan.trucks.map((t) => ({ type: 'Feature', properties: { color: tcol(t.n) },
+    geometry: { type: 'LineString', coordinates: [[DEPOT.lon, DEPOT.lat]].concat(t.stops.map((s) => [s.lon, s.lat])) } })) });
+  // Trucks ride just above their point so a parked truck never hides its stop label; stops are added after, on top.
+  truckMarkers.forEach((m) => m.remove());
+  truckMarkers = S.plan.trucks.map((t) => {
+    const el = document.createElement('div');
+    el.className = 'truck';
+    el.title = 'Truck ' + t.n + ', sample';
+    el.innerHTML = TRUCK_SVG + '<b style="background:' + tcol(t.n) + '">' + t.n + '</b>';
+    return new maplibregl.Marker({ element: el, offset: [0, -22] }).setLngLat([DEPOT.lon, DEPOT.lat]).addTo(map);
+  });
+  stopMarkers.forEach((m) => m.remove());
+  stopMarkers = S.plan.stops.map((s) => {
+    const el = document.createElement('div');
+    el.className = 'stop';
+    el.style.background = tcol(s.truck);
+    el.textContent = s.label;
+    el.title = 'Stop ' + s.label + ', Truck ' + s.truck + ', about ' + fmtClock(s.arrive);
+    el.addEventListener('click', (e) => { e.stopPropagation(); popup.options.anchor = undefined; openPopup(s.sites[0].id); });
+    return new maplibregl.Marker({ element: el }).setLngLat([s.lon, s.lat]).addTo(map);
+  });
+  setClock(S.clock);
+  qcReady();
+}
+function qcReady() {
+  if (qc && S.routeError) { document.title = 'ERROR route'; return; }
+  if (!qc || S.rendered || !S.final || !S.mapReady || !S.sites.length) return;
+  S.rendered = true;
+  map.once('idle', () => {
+    const inSource = map.querySourceFeatures('sites').length;
+    document.title = 'READY ' + (inSource > 0 ? S.sites.length : 0);
+  });
+  map.triggerRepaint();
+}
+window.__settle = (source) => {
+  document.documentElement.dataset.source = source;
+  S.final = true;
+  qcReady();
+};
+
+function setData(sites, asOf) {
+  S.asOf = asOf;
+  S.byId = {};
+  S.sites = sites.map((r) => {
+    const o = Object.assign({}, r, { near: miles(DEPOT, r) <= RADIUS_MI });
+    S.byId[o.id] = o;
+    return o;
+  });
+  S.near = nearDepot(S.sites);
+  S.plan = planFleet(S.sites);
+  // Every planned stop must land inside the lunch window; anything else fails QC.
+  if (S.plan.problems.length) {
+    S.routeError = true;
+    console.warn('route check failed: ' + S.plan.problems.join('; '));
+    if (qc) document.title = 'ERROR route';
+  }
+  S.stopOf = {};
+  S.plan.stops.forEach((st) => st.sites.forEach((x) => { S.stopOf[x.id] = st; }));
+  renderPanels();
+  if (S.mapReady) pushToMap();
+}
+
+function renderPanels() {
+  const city = S.sites.length, near = S.near, wkStart = addDays(S.asOf, -6);
+  const wk = near.filter((r) => r.lastInsp >= wkStart);
+  const plan = S.plan, stops = plan.stops, trucks = plan.trucks;
+  const big = near.slice().sort((a, b) => b.valuation - a.valuation)[0];
+  const range = fmtD(wkStart) + ' to ' + fmtD(S.asOf);
+
+  document.getElementById('summary').innerHTML = '<b>' + city + ' job sites in LA</b> had a city inspection in the 60 days through ' + fmtD(S.asOf) + '. <b>' +
+    near.length + ' ' + plural(near.length, 'is', 'are') + ' within 3 miles of your depot</b>, and ' + wk.length + ' logged an inspection in the latest week on file (' + range + ').';
+
+  document.getElementById('railSub').textContent = '60 days of city inspections through ' + fmtD(S.asOf) + '. Depot is a sample point.';
+  document.getElementById('tCity').textContent = city;
+  document.getElementById('tNear').textContent = near.length;
+  document.getElementById('tWeek').textContent = wk.length;
+  document.getElementById('tWeekLbl').textContent = 'near the depot, inspected ' + range;
+  document.getElementById('tStops').textContent = stops.length;
+  document.getElementById('tStopsLbl').textContent = plural(stops.length, 'stop', 'stops') + ' across ' + trucks.length + ' ' + plural(trucks.length, 'truck', 'trucks') + ', all inside the lunch window';
+  document.getElementById('tBig').textContent = big ? size(big.valuation) : '-';
+  document.getElementById('tBigLbl').textContent = big ? 'biggest project nearby, ' + big.block + '. From the permit, not a headcount.' : 'no sites nearby';
+
+  const by = {};
+  near.forEach((r) => { by[r.stage] = (by[r.stage] || 0) + 1; });
+  const top = Math.max(1, ...Object.values(by));
+  document.getElementById('bars').innerHTML = STAGES.map((s) => '<div class="bar"><em><u style="background:' + STAGE_COLOR[s] + '"></u>' + esc(s) + '</em><i><s style="width:' +
+    ((by[s] || 0) / top * 100).toFixed(0) + '%;background:' + STAGE_COLOR[s] + '"></s></i><b>' + (by[s] || 0) + '</b></div>').join('');
+
+  const feed = near.slice().sort((a, b) => (a.lastInsp < b.lastInsp ? 1 : a.lastInsp > b.lastInsp ? -1 : b.insp60 - a.insp60)).slice(0, 14);
+  document.getElementById('feed').innerHTML = feed.length ? feed.map((r) => '<li data-id="' + esc(r.id) + '" tabindex="0" role="button"><i class="dot" style="background:' +
+    STAGE_COLOR[r.stage] + '"></i><div><b>' + esc(r.block) + '</b><span>' + esc(shortArea(r.area)) + ' · inspected ' + fmtD(r.lastInsp) + ' · ' + esc(r.stage) + '</span></div></li>').join('')
+    : '<li class="none">No active sites within 3 miles.</li>';
+
+  const more = plan.uncoveredSites;
+  const moreText = more + ' more active ' + plural(more, 'site', 'sites') + ' nearby for tomorrow or another truck.';
+  document.getElementById('sheetSub').textContent = trucks.length + ' ' + plural(trucks.length, 'truck', 'trucks') + ', ' + stops.length + ' ' + plural(stops.length, 'stop', 'stops') +
+    ', busiest sites first. Every truck is at its first gate at 10:45 and every stop lands inside the lunch window. ' +
+    'Times are estimates: straight-line miles x ' + ROAD_FACTOR + ' at ' + MPH + ' mph, plus ' + STOP_MIN + ' minutes a stop.';
+  const stopRow = (s) => {
+    const sub = s.sites.map((g) => esc(g.stage) + ' · ' + (g.insp7 || 0) + ' ' + plural(g.insp7 || 0, 'inspection', 'inspections') + ' in the latest week, ' + g.insp60 + ' in 60 days · ' +
+      size(g.valuation) + ' project, from the permit, not a headcount');
+    const head = s.sites[0];
+    return '<li data-id="' + esc(head.id) + '" tabindex="0" role="button"><span class="i" style="background:' + tcol(s.truck) + '">' + s.label + '</span><div><b>' + esc(head.block) + ', ' + esc(shortArea(head.area)) +
+      (s.sites.length > 1 ? ' (' + s.sites.length + ' sites)' : '') + '</b><span>' + sub.join('</span><span>') + '</span></div><span class="d">' + fmtClock(s.arrive) +
+      '<small>estimate</small></span></li>';
+  };
+  document.getElementById('sheetList').innerHTML = trucks.length ? trucks.map((t) => '<li class="th"><u style="background:' + tcol(t.n) + '"></u>' + esc(t.name) +
+    '<em>leaves the depot ' + fmtClock(t.depart) + '</em></li>' + t.stops.map(stopRow).join('')).join('') +
+    (more ? '<li class="more">' + moreText + '</li>' : '')
+    : '<li><span></span><div><span>No active sites within 3 miles of the depot.</span></div><span></span></li>';
+
+  document.getElementById('source').textContent = 'Sites are City of Los Angeles permits with a city inspection in the last 60 days, through ' + fmtD(S.asOf) + ', ' +
+    S.asOf.slice(0, 4) + ', shown to the block. Project size comes from the permit, not a headcount. The fleet, the depot, and the routes are samples.';
+
+  // scrubber lane
+  const span = CLOCK[1] - CLOCK[0], pct = (m) => ((m - CLOCK[0]) / span * 100).toFixed(2) + '%';
+  const w = 'left:' + pct(WINDOW[0]) + ';width:' + ((WINDOW[1] - WINDOW[0]) / span * 100).toFixed(2) + '%';
+  const lane = document.getElementById('lane');
+  lane.style.height = Math.max(18, trucks.length * 14 + 4) + 'px';
+  lane.innerHTML = '<div class="win" style="' + w + '"></div>' + trucks.map((t, i) => '<div class="row" style="top:' + (2 + i * 14) + 'px">' +
+    '<div class="dep" style="left:' + pct(t.depart) + ';background:' + tcol(t.n) + '" title="' + esc(t.name) + ' leaves the depot"></div>' +
+    t.stops.filter((s) => s.arrive <= CLOCK[1]).map((s) => '<div class="tick" style="left:' + pct(s.arrive) + ';background:' + tcol(t.n) + '">' + s.label + '</div>').join('') + '</div>').join('');
+  document.getElementById('tlWin').style.cssText = w;
+}
+
+// ---------- clock ----------
+function truckAt(tr, t) {
+  const st = tr.stops;
+  if (!st.length || t <= tr.depart) return { ll: [DEPOT.lon, DEPOT.lat], state: 'depot' };
+  let prev = { lon: DEPOT.lon, lat: DEPOT.lat }, prevLeave = tr.depart;
+  for (const s of st) {
+    if (t < s.arrive) {
+      const f = (t - prevLeave) / (s.arrive - prevLeave);
+      return { ll: [prev.lon + (s.lon - prev.lon) * f, prev.lat + (s.lat - prev.lat) * f], state: 'driving' };
+    }
+    if (t <= s.leave) return { ll: [s.lon, s.lat], state: 'parked' };
+    prev = s; prevLeave = s.leave;
+  }
+  const last = st[st.length - 1];
+  return { ll: [last.lon, last.lat], state: 'done' };
+}
+function fleetNote(states) {
+  const c = {}; states.forEach((x) => { c[x] = (c[x] || 0) + 1; });
+  if (!states.length) return 'no trucks out';
+  if (c.depot === states.length) return 'trucks at the depot';
+  if (c.done === states.length) return 'runs finished';
+  const bits = [];
+  if (c.parked) bits.push(c.parked + ' parked');
+  if (c.driving) bits.push(c.driving + ' driving');
+  if (c.depot) bits.push(c.depot + ' at the depot');
+  if (c.done) bits.push(c.done + ' done');
+  return andList(bits);
+}
+function setClock(t) {
+  S.clock = t;
+  const rg = document.getElementById('range'); if (rg && +rg.value !== t) rg.value = t;
+  const inWin = t >= WINDOW[0] && t <= WINDOW[1];
+  const pos = S.plan.trucks.map((tr) => truckAt(tr, t));
+  document.getElementById('whenTime').textContent = fmtClock(t);
+  document.getElementById('whenNote').textContent = (t < WINDOW[0] ? 'before lunch' : t > WINDOW[1] ? 'after the window' : 'lunch window') + ', ' + fleetNote(pos.map((p) => p.state));
+  document.getElementById('tlNow').style.left = ((t - CLOCK[0]) / (CLOCK[1] - CLOCK[0]) * 100).toFixed(2) + '%';
+  pos.forEach((p, i) => { if (truckMarkers[i]) truckMarkers[i].setLngLat(p.ll); });
+  S.plan.stops.forEach((s, i) => { if (stopMarkers[i]) stopMarkers[i].getElement().classList.toggle('done', t > s.leave); });
+  if (S.mapReady && map.getLayer('sites')) {
+    map.setPaintProperty('sites', 'circle-opacity', inWin ? 1 : 0.3);
+    map.setPaintProperty('sites', 'circle-stroke-opacity', inWin ? 1 : 0.3);
+  }
+}
+const range = document.getElementById('range');
+range.min = CLOCK[0]; range.max = CLOCK[1]; range.value = S.clock;
+range.addEventListener('input', () => { stop(); setClock(+range.value); });
+let timer = null;
+const playIcon = document.getElementById('playIcon');
+function stop() {
+  if (timer) { clearInterval(timer); timer = null; }
+  playIcon.innerHTML = '<path d="M2 1l7 4-7 4z"/>';
+}
+function play() {
+  if (timer) { stop(); return; }
+  if (+range.value >= +range.max) range.value = range.min;
+  playIcon.innerHTML = '<path d="M1.5 1h2.5v8H1.5zM6 1h2.5v8H6z"/>';
+  timer = setInterval(() => {
+    const v = +range.value + 1;
+    if (v > +range.max) { stop(); return; }
+    range.value = v;
+    setClock(v);
+  }, 50);
+}
+document.getElementById('play').addEventListener('click', play);
+document.getElementById('playMorning').addEventListener('click', () => {
+  stop(); range.value = CLOCK[0]; setClock(CLOCK[0]);
+  if (isPhone()) document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+  play();
+});
+
+// ---------- sheet and lists ----------
+function openSheet() {
+  sheet.classList.add('on'); sheet.setAttribute('aria-hidden', 'false');
+  if (isPhone()) sheet.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else if (S.mapReady) {
+    const b = new maplibregl.LngLatBounds([DEPOT.lon, DEPOT.lat], [DEPOT.lon, DEPOT.lat]);
+    S.plan.stops.forEach((s) => b.extend([s.lon, s.lat]));
+    map.fitBounds(b, { padding: framePad(true), duration: 600, maxZoom: 14.5 });
+  }
+}
+function closeSheet() { sheet.classList.remove('on'); sheet.setAttribute('aria-hidden', 'true'); }
+document.getElementById('openRun').addEventListener('click', openSheet);
+document.getElementById('openRun2').addEventListener('click', openSheet);
+document.getElementById('closeRun').addEventListener('click', closeSheet);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheet(); });
+function listClick(e) {
+  const li = e.target.closest('li[data-id]'); if (!li) return;
+  if (isPhone()) document.getElementById('map').scrollIntoView({ behavior: 'smooth' });
+  flyTo(li.dataset.id);
+}
+function listKey(e) {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  if (!e.target.closest('li[data-id]')) return;
+  e.preventDefault(); listClick(e);
+}
+['feed', 'sheetList'].forEach((id) => {
+  document.getElementById(id).addEventListener('click', listClick);
+  document.getElementById(id).addEventListener('keydown', listKey);
+});
+window.__lunch = { S, openSheet, flyTo, setClock };
+
+// ---------- snapshot first ----------
+let snap;
+try {
+  const r = await fetch('./sites.json', { cache: 'no-cache' });
+  if (!r.ok) throw new Error(r.status);
+  snap = await r.json();
+  setData(snap.rows || [], snap.inspectionsThrough);
+} catch (e) {
+  document.getElementById('summary').textContent = 'The city records did not load. Refresh the page to try again.';
+  if (qc) document.title = 'ERROR';
+}
+
+// ---------- live refresh: permits near the depot, one inspection call ----------
+async function live() {
+  if (!snap) return false;
+  const swap = (u) => (offline ? u.replace('data.lacity.org', 'data.lacity.invalid') : u);
+  const ctl = new AbortController();
+  const tm = setTimeout(() => ctl.abort(), 10000);
+  try {
+    const pr = await fetch(swap(PERMITS_URL), { signal: ctl.signal });
+    if (!pr.ok) return false;
+    const permits = (await pr.json()).filter((p) => isCandidate(p) && !EXCLUDE_BLOCK.test(blockFrom(p.primary_address)) &&
+      miles(DEPOT, { lat: parseFloat(p.lat), lon: parseFloat(p.lon) }) <= RADIUS_MI);
+    if (!permits.length) return false;
+    const keys = permits.map((p) => p.permit_nbr).slice(0, 80);
+    const ir = await fetch(swap(inspectionsUrl(keys, cutoffFor(snap.inspectionsThrough))), { signal: ctl.signal });
+    if (!ir.ok) return false;
+    const insp = await ir.json();
+    if (!Array.isArray(insp) || !insp.length) return false;
+    const asOf = insp.reduce((m, h) => { const d = String(h.inspection_date || '').slice(0, 10); return d > m ? d : m; }, snap.inspectionsThrough);
+    const nearLive = groupSites(permits, insp, asOf).filter((s) => miles(DEPOT, s) <= RADIUS_MI);
+    if (!nearLive.length) return false;
+    const far = snap.rows.filter((s) => miles(DEPOT, s) > RADIUS_MI && s.lastInsp >= cutoffFor(asOf));
+    setData(far.concat(nearLive), asOf);
+    document.getElementById('liveText').textContent = 'Checked city records just now: ' + nearLive.length + ' active ' + plural(nearLive.length, 'site', 'sites') + ' near the depot.';
+    document.getElementById('live').hidden = false;
+    S.live = { asOf, near: nearLive.length, permits: permits.length, keys: keys.length, inspections: insp.length };
+    return true;
+  } catch (e) {
+    S.liveError = String(e && e.message || e);
+    return false;
+  } finally {
+    clearTimeout(tm);
+  }
+}
+let ok = false;
+try { ok = await live(); } catch (e) { ok = false; }
+window.__settle(ok ? 'live' : 'snapshot');
+if (qc && S.routeError) document.title = 'ERROR route';
+</script>
+</body>
+</html>
