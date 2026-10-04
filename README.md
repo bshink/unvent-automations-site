@@ -76,9 +76,11 @@ that an older spec mentioned it.
 
 - **No client names, logos, testimonials, or case studies.** There are zero clients. The
   rule against claiming clients we do not have applies here exactly as it does on a call.
-- ~~**No pricing.**~~ **Superseded.** The FAQ and the closing block both state "builds start
-  at $3,500" plus a retainer. That is deliberate and it stays. The rule that survives is
-  narrower: **no full quote on the page**, because the real number comes out of the audit.
+- ~~**No pricing.**~~ **Superseded.** ~~The FAQ and the closing block both state "builds start
+  at $3,500" plus a retainer.~~ **Removed 2026-10-03:** Brandon closed the $3,500 floor on
+  2026-09-28, so the site no longer states a starting price. The FAQ says every build is
+  quoted after the walkthrough, flat fee or paid from results. The rule that survives:
+  **no full quote on the page**, because the real number comes out of the audit.
 - **No stack names.** No Claude, n8n, Retell, ElevenLabs.
 - **No guarantees** of results, rankings, or revenue.
 - **No LLC or Inc.** anywhere. The entity does not exist yet.
