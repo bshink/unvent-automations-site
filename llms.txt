@@ -1,6 +1,6 @@
 # Unvent Automations
 
-> Operations and AI automation firm in Los Angeles, California. We walk a business's whole operation, put a dollar number on each gap, and build the systems that close them: the phone, quotes, follow-ups, invoicing, scheduling, and reporting.
+> Operations firm in Los Angeles, California. We walk a business's whole operation, put a dollar number on each gap, and build the systems that close them: the phone, quotes, follow-ups, invoicing, scheduling, and reporting.
 
 ## What we build
 - Find the work: new leads from public records every morning, such as new pool permits, hail-damaged blocks after a storm, and active construction sites.
