@@ -2,6 +2,11 @@
 
 > Operations and AI automation firm in Los Angeles, California. We walk a business's whole operation, put a dollar number on each gap, and build the systems that close them: the phone, quotes, follow-ups, invoicing, scheduling, and reporting.
 
+## What we build
+- Find the work: new leads from public records every morning, such as new pool permits, hail-damaged blocks after a storm, and active construction sites.
+- Follow it up: every quote chased on schedule, not when someone remembers.
+- Run the back office: invoices, payment reminders, and the weekly report sent on their own.
+
 ## How an engagement works
 - The first call is thirty minutes and mostly questions. You leave it with every gap we found costed in dollars, whether or not you hire us.
 - We build what pays for itself first. The first systems are live in about a week.
@@ -10,9 +15,9 @@
 - You work directly with the people who build it.
 
 ## Pages
-- [Home](https://unventautomations.com/): what we build and where we stop
+- [Home](https://unventautomations.com/): what we build, how an engagement works, and common questions
 - [Who we are](https://unventautomations.com/about/): the people and how an engagement runs
-- [Demos](https://unventautomations.com/demos/): working demos on real public records
+- [Demos](https://unventautomations.com/demos/): working demos on real public records: new pool permits, hail-damaged blocks, and busy construction sites
 
 ## Contact
 - Book a 30-minute call: https://calendly.com/andre-unventautomations/30min

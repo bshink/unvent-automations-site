@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Unvent Automations - The work you keep in your head, running on its own</title>
-<meta name="description" content="A quote nobody chased. An invoice that sat nine days. We find the work that only breaks because somebody was busy, put a dollar number on it, and build the systems that close it. First systems live in about a week.">
+<meta name="description" content="We find new work in public records, follow up every quote, and run the back office. See live demos on real city records, then book a walkthrough.">
 <link rel="canonical" href="https://unventautomations.com/">
 <meta name="theme-color" content="#0A0B0D">
 <meta name="color-scheme" content="dark">
+<meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Unvent Automations">
 <meta property="og:title" content="The work you keep in your head, running on its own">
@@ -22,186 +23,93 @@
 <link rel="icon" href="/favicon-96.png" type="image/png" sizes="96x96">
 <link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Sora:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/f.css">
+<link rel="preload" href="/fonts/sora-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/sora-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="/img/demo-pool-permits.webp" media="(min-width:641px)" fetchpriority="high">
+<link rel="preload" as="image" href="/img/demo-pool-permits-m.webp" media="(max-width:640px)" fetchpriority="high">
+<link rel="stylesheet" href="/home.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-
-<nav aria-label="Primary"><div class="wrap">
-  <a class="brand" href="/">unvent<span>/</span>automations</a>
-  <div class="links">
-    <a href="#how">How we work</a>
-    <a href="#build">What we build</a>
-    <a href="#limits">Where we stop</a>
-    <a href="/about/">Who we are</a>
-  </div>
-  <a href="/demos/" class="ndemo">Demos</a>
-  <a href="https://calendly.com/andre-unventautomations/30min" class="ncta">Book<span class="nx"> 30 min</span></a>
-</div></nav>
-
+<div class="w">
+<nav aria-label="Primary">
+  <a class="mark" href="/">unvent<span>/automations</span></a>
+  <a class="ghost" href="/demos/">Demos</a>
+  <div class="links"><a href="#how">How does it work?</a><a href="#build">What do you build?</a><a href="#who">Who are you?</a></div>
+</nav>
+</div>
 <main id="main">
-
-<header class="hero"><div class="wrap"><div class="grid">
+<div class="w"><header class="hero">
   <div>
-    <p class="eye"><i></i>Built per business &middot; Los Angeles</p>
-    <h1>The work you keep in your head, <span class="u">running on its own</span>.</h1>
-    <p class="lede">A quote nobody chased because Thursday happened. An invoice that sat in drafts for nine days. Three calls at 11:40 while everybody was heads-down, and one of them never left a voicemail. None of it has a line item, so nobody fixes it, and it happens again next week.</p>
-    <div class="btns">
-      <a class="b fill" href="https://calendly.com/andre-unventautomations/30min">Book the walkthrough</a>
-      <a class="b out" href="#how">How it works</a>
+    <h1>The work you keep in your head, running on its own.</h1>
+    <p class="sub">A permit filed this morning that nobody called on. A quote nobody chased. An invoice in drafts for nine days.</p>
+    <div class="cta"><a class="btn" href="https://calendly.com/andre-unventautomations/30min">Book the walkthrough</a><a class="tl" href="/demos/">See the demos</a></div>
+  </div>
+  <div>
+    <div class="shot">
+      <picture>
+        <source id="demo-m" media="(max-width:640px)" srcset="/img/demo-pool-permits-m.webp" width="390" height="760">
+        <img id="demo" src="/img/demo-pool-permits.webp" width="1280" height="800" fetchpriority="high" alt="Live pool permit demo: new pool permits from Los Angeles city records on a map near a sample route, with a call list">
+      </picture>
     </div>
-    <p class="who">
-      <b>Built per business.</b> No two have looked the same.<br>
-      <b>First systems live</b> in about a week.<br>
-      <b>Month to month.</b> Thirty days' notice, your number ports out with you.
-    </p>
-  </div>
-
-  <div>
-    <div class="console">
-      <div class="cbar">
-        <div class="lights"><i></i><i></i><i></i></div>
-        <span class="t">operations &middot; live</span>
-        <span class="livepill">&#9679; Running</span>
-      </div>
-      <div class="feed" id="feed" aria-hidden="true"></div>
-      <div class="cfoot">
-        <div class="cs"><div class="k">Handled today</div><div class="v" style="color:var(--on)" id="s1">0</div></div>
-        <div class="cs"><div class="k">Waiting on a person</div><div class="v" style="color:var(--warn)" id="s2">0</div></div>
-        <div class="cs"><div class="k">Dropped</div><div class="v" style="color:var(--fg-3)" id="s3">0</div></div>
-      </div>
+    <p class="cap">A live demo, running on real city records. The company in it is a sample. <a id="demo-link" href="/demos/pool-permits/">Open this demo</a></p>
+    <div class="tiles" role="group" aria-label="Choose a demo">
+      <button class="tile on" type="button" aria-pressed="true" data-s="pool-permits" data-alt="Live pool permit demo: new pool permits from Los Angeles city records on a map near a sample route, with a call list"><span class="t">New pool permits</span><span class="ar" aria-hidden="true">&rarr;</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-s="hail-leads" data-alt="Live hail demo: homes hit by a storm, from radar and county records, ranked by street"><span class="t">Hail-damaged blocks</span><span class="ar" aria-hidden="true">&rarr;</span></button>
+      <button class="tile" type="button" aria-pressed="false" data-s="lunch-sites" data-alt="Live job-site demo: busy Los Angeles construction sites from city inspection records, near a sample depot, for lunch trucks"><span class="t">Busiest job sites</span><span class="ar" aria-hidden="true">&rarr;</span></button>
     </div>
-    <p class="cap">Illustrative. Your build runs your work, not this.</p>
   </div>
-</div></div></header>
+</header></div>
 
-<section id="how"><div class="wrap">
-  <div class="shead">
-    <p class="e">How we work</p>
-    <h2>We look first. Then we build.</h2>
-    <p>You have run this for eleven years. We have been looking at it since Tuesday. Guess which one of us should be doing most of the talking on the first call.</p>
-  </div>
-  <div class="steps">
-    <div class="st"><span class="n">01</span><h3>We walk the whole operation</h3><p>What goes wrong most often. What happens between a customer calling and somebody being dispatched. Where the same information gets typed twice. Who is the one person who knows how a thing works, and what happens the week they are away.</p></div>
-    <div class="st"><span class="n">02</span><h3>We put a number on every gap</h3><p>Each one costed in dollars from your figures, with the arithmetic shown. Some of it will be smaller than you feared. Some of it will be worse. You get the number on the first call, before you have paid anything.</p></div>
-    <div class="st"><span class="n">03</span><h3>We build what pays first</h3><p>Usually we end up saying the expensive problem is not the one you called about. Sometimes you tell us we are wrong. That is a good call, not a failed one. First systems live in about a week, starting with whatever we can prove is costing the most.</p></div>
-  </div>
-</div></section>
-
-<section id="build" class="band"><div class="wrap">
-  <div class="shead">
-    <p class="e">What we build</p>
-    <h2>If it repeats, it can run itself.</h2>
-    <p>Anything that repeats, runs on a schedule, or only ever breaks because somebody was busy, tired, or never told. It does not get busy. It does not get tired. It does not need reminding.</p>
-  </div>
-  <div class="rows">
-    <div class="r"><span class="nm">sales_pipeline</span><p>Every lead from every source landing in one place, in the same shape, worked on a schedule instead of whenever someone remembers.</p><span class="s">Always on</span></div>
-    <div class="r"><span class="nm">quotes_proposals</span><p>The document that takes an hour to assemble, built from what the customer already told you, then followed up until they answer either way.</p><span class="s">Always on</span></div>
-    <div class="r"><span class="nm">money_in</span><p>Invoices that go out the day the work is done. Payment reminders that go without you deciding to send them. What you are owed, worked every week.</p><span class="s">Always on</span></div>
-    <div class="r"><span class="nm">reporting_costing</span><p>Which work is actually profitable, and the weekly numbers you rebuild in a spreadsheet every Monday, built for you instead.</p><span class="s">Scheduled</span></div>
-    <div class="r"><span class="nm">scheduling_handoffs</span><p>A calendar that fills its own gaps, reminders that cut the no-shows you currently absorb, and handoffs between your own people that do not need a phone call.</p><span class="s">Always on</span></div>
-    <div class="r"><span class="nm">admin_knowledge</span><p>Intake that stops getting typed twice. Onboarding without walking someone through the same eight things. The process only one person knows, written down and running whether or not they are in.</p><span class="s">Always on</span></div>
-  </div>
-  <p class="after">None of it comes back as a menu you assemble yourself. One engagement, one number.</p>
-</div></section>
-
-<section id="control"><div class="wrap"><div class="cord">
-  <div>
-    <p class="e">The part everyone worries about</p>
-    <h2>You keep the controls.</h2>
-    <p>Every conversation about handing work to a machine reaches the same moment. The owner leans back a bit and says some version of: so what you are telling me is I lose control of my own business.</p>
-    <p>Reasonable thing to worry about. Wrong worry. The cleanest counter-example has been running since the 1950s.</p>
-    <blockquote class="pull"><p>Toyota automated the line, then put a cord next to every person standing at it. Anyone can pull it. The line stops.</p></blockquote>
-  </div>
-  <div>
-    <div class="split">
-      <div class="sp"><p class="k">The machine</p><p>Perfect ten thousand times. Completely blind to the one that came out wrong.</p></div>
-      <div class="sp b2"><p class="k">The person</p><p>Bad at ten thousand. Very good at the one.</p></div>
-    </div>
-    <p style="color:var(--fg-2);margin:0">The machine does the repetition. You keep the authority. Nobody at Toyota confused those two jobs, which is why they were still building the good cars while everyone else argued about whether robots were coming for the line. Every line we build has a cord on it.</p>
-  </div>
+<section id="build"><div class="w"><h2>What we build</h2><div class="rows">
+  <div><h3>Find the work</h3><p>Permits, storm reports and job sites, from public records, every morning.</p></div>
+  <div><h3>Follow it up</h3><p>The quote gets chased on day two, not when someone remembers.</p></div>
+  <div><h3>Run the back office</h3><p>Invoices, reminders and the Monday report go out on their own.</p></div>
 </div></div></section>
 
-<section id="limits" class="band"><div class="wrap">
-  <div class="shead">
-    <p class="e">Where we stop</p>
-    <h2>Five things we will not do.</h2>
-    <p>Said now, rather than after you have paid for something.</p>
-  </div>
-  <div class="lim">
-    <div class="li"><span class="n">01</span><p>Guess at a price before we have looked at your operation.</p></div>
-    <div class="li"><span class="n">02</span><p>Tell you how to run your business.</p></div>
-    <div class="li"><span class="n">03</span><p>Pretend a machine is a person to your customers.</p></div>
-    <div class="li"><span class="n">04</span><p>Lock you in. Month to month, thirty days' notice, and your number ports out with you.</p></div>
-    <div class="li"><span class="n">05</span><p>Take your money if we cannot help you. We say so on the first call, before you have paid anything.</p></div>
-  </div>
+<section id="how" style="padding-top:0"><div class="w"><h2>We look first. Then we build.</h2><ol class="steps">
+  <li>We walk the whole operation</li><li>We put a number on every gap</li><li>We build what pays first</li>
+</ol></div></section>
+
+<section id="who" style="padding-top:0"><div class="w who">
+  <div><h2 class="eyebrow">Who are you?</h2><div class="ppl">
+    <figure><img src="/img/brandon.webp" width="200" height="200" loading="lazy" alt="Brandon Shin, co-founder of Unvent Automations"><figcaption>Brandon</figcaption></figure>
+    <figure><img src="/img/andre.webp" width="200" height="200" loading="lazy" alt="Andre, co-founder of Unvent Automations"><figcaption>Andre</figcaption></figure>
+  </div><p class="cap" style="margin-top:14px"><a href="/about/">How we got here</a></p></div>
+  <p class="quote">We want you to get to Friday and not be able to name the thing you dropped.</p>
 </div></section>
 
+<section id="faq" style="padding-top:0"><div class="w"><h2>The questions everybody asks.</h2><div class="faq">
+<details>
+<summary>How much does this cost?</summary>
+<p>Every build is quoted after the walkthrough, from what we find. Some are a flat build fee, some are paid out of what the system brings back. On top of the build there is a monthly retainer that scales with how much we are running for you. We will not quote you before we have looked at your operation, because a number we made up is worse than no number at all.</p>
+</details>
+<details>
+<summary>How fast is it running?</summary>
+<p>The first pieces are live in about a week. We start with whatever we can prove is losing you money fastest, usually the phone, and build out from there.</p>
+</details>
+<details>
+<summary>Do you need access to my software?</summary>
+<p>Usually less than people expect. A lot of what we build runs alongside what you already have rather than inside it. Where we do need to connect something, we tell you exactly what and why before it gets built, and you can say no to any piece of it. Nothing gets access it does not need. If a fix genuinely requires writing into your dispatch, booking or accounting system, that is a separate conversation and a separate quote, and we would tell you that up front rather than after.</p>
+</details>
+<details>
+<summary>Is it going to sound like a robot to my customers?</summary>
+<p>Most of what we build your customers never see or hear at all. Invoicing, scheduling, reporting and the handoffs between your own people all happen behind the scenes. Where something does talk to a customer, it answers immediately, it knows what you sell and what you charge, and it asks what your front desk would ask. It will not pretend to be something it is not, diagnose a problem, or quote a price. And if your customers would genuinely be better served by a person on that line, we will tell you that.</p>
+</details>
+<details>
+<summary>What if it does not work for my business?</summary>
+<p>The agreement is month to month and either of us can end it with thirty days' notice. You are not signing up for a year. The setup fee covers work that has already been done, so it is not refundable once we have started, and we would rather say that plainly now than surprise you with it later. If we do not think we can help you, we will tell you on the first call, before you have paid anything.</p>
+</details>
+<details>
+<summary>Am I locked in?</summary>
+<p>No. Month to month, thirty days' notice, and if you ever leave, the phone number we set up gets ported to you. You keep it. We are not going to hold your number hostage to keep your business.</p>
+</details>
+</div></div></section>
 
-<section class="hinge"><div class="wrap">
-  <h3>Usually it is the thing you stopped noticing.</h3>
-  <div>
-    <p>No two builds have looked the same, and the top three problems are almost never the same twice. Sometimes it is the phone. Sometimes it is one thing you have complained about for two years and stopped hearing yourself say.</p>
-    <p>Which is why we will not quote you before we have looked. We would be guessing, and a number we made up is worse than no number at all. The first call costs nothing, and you leave knowing your number whether or not you hire us.</p>
-  </div>
-</div></section>
-
-<section id="faq" class="band"><div class="wrap">
-  <div class="shead">
-    <p class="e">Before you book</p>
-    <h2>The questions everybody asks.</h2>
-  </div>
-  <div class="faq">
-    <details>
-      <summary>How much does this cost?</summary>
-      <p>Every build is quoted after the walkthrough, from what we find. Some are a flat build fee, some are paid out of what the system brings back. On top of the build there is a monthly retainer that scales with how much we are running for you. We will not quote you before we have looked at your operation, because a number we made up is worse than no number at all.</p>
-    </details>
-    <details>
-      <summary>How fast is it running?</summary>
-      <p>The first pieces are live in about a week. We start with whatever we can prove is losing you money fastest, usually the phone, and build out from there.</p>
-    </details>
-    <details>
-      <summary>Do you need access to my software?</summary>
-      <p>Usually less than people expect. A lot of what we build runs alongside what you already have rather than inside it. Where we do need to connect something, we tell you exactly what and why before it gets built, and you can say no to any piece of it. Nothing gets access it does not need. If a fix genuinely requires writing into your dispatch, booking or accounting system, that is a separate conversation and a separate quote, and we would tell you that up front rather than after.</p>
-    </details>
-    <details>
-      <summary>Is it going to sound like a robot to my customers?</summary>
-      <p>Most of what we build your customers never see or hear at all. Invoicing, scheduling, reporting and the handoffs between your own people all happen behind the scenes. Where something does talk to a customer, it answers immediately, it knows what you sell and what you charge, and it asks what your front desk would ask. It will not pretend to be something it is not, diagnose a problem, or quote a price. And if your customers would genuinely be better served by a person on that line, we will tell you that.</p>
-    </details>
-    <details>
-      <summary>What if it does not work for my business?</summary>
-      <p>The agreement is month to month and either of us can end it with thirty days' notice. You are not signing up for a year. The setup fee covers work that has already been done, so it is not refundable once we have started, and we would rather say that plainly now than surprise you with it later. If we do not think we can help you, we will tell you on the first call, before you have paid anything.</p>
-    </details>
-    <details>
-      <summary>Am I locked in?</summary>
-      <p>No. Month to month, thirty days' notice, and if you ever leave, the phone number we set up gets ported to you. You keep it. We are not going to hold your number hostage to keep your business.</p>
-    </details>
-  </div>
-</div></section>
-
-<section id="book" class="close"><div class="wrap">
-  <h2>We want you to get to Friday and not be able to name the thing you dropped.</h2>
-  <p>Not a bigger business, not a leaner one, not a number on a dashboard. Just a week where the thing you forgot was not expensive, because it did not depend on you remembering it.</p>
-  <a class="b fill" href="https://calendly.com/andre-unventautomations/30min">Book 30 minutes</a>
-  <p class="fine">Nothing to sign. You leave knowing your number either way.</p>
-</div></section>
-
+<section id="book" class="close"><div class="w"><h2>Thirty minutes, mostly questions.</h2><a class="btn" href="https://calendly.com/andre-unventautomations/30min">Book the walkthrough</a><p>You leave knowing your number either way. Month to month, thirty days&rsquo; notice.</p></div></section>
 </main>
 
-<footer><div class="wrap">
-  <span class="c">&copy; <span id="yy">2026</span> Unvent Automations &middot; Los Angeles, California</span>
-  <div class="fl">
-    <a href="#how">How we work</a>
-    <a href="#build">What we build</a>
-    <a href="#limits">Where we stop</a>
-    <a href="/about/">Who we are</a>
-    <a href="/demos/">Demos</a>
-    <a href="https://calendly.com/andre-unventautomations/30min">Book a call</a>
-  </div>
-</div></footer>
+<div class="w"><footer><span>&copy; <span id="yy">2026</span> Unvent Automations &middot; Los Angeles, California</span><div class="links"><a href="/demos/">Demos</a><a href="/about/">Who are you?</a><a href="#how">How does it work?</a></div></footer></div>
 
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
@@ -216,64 +124,14 @@
 {"@type":"Question","name":"Am I locked in?","acceptedAnswer":{"@type":"Answer","text":"No. Month to month, thirty days' notice, and if you ever leave, the phone number we set up gets ported to you. You keep it."}}
 ]}]}
 </script>
-
 <script>
-document.getElementById('yy').textContent=new Date().getFullYear();
-(function(){
-  var feed=document.getElementById('feed');
-  if(!feed)return;
-  var EV=[
-    ['in','inbound','Call taken while the crew was out'],
-    ['ok','captured','Job details written down, sent to the owner'],
-    ['in','inbound','Enquiry at 19:44, after hours'],
-    ['ok','replied','Answered in forty seconds, not next morning'],
-    ['ok','quote','Follow-up sent, second touch'],
-    ['wait','waiting','Customer asked something a person should answer'],
-    ['ok','invoice','Invoice sent the day the work finished'],
-    ['ok','reminder','Payment reminder, day seven'],
-    ['pay','paid','Invoice cleared'],
-    ['ok','intake','Job written once, landed in both systems'],
-    ['ok','report','Monday numbers built overnight'],
-    ['in','inbound','Form fill from the website'],
-    ['ok','routed','Assigned before anyone opened a laptop'],
-    ['ok','schedule','Gap in Thursday filled from the waitlist'],
-    ['ok','reminder','Appointment confirmation, twenty-four hours out'],
-    ['wait','waiting','Needs a price only the owner can set'],
-    ['ok','review','Review request sent, work signed off'],
-    ['ok','onboard','New hire walked through step four of eight'],
-    ['pay','paid','Deposit received'],
-    ['ok','recall','Annual service reminder, ninety customers']
-  ];
-  var s1=document.getElementById('s1'),s2=document.getElementById('s2'),s3=document.getElementById('s3');
-  var i=0,n1=0,n2=0,timer=null,visible=true;
-  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function pad(n){return String(n).padStart(2,'0')}
-  var clock=new Date();clock.setHours(7,12,0,0);
-  function line(){
-    var e=EV[i%EV.length];i++;
-    clock=new Date(clock.getTime()+(90000+Math.random()*420000));
-    if(clock.getHours()>=20){clock.setHours(7,4,0,0)}
-    var d=document.createElement('div');
-    d.className='ln';
-    d.innerHTML='<span class="ts">'+pad(clock.getHours())+':'+pad(clock.getMinutes())+'</span>'+
-      '<span class="tag t-'+e[0]+'">'+e[1]+'</span>'+
-      '<span class="msg">'+e[2]+'</span>'+
-      '<span class="ms">'+(40+Math.floor(Math.random()*900))+'ms</span>';
-    feed.appendChild(d);
-    if(e[0]==='wait'){n2++;s2.textContent=n2}else{n1++;s1.textContent=n1}
-    s3.textContent='0';
-    while(feed.children.length>14){feed.removeChild(feed.firstChild)}
-  }
-  for(var k=0;k<9;k++){line()}
-  function start(){if(!timer&&!reduce&&visible){timer=setInterval(line,1750)}}
-  function stop(){if(timer){clearInterval(timer);timer=null}}
-  document.addEventListener('visibilitychange',function(){
-    visible=document.visibilityState==='visible';
-    visible?start():stop();
-  });
-  if('IntersectionObserver'in window){
-    new IntersectionObserver(function(es){es[0].isIntersecting?start():stop()},{threshold:0}).observe(feed);
-  }else{start()}
-})();
+document.getElementById("yy").textContent=new Date().getFullYear();
+["hail-leads","lunch-sites"].forEach(s=>{new Image().src="/img/demo-"+s+".webp";new Image().src="/img/demo-"+s+"-m.webp"});
+const img=document.getElementById("demo"),src=document.getElementById("demo-m"),lnk=document.getElementById("demo-link");
+document.querySelectorAll(".tile").forEach(t=>t.addEventListener("click",()=>{
+  img.src="/img/demo-"+t.dataset.s+".webp";src.srcset="/img/demo-"+t.dataset.s+"-m.webp";img.alt=t.dataset.alt;lnk.href="/demos/"+t.dataset.s+"/";
+  document.querySelectorAll(".tile").forEach(x=>{const on=x===t;x.classList.toggle("on",on);x.setAttribute("aria-pressed",on)});
+}));
 </script>
-</body></html>
+</body>
+</html>
