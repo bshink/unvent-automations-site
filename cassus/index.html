@@ -109,6 +109,52 @@ ul.plain li b{color:var(--ink);font-weight:620}
 footer{padding:46px 0 60px;color:var(--ink-3);font-size:13.5px}
 footer b{color:var(--ink-2);font-weight:500}
 
+/* fit quiz */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;
+  padding:0 20px;border-radius:10px;background:var(--ink);color:#fff;font:inherit;font-size:15px;
+  font-weight:600;text-decoration:none;border:1px solid var(--ink);cursor:pointer;transition:background .15s}
+.btn:hover{background:#262A30}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn.ghost:hover{background:var(--paper-2)}
+.btn small{font-weight:500;color:#A8B0B8;font-size:13px}
+.hcta{margin-top:28px}
+#fit{scroll-margin-top:72px}
+.quiz{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:26px;max-width:720px}
+.qtop{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.qcount{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.qbar{flex:1;height:4px;background:var(--paper-3);border-radius:4px;overflow:hidden}
+.qbar i{display:block;height:100%;width:0;background:var(--beak);transition:width .25s}
+.quiz h3{font-size:clamp(19px,2.3vw,23px);line-height:1.28;margin-bottom:6px}
+.qhint{color:var(--ink-3);font-size:14px;margin:0 0 16px}
+.opts{display:grid;gap:9px;margin-top:16px}
+.opt{display:block;width:100%;text-align:left;min-height:48px;padding:12px 16px;border-radius:10px;
+  background:var(--paper);border:1px solid var(--line);color:var(--ink);font:inherit;font-size:15.5px;
+  cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--line-2)}
+.opt[aria-pressed="true"]{border-color:var(--beak);background:var(--beak-soft)}
+.opt:focus-visible,.btn:focus-visible,.qback:focus-visible,.qin:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+.qin{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+  background:var(--paper);color:var(--ink)}
+textarea.qin{min-height:96px;resize:vertical}
+.qlabel{display:block;font-size:13.5px;color:var(--ink-2);margin:16px 0 4px}
+.qnav{display:flex;align-items:center;gap:12px;margin-top:20px;flex-wrap:wrap}
+.qback{background:none;border:0;padding:8px 0;font:inherit;font-size:14px;color:var(--ink-3);cursor:pointer}
+.qback:hover{color:var(--ink)}
+.qnav .btn{margin-left:auto}
+.res h3{font-size:clamp(21px,2.6vw,27px);margin-bottom:8px}
+.res>p{color:var(--ink-2);margin:0 0 22px}
+.rcards{display:grid;gap:12px}
+.rcard{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px}
+.rcard .rk{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--beak);margin-bottom:6px}
+.rcard h4{margin:0 0 8px;font-size:16.5px;letter-spacing:-.02em;font-weight:650}
+.rcard q{display:block;font-size:14px;color:var(--ink);background:var(--paper-2);border-radius:8px;padding:9px 12px;margin-bottom:10px;quotes:none}
+.rcard p{margin:0;color:var(--ink-2);font-size:14.5px}
+.rcard a{color:var(--ice);font-weight:600}
+.rclose{margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.rclose p{color:var(--ink-2);font-size:14.5px;margin:0 0 16px}
+.rbtns{display:flex;gap:10px;flex-wrap:wrap}
+.copied{font-size:13px;color:var(--go);margin-left:4px;align-self:center}
+
 /* ---- phones ---- */
 @media(max-width:760px){
   nav .wrap{height:auto;padding-top:11px;padding-bottom:11px;flex-wrap:wrap;row-gap:9px}
@@ -119,7 +165,10 @@ footer b{color:var(--ink-2);font-weight:500}
   .brand .paul{height:38px}
   .brand .wordmark{height:22px}
   .bops{font-size:10px}
-  #how,#build,#limits{scroll-margin-top:12px}
+  #how,#build,#limits,#fit{scroll-margin-top:12px}
+  #fit{scroll-margin-top:12px}
+  .quiz{padding:18px}
+  .qnav .btn,.rbtns .btn{width:100%;margin-left:0}
   .hero{padding:40px 0 34px}
   section{padding:44px 0}
   h1{font-size:30px;line-height:1.1}
@@ -153,6 +202,7 @@ footer b{color:var(--ink-2);font-weight:500}
   <div class="nlinks">
     <a href="#how">How it works</a>
     <a href="#build">What we build</a>
+    <a href="#fit">What fits you</a>
     <a href="#limits">Where we stop</a>
     <a href="demo/" style="color:var(--beak);font-weight:600">Try it</a>
   </div>
@@ -171,6 +221,7 @@ footer b{color:var(--ink-2);font-weight:500}
       <li><b>Running in about a week.</b> We start with whatever is costing you the most.</li>
       <li><b>Month to month.</b> Thirty days notice, and what we built stays yours.</li>
     </ul>
+    <div class="hcta"><a class="btn" href="#fit">See what fits your business <small>2 min</small></a></div>
   </div>
   <div class="flow">
     <h3>A normal week, before and after</h3>
@@ -273,9 +324,21 @@ footer b{color:var(--ink-2);font-weight:500}
 
 
 
+<section id="fit"><div class="wrap">
+  <div class="shead">
+    <div class="k">03 · What fits you</div>
+    <h2>Twelve questions about your week.</h2>
+    <p>Tap the answer closest to true. At the end you see where we would start, with your own
+    answers as the reason. No prices, because we have not looked at your operation yet.</p>
+  </div>
+  <div class="quiz" id="quiz" aria-live="polite"></div>
+  <noscript><p>This needs JavaScript. You can also just book the first call:
+  <a href="https://calendly.com/andre-unventautomations/30min">calendly.com/andre-unventautomations/30min</a></p></noscript>
+</div></section>
+
 <section id="limits"><div class="wrap">
   <div class="shead">
-    <div class="k">03 · Where we stop</div>
+    <div class="k">04 · Where we stop</div>
     <h2>Five things we will not do.</h2>
     <p>Said now, rather than after you have paid for something.</p>
   </div>
@@ -312,6 +375,106 @@ footer b{color:var(--ink-2);font-weight:500}
     <span style="margin-left:auto;font-size:13px">© 2026 Cassus Media</span>
   </div>
 </div></footer>
+
+<script>
+(function(){
+var BOOK='https://calendly.com/andre-unventautomations/30min';
+var BUILDS={
+  invoices:{t:'Invoices that chase themselves',d:'Reminders that keep going past the point your accounting software gives up, read the reply, and hand it to you when it needs a person.'},
+  quotes:{t:'Every quote chased',d:'Followed up by text and email, in your name, until they answer either way. Plus a second pass months later on the ones that went quiet.'},
+  leads:{t:'New work from public records',d:'We watch the filings every morning and hand you the ones in your area, before anyone else has called.',link:{href:'/demos/',label:'See one running'}},
+  crm:{t:'Customer records in one place',d:'Every quote, job and conversation on the customer’s record, found in seconds by whoever picks up. If what you have cannot do that, we build one that fits how you work.'},
+  integrations:{t:'Your tools sharing records',d:'Typed once. Your CRM, calendar, quoting tool and scheduler all have it after that.'},
+  reactivation:{t:'Old customers, back on the books',d:'Past customers who would hire you again, contacted from a list you already own.'},
+  scheduling:{t:'Booking without the back-and-forth',d:'Customers pick a time that actually works, reminders go out on their own, and a reschedule stops costing anyone an afternoon.'},
+  inbox:{t:'Routine questions answered in your voice',d:'The same ten questions answered right away from your own answers. Anything unusual comes straight to you, and it never pretends to be a person.'},
+  sorting:{t:'Reading and sorting, done before you get there',d:'New inquiries, applications and paperwork read, sorted and flagged, so your people start on the ones that matter.'},
+  dashboard:{t:'Your week on one screen',d:'What got handled, what is waiting on a person, and what fell through. On your phone, Monday morning.'},
+  expiration:{t:'Nothing expires by surprise',d:'Licenses, insurance certificates, contracts and cards on file tracked, with a reminder well before the date.'}
+};
+var ORDER=['invoices','quotes','leads','crm','integrations','reactivation','scheduling','inbox','sorting','dashboard','expiration'];
+var Q=[
+  {id:'about',type:'about',q:'What does your business do, and how many people work there, counting you?',o:['1-3','4-10','11-30','30+']},
+  {q:'A customer calls back after six months. How long does it take to find what you quoted them last time?',o:['Seconds, it’s all in one place','A few minutes of digging through email and texts','Depends who picks up','We’d probably start over'],s:[0,2,2,3],b:'crm',k:'Finding an old quote'},
+  {q:'A new job comes in. How many places does someone type the customer’s name before the work starts?',o:['One','Two','Three or more','Not sure'],s:[0,1,3,2],b:'integrations',k:'Places the name gets typed'},
+  {q:'Of the last ten quotes you sent, how many got a second follow-up?',o:['All ten','About half','One or two','We don’t track it'],s:[0,1,3,3],b:'quotes',k:'Quotes with a second follow-up'},
+  {q:'How many invoices are past 30 days right now?',o:['None','1-3','4-10','More than 10','I’d have to check'],s:[0,1,3,3,2],b:'invoices',k:'Invoices past 30 days'},
+  {q:'Does something public happen before a customer needs you? A permit filed, a house sold, a storm, a new business opening.',o:['Yes, and we watch for it by hand','Yes, but nobody has time to watch','Not that I know of'],s:[2,3,0],b:'leads',k:'A public signal before the job'},
+  {q:'When did you last reach out to a customer who hasn’t hired you in over a year?',o:['This month','Sometime this year','Can’t remember','We don’t'],s:[0,1,2,3],b:'reactivation',k:'Last time you reached old customers'},
+  {q:'A customer wants to book. What happens next?',o:['They book themselves online','Calls and texts back and forth','One person holds the calendar in their head','Reschedules eat part of every week'],s:[0,2,3,3],b:'scheduling',k:'When a customer wants to book'},
+  {q:'How much of your inbox is the same ten questions? Hours, pricing, “are you free Thursday,” “where’s my order.”',o:['Almost none','Some','Most of it','Answering it is someone’s whole job'],s:[0,1,3,3],b:'inbox',k:'Inbox that is the same questions'},
+  {q:'Is there a job where someone reads something and decides where it goes? Sorting new inquiries, checking applications, reviewing paperwork.',o:['No','Sometimes','Every day','It’s the bottleneck'],s:[0,1,2,3],b:'sorting',k:'Reading and deciding where it goes'},
+  {q:'Monday morning. How do you know how last week went?',o:['A dashboard I trust','Someone builds a spreadsheet','I add it up in my head','I find out at the end of the month'],s:[0,1,2,3],b:'dashboard',k:'How you know how last week went'},
+  {q:'The last time something expired that shouldn’t have, like a license, an insurance certificate, a contract, or a card on file, how did you find out?',o:['Hasn’t happened','A reminder caught it','A customer or inspector told us','When it cost us'],s:[0,1,3,3],b:'expiration',k:'How you found out something expired'},
+  {id:'handoff',type:'text',q:'Optional: If you could hand off one job tomorrow and never think about it again, what would it be?'}
+];
+var N=Q.length, NQ=12, A={what:'',size:null,handoff:''}, step=0;
+var box=document.getElementById('quiz');
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function top(i){var n=Math.min(i+1,NQ);var lab=i<NQ?('Question '+n+' of '+NQ):'Last one, optional';
+  return '<div class="qtop"><span class="qcount">'+lab+'</span><span class="qbar"><i style="width:'+(i/N*100)+'%"></i></span></div>'}
+function focusFirst(){var el=box.querySelector('h3');if(el){el.setAttribute('tabindex','-1');el.focus({preventScroll:true})}}
+function render(){
+  var q=Q[step],h=top(step)+'<h3>'+esc(q.q)+'</h3>';
+  if(q.type==='about'){
+    h+='<label class="qlabel" for="qwhat">What you do</label><input class="qin" id="qwhat" maxlength="120" placeholder="Plumbing, a dental office, a print shop..." value="'+esc(A.what)+'">';
+    h+='<span class="qlabel">People, counting you</span><div class="opts">'+q.o.map(function(o,j){return '<button type="button" class="opt" data-j="'+j+'" aria-pressed="'+(A.size===j)+'">'+esc(o)+'</button>'}).join('')+'</div>';
+    h+='<div class="qnav"><button type="button" class="btn" id="qnext"'+(A.size===null?' disabled style="opacity:.45;cursor:default"':'')+'>Next</button></div>';
+  }else if(q.type==='text'){
+    h+='<p class="qhint">This comes to us before the call. It does not change your results.</p><textarea class="qin" id="qhand" maxlength="500">'+esc(A.handoff)+'</textarea>';
+    h+='<div class="qnav"><button type="button" class="qback" id="qprev">← Back</button><button type="button" class="btn" id="qdone">See where we would start</button></div>';
+  }else{
+    h+='<div class="opts">'+q.o.map(function(o,j){return '<button type="button" class="opt" data-j="'+j+'" aria-pressed="'+(A[step]===j)+'">'+esc(o)+'</button>'}).join('')+'</div>';
+    h+='<div class="qnav"><button type="button" class="qback" id="qprev">← Back</button></div>';
+  }
+  box.innerHTML=h;
+  var opts=box.querySelectorAll('.opt');
+  Array.prototype.forEach.call(opts,function(b){b.addEventListener('click',function(){
+    var j=+b.getAttribute('data-j');
+    if(q.type==='about'){A.size=j;A.what=document.getElementById('qwhat').value;render();return}
+    A[step]=j;Array.prototype.forEach.call(opts,function(x){x.setAttribute('aria-pressed',x===b)});
+    setTimeout(function(){step++;render();focusFirst()},160);
+  })});
+  var w=document.getElementById('qwhat');if(w)w.addEventListener('input',function(){A.what=w.value});
+  var nx=document.getElementById('qnext');if(nx)nx.addEventListener('click',function(){if(A.size===null)return;step++;render();focusFirst()});
+  var pv=document.getElementById('qprev');if(pv)pv.addEventListener('click',function(){step--;render();focusFirst()});
+  var ha=document.getElementById('qhand');if(ha)ha.addEventListener('input',function(){A.handoff=ha.value});
+  var dn=document.getElementById('qdone');if(dn)dn.addEventListener('click',results);
+}
+function picks(){
+  var r=[];for(var i=1;i<NQ;i++){var q=Q[i];if(A[i]==null)continue;var sc=q.s[A[i]];
+    if(sc>=2)r.push({b:q.b,sc:sc,k:q.k,a:q.o[A[i]]})}
+  r.sort(function(x,y){return y.sc-x.sc||ORDER.indexOf(x.b)-ORDER.indexOf(y.b)});
+  return r.slice(0,4);
+}
+function summary(){
+  var L=['Fit quiz answers (Cassus page)'];
+  L.push('Business: '+(A.what||'(not given)')+', '+(A.size!=null?Q[0].o[A.size]:'?')+' people');
+  for(var i=1;i<NQ;i++){if(A[i]!=null)L.push(Q[i].k+': '+Q[i].o[A[i]])}
+  if(A.handoff.trim())L.push('One job to hand off: '+A.handoff.trim());
+  return L.join('\n');
+}
+function results(){
+  var P=picks(),h='<div class="res">';
+  if(P.length){
+    h+='<h3>Where we would start</h3><p>From your answers, these are the places we would look first. On the call we check them against your real numbers.</p><div class="rcards">';
+    P.forEach(function(p,n){var B=BUILDS[p.b];
+      h+='<div class="rcard"><div class="rk">'+(n+1)+'</div><h4>'+esc(B.t)+'</h4><q>You said: '+esc(p.k)+', “'+esc(p.a)+'.”</q><p>'+esc(B.d)+(B.link?' <a href="'+B.link.href+'">'+esc(B.link.label)+' →</a>':'')+'</p></div>'});
+    h+='</div>';
+  }else{
+    h+='<h3>You are running tighter than most.</h3><p>Nothing you told us stands out as a leak. If there is one job you would still hand off, bring it to the call and we will tell you straight whether it is worth building.</p>';
+  }
+  var url=BOOK+'?a1='+encodeURIComponent(summary());
+  h+='<div class="rclose"><p>Your answers go with the booking, so the first call starts where these leave off. Thirty minutes, nothing to sign.</p><div class="rbtns"><a class="btn" id="qbook" href="'+url+'" target="_blank" rel="noopener">Book the first call</a><button type="button" class="btn ghost" id="qcopy">Copy my answers</button><button type="button" class="qback" id="qredo">Start over</button><span class="copied" id="qcopied" hidden>Copied</span></div></div></div>';
+  box.innerHTML=h;focusFirst();
+  document.getElementById('qcopy').addEventListener('click',function(){
+    var s=summary(),done=function(){document.getElementById('qcopied').hidden=false};
+    if(navigator.clipboard)navigator.clipboard.writeText(s).then(done,function(){});});
+  document.getElementById('qredo').addEventListener('click',function(){A={what:'',size:null,handoff:''};step=0;render();focusFirst()});
+}
+render();
+})();
+</script>
 
 </body>
 </html>
